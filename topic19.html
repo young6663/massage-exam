@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#1a2a3a">
+<title>題19 橈側伸腕肌腱周圍炎</title>
+<style>
+:root{
+  --bg:#f4f1ec;--card:#fff;--text:#1a1a1a;--muted:#666;
+  --border:#ddd8cf;--sec-bg:#eeebe4;
+  --acu-bg:#e4eef8;--acu-bd:#a8c4e0;--acu-txt:#1a3a6e;
+  --empty:#aaa;--focus:#1a5fbf;
+  --hdr:#1a2a3a;
+  --spec-accent:#1e5799;
+  --teacher-accent:#7a4a0a;
+  --font:'Noto Sans TC','微軟正黑體',sans-serif;
+  --r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.7;-webkit-text-size-adjust:100%;padding-bottom:60px}
+
+/* ── 頂部 ── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--hdr);
+  padding:12px 16px 0;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.topic-info{color:#fff;margin-bottom:10px}
+.topic-info .badge{
+  display:inline-block;padding:2px 9px;border-radius:5px;
+  background:#6b3fa0;color:#fff;font-size:.75rem;font-weight:700;
+  margin-right:6px;
+}
+.topic-info h1{font-size:.95rem;font-weight:700;color:#fff;line-height:1.4}
+
+/* 版本切換標籤 */
+.ver-tabs{display:flex;gap:0;}
+.ver-tab{
+  flex:1;padding:10px 8px 8px;border:none;
+  background:transparent;color:rgba(255,255,255,.5);
+  font-family:var(--font);font-size:.88rem;font-weight:700;
+  cursor:pointer;border-bottom:3px solid transparent;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s,border-color .15s;
+}
+.ver-tab.active{color:#fff;border-bottom-color:#f0a030}
+.ver-tab.disabled{opacity:.35;cursor:not-allowed}
+.ver-tab:focus{outline:2px solid #5a9af0;outline-offset:-2px}
+
+/* ── 主內容 ── */
+.content{padding:14px 13px 0}
+.version-panel{display:none}
+.version-panel.active{display:block}
+
+/* 版本標示條 */
+.ver-badge{
+  display:inline-block;padding:3px 12px;border-radius:4px;
+  font-size:.78rem;font-weight:700;letter-spacing:.04em;
+  margin-bottom:12px;
+}
+.ver-badge.spec{background:#ddeaff;color:var(--spec-accent)}
+.ver-badge.teacher{background:#fdf0e0;color:var(--teacher-accent)}
+
+/* 區塊 */
+.sec-wrap{background:var(--card);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.acu-sec .sec-toggle{background:#edf3fb}
+.sec-toggle{
+  width:100%;display:flex;justify-content:space-between;align-items:center;
+  padding:13px 15px;border:none;background:var(--sec-bg);
+  font-family:var(--font);font-size:.92rem;font-weight:700;color:#1a2a4a;
+  cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;
+}
+.sec-toggle:focus{outline:2px solid var(--focus)}
+.sec-arrow{font-size:.75rem;color:var(--muted);transition:transform .2s}
+.sec-toggle[aria-expanded="false"] .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:12px 14px 14px}
+.sec-body[hidden]{display:none}
+
+/* 穴位 */
+.acu-summary{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+.acu-summary strong{color:#1a3a6e}
+.acu-group{background:#fff;border:1px solid var(--acu-bd);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.acu-group:last-child{margin-bottom:0}
+.acu-header{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--acu-bg);border-bottom:1px solid var(--acu-bd)}
+.acu-seg{font-size:.75rem;font-weight:700;color:#1a3a6e;background:#c4d8f0;padding:1px 7px;border-radius:10px}
+.acu-region{font-size:.8rem;font-weight:600;color:#1a3a6e;flex:1}
+.acu-cnt{font-size:.75rem;color:var(--muted)}
+.acu-pts{display:flex;flex-wrap:wrap;gap:7px;padding:9px 10px}
+.acu-tag{
+  display:inline-block;padding:5px 12px;border-radius:14px;
+  background:var(--acu-bg);border:1px solid var(--acu-bd);
+  color:var(--acu-txt);font-size:.92rem;font-weight:600;
+}
+button.acu-tag{
+  cursor:pointer;font-family:var(--font);
+  -webkit-tap-highlight-color:transparent;
+}
+button.acu-tag.has-detail{
+  background:#d4e8ff;border-color:#78aee0;
+  position:relative;
+}
+button.acu-tag.has-detail:active{background:#bbd8f8}
+button.acu-tag:focus{outline:2px solid var(--focus)}
+
+/* 步驟 */
+.steps{display:flex;flex-direction:column;gap:8px}
+.step-item{font-size:.93rem;line-height:1.7;padding-left:4px}
+
+/* 段落 */
+.sec-body p{font-size:.93rem;line-height:1.72;margin-bottom:6px}
+.sec-body p:last-child{margin-bottom:0}
+.empty{color:var(--empty);font-style:italic;font-size:.86rem}
+
+/* ── 穴位彈窗 ── */
+.acu-modal-bg{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.55);
+  align-items:flex-end;justify-content:center;
+}
+.acu-modal-bg.open{display:flex}
+.acu-modal{
+  background:var(--card);border-radius:16px 16px 0 0;
+  padding:20px 20px 36px;width:100%;max-width:520px;
+  box-shadow:0 -4px 24px rgba(0,0,0,.2);
+}
+.acu-modal-name{
+  font-size:1.4rem;font-weight:800;color:var(--acu-txt);
+  margin-bottom:6px;
+}
+.acu-modal-title{
+  font-size:.78rem;color:var(--muted);margin-bottom:14px;
+  letter-spacing:.04em;
+}
+.acu-modal-text{
+  font-size:1rem;line-height:1.75;color:var(--text);
+  background:var(--acu-bg);border-radius:8px;
+  padding:14px 16px;
+}
+.acu-modal-close{
+  margin-top:16px;width:100%;padding:13px;
+  border-radius:var(--r);border:none;
+  background:var(--sec-bg);color:var(--text);
+  font-size:.95rem;font-weight:600;font-family:var(--font);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.acu-modal-close:focus{outline:2px solid var(--focus)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- 頂部 -->
+<div class="top-bar">
+  <div class="topic-info">
+    <span class="badge">關節炎</span>
+    <span class="badge" style="background:#1e5799">題19</span>
+    <h1>腕部橈側伸腕肌腱周圍炎之按摩</h1>
+  </div>
+  <div class="ver-tabs" role="tablist" aria-label="選擇版本">
+    <button class="ver-tab active" role="tab" aria-selected="true"
+      onclick="switchVer('spec')" id="tab-spec">規範版</button>
+    <button class="ver-tab" role="tab" aria-selected="false"
+      onclick="switchVer('teacher')" id="tab-teacher">萬老師版</button>
+    <button class="ver-tab disabled" role="tab" aria-disabled="true"
+      title="尚無資料">同學版（待補）</button>
+  </div>
+</div>
+
+<!-- 內容 -->
+<div class="content">
+
+  <!-- 規範版 -->
+  <div class="version-panel active" id="panel-spec" role="tabpanel" aria-labelledby="tab-spec">
+    <div style="padding:10px 0 4px">
+      <span class="ver-badge spec">官方規範</span>
+    </div>
+    <div class="sec-wrap acu-sec">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">一【穴位】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><div class="acu-summary">共 <strong>8</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><button class="acu-tag has-detail" onclick="showAcu('曲池','屈肘成直角，肘彎橫紋盡頭（尺澤與肱骨外上髁中點）。')">曲池 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('手三里','曲池下二寸。')">手三里 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('溫溜','陽谿直上五寸（偏歷上二寸）。')">溫溜 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('偏歷','陽谿直上三寸（兩虎口交叉，中指盡處是穴）。')">偏歷 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('陽谿','拇指上翹，第一掌骨之後兩肌腱之間凹陷處（伸拇長短肌腱之間）。')">陽谿 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('尺澤','手臂平伸掌朝上，肘窩橫紋外側大筋（肱二頭肌腱）外側大靜脈外側凹陷處。')">尺澤 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('列缺','橈骨莖突上方，腕後一寸五分（兩虎口交叉，食指按橈骨莖突，食指盡處筋骨罅陷中）。')">列缺 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('太淵','腕橫紋頭，橈側腕屈肌腱外側，外展拇長肌腱內側，動脈搏動處（大指立起有大筋豎起，筋內側凹陷處）。')">太淵 ⓘ</button></div></div></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">二【施術步驟】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><div class="steps"><div class="step-item">(一) 坐姿、側臥或仰臥，患肢背側向上。輕快柔和地掌擦、揉捏、按壓橈側伸腕肌，沿肌肉走向施術。</div><div class="step-item">(二) 同部位施深沉的掌擦、揉捏和按壓法。</div><div class="step-item">(三) 揉捏、按壓曲池、手三里、溫溜、偏歷、陽谿、尺澤、列缺、太淵各穴及壓痛點。</div><div class="step-item">(四) 輕柔揉捏、按壓腕部橈側肌群，沿外展拇長肌和伸拇短肌走向進行。</div><div class="step-item">(五) 掌擦腕部橈側肌群，以熱透為宜。</div><div class="step-item">(六) 施腕關節拔伸、迴旋、屈伸運動，幅度由小漸大、力度由輕到重，不可過於勉強。</div><div class="step-item">(七) 掌擦橈側伸腕肌群，以熱透為宜。</div></div></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈側伸腕肌腱周圍炎，是肌腱滑動組織損傷性炎症中最常見的一種。</p><p>好發於前臂橈側伸腕肌腱部位，亦可發生在大腿股四頭肌及小腿跟腱部，以前臂最常見。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>拇指和腕部過度活動時，橈側伸腕長、短肌腱與外展拇長、伸拇短肌腱互相摩擦，腱旁組織產生炎症反應。</p><p>局部水腫、積液性滲出，纖維變性，導致黏連。</p><p>常出現於前臂持久重複運動或經常處於高度緊張狀態的肌肉。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腕部疼痛、酸痛或壓痛點。</p><p>握拳或伸拇指時疼痛加重，腕部無力。</p><p>活動時前臂背側腕上部有細微摩擦聲。</p><p>沿病變伸腕肌有條索狀或硬結出現。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈側伸腕長、短肌腱與外展拇長、伸拇短肌腱兩組肌腱在前臂橈背側下1/3處交叉。</p><p>發病部位與工作負荷及肌腱解剖位置密切相關。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p class="empty">（待補充）</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+
+  <!-- 萬老師版 -->
+  <div class="version-panel" id="panel-teacher" role="tabpanel" aria-labelledby="tab-teacher">
+    <div style="padding:10px 0 4px">
+      <span class="ver-badge teacher">萬老師整理</span>
+    </div>
+    <div class="sec-wrap acu-sec">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">一【穴位】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><div class="acu-summary">共 <strong>8</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><button class="acu-tag has-detail" onclick="showAcu('曲池','屈肘成直角，肘彎橫紋盡頭（尺澤與肱骨外上髁中點）。')">曲池 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('手三里','曲池下二寸。')">手三里 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('溫溜','陽谿直上五寸（偏歷上二寸）。')">溫溜 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('偏歷','陽谿直上三寸（兩虎口交叉，中指盡處是穴）。')">偏歷 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('陽谿','拇指上翹，第一掌骨之後兩肌腱之間凹陷處（伸拇長短肌腱之間）。')">陽谿 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('尺澤','手臂平伸掌朝上，肘窩橫紋外側大筋（肱二頭肌腱）外側大靜脈外側凹陷處。')">尺澤 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('列缺','橈骨莖突上方，腕後一寸五分（兩虎口交叉，食指按橈骨莖突，食指盡處筋骨罅陷中）。')">列缺 ⓘ</button><button class="acu-tag has-detail" onclick="showAcu('太淵','腕橫紋頭，橈側腕屈肌腱外側，外展拇長肌腱內側，動脈搏動處（大指立起有大筋豎起，筋內側凹陷處）。')">太淵 ⓘ</button></div></div></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">二【施術步驟】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><div class="steps"><div class="step-item">(1) 仰臥，輕柔的沿橈側伸腕肌走向施術。</div><div class="step-item">(2) 深沈的做上述部位。</div><div class="step-item">(3) 八個穴位及壓痛點。</div><div class="step-item">(4) 輕柔的沿外展拇長肌和伸拇短肌施行施術。</div><div class="step-item">(5) 掌擦熱透。</div><div class="step-item">(6) 腕關節拔伸、迴旋、屈伸運動。</div><div class="step-item">(7) 掌擦熱透。</div></div></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>有捻髮音肌腱炎之稱。</p><p>是橈側伸腕長、伸腕短肌腱與外展拇長、伸拇短肌腱，兩組肌腱互相摩擦，引起周圍的腱旁組織損傷性炎症。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>❶ 多因急性損傷。</p><p>❷ 少數慢性勞損。</p><p>❸ 病理機轉：肌腱周圍滑動組織損傷性炎症，肌腱相互磨擦，腱旁組織產生水腫、滲出、纖維變性導致粘連。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(1) 紅腫熱痛，功能受限：</p><p>　紅腫熱：腫脹，局部有灼熱感。</p><p>　痛：疼痛、壓痛明顯。</p><p>　功能障礙：握物無力，腕關節活動無力。</p><p>(2) 人事時地：</p><p>　人：好發於青壯年男性，多見於泥瓦匠、司爐工、農民。</p><p>　事時：勞累加重，休息減輕；陰雨天加重，喜暖怕冷；用力握物屈伸腕關節時疼痛加重。</p><p>　地：疼痛部位在前臂橈背側下1/3處兩組肌腱交叉處。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(1) 橈側伸腕長肌、橈側伸腕短肌和外展拇長肌、伸拇短肌這兩組肌腱的磨擦。</p><p>(2) 兩肌群交叉時缺乏腱鞘保護，僅有疏鬆的腱旁組織，所以易遭磨損。</p><p>(3) 當手用力握物向尺側傾斜時，兩肌群運轉方向不一致，更易磨擦。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>放恢消促舒舒解解。</p></div>
+</div><div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>保手休護鍛骨、禁飲冰。</p></div>
+</div>
+  </div>
+
+</div>
+
+<!-- 穴位彈窗 -->
+<div class="acu-modal-bg" id="acuModal" role="dialog" aria-modal="true" aria-labelledby="acuModalName"
+  onclick="if(event.target===this)closeAcu()">
+  <div class="acu-modal">
+    <div class="acu-modal-name" id="acuModalName"></div>
+    <div class="acu-modal-title">取穴說明</div>
+    <div class="acu-modal-text" id="acuModalText"></div>
+    <button class="acu-modal-close" onclick="closeAcu()">關閉</button>
+  </div>
+</div>
+
+<script>
+function switchVer(ver) {
+  document.querySelectorAll('.version-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ver-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected','false');
+  });
+  document.getElementById('panel-' + ver).classList.add('active');
+  document.getElementById('tab-' + ver).classList.add('active');
+  document.getElementById('tab-' + ver).setAttribute('aria-selected','true');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function toggleSec(btn) {
+  var expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !expanded);
+  btn.querySelector('.sec-arrow').textContent = expanded ? '▶' : '▼';
+  var body = btn.nextElementSibling;
+  if (expanded) body.setAttribute('hidden','');
+  else body.removeAttribute('hidden');
+}
+
+function showAcu(name, text) {
+  document.getElementById('acuModalName').textContent = name;
+  document.getElementById('acuModalText').textContent = text;
+  var modal = document.getElementById('acuModal');
+  modal.classList.add('open');
+  modal.querySelector('.acu-modal-close').focus();
+}
+
+function closeAcu() {
+  document.getElementById('acuModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeAcu();
+});
+</script>
+</body>
+</html>

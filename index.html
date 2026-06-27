@@ -1,0 +1,2993 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#1a2a3a">
+<title>按摩乙級術科 · 考試用</title>
+<style>
+:root{
+  --bg:#f4f1ec;--card:#fff;--text:#1a1a1a;--muted:#666;
+  --border:#ddd8cf;--sec-bg:#eeebe4;
+  --acu-bg:#e4eef8;--acu-bd:#a8c4e0;--acu-txt:#1a3a6e;
+  --empty:#aaa;--focus:#1a5fbf;
+  --hdr:#1a2a3a;--exam-bg:#7a1a1a;
+  --font:'Noto Sans TC','微軟正黑體',sans-serif;
+  --r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.7;-webkit-text-size-adjust:100%}
+
+/* ── 選題頁 ── */
+#pickScreen{
+  min-height:100dvh;display:flex;flex-direction:column;
+  background:var(--hdr);color:#fff;padding:0;
+}
+.pick-hero{
+  padding:32px 20px 24px;text-align:center;
+}
+.pick-hero h1{font-size:1.3rem;font-weight:800;letter-spacing:.06em;margin-bottom:6px}
+.pick-hero p{font-size:.85rem;opacity:.7}
+.pick-body{
+  background:var(--bg);flex:1;border-radius:20px 20px 0 0;
+  padding:28px 20px 40px;display:flex;flex-direction:column;gap:18px;
+}
+.pick-row{display:flex;flex-direction:column;gap:6px}
+.pick-row label{font-size:.85rem;font-weight:600;color:var(--muted)}
+.pick-sel{
+  width:100%;padding:14px 16px;border-radius:var(--r);
+  border:1.5px solid var(--border);background:var(--card);
+  font-size:1rem;font-family:var(--font);color:var(--text);
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  padding-right:44px;
+}
+.pick-sel:focus{outline:2px solid var(--focus);border-color:var(--focus)}
+.pick-go{
+  margin-top:8px;width:100%;padding:16px;border-radius:var(--r);
+  border:none;background:#c0392b;color:#fff;
+  font-size:1.1rem;font-weight:800;letter-spacing:.06em;cursor:pointer;
+  box-shadow:0 4px 16px rgba(192,57,43,.35);
+  -webkit-tap-highlight-color:transparent;
+}
+.pick-go:active{transform:scale(.98)}
+.pick-go:focus{outline:2px solid #ffaaaa}
+.pick-hint{font-size:.82rem;color:var(--muted);text-align:center}
+
+/* ── 考試頁 ── */
+#examScreen{display:none;min-height:100dvh;flex-direction:column}
+
+/* 頂部兩題切換按鈕 */
+.exam-nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--hdr);
+  display:flex;align-items:stretch;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.nav-btn{
+  flex:1;padding:14px 8px 12px;border:none;
+  background:transparent;color:rgba(255,255,255,.55);
+  font-family:var(--font);font-size:.78rem;font-weight:600;
+  cursor:pointer;border-bottom:3px solid transparent;
+  line-height:1.3;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s,border-color .15s;
+}
+.nav-btn.active{color:#fff;border-bottom-color:#e03030}
+.nav-btn:focus{outline:2px solid #5a9af0;outline-offset:-2px}
+.nav-btn .nb-num{font-size:1rem;font-weight:800;display:block}
+.nav-btn .nb-name{font-size:.72rem;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;display:block}
+.nav-exit{
+  padding:0 14px;border:none;background:transparent;
+  color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;
+  border-left:1px solid rgba(255,255,255,.15);
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-exit:focus{outline:2px solid #5a9af0}
+
+/* 題目內容 */
+.exam-content{flex:1;padding:16px 14px 60px}
+.topic{display:none}
+.topic.active{display:block}
+.topic-head{background:var(--card);border-radius:var(--r);padding:14px 15px 12px;margin-bottom:12px}
+.topic-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.topic-badge{padding:2px 9px;border-radius:5px;color:#fff;font-size:.78rem;font-weight:700;letter-spacing:.05em}
+.topic-cat{font-size:.78rem;font-weight:600}
+.topic-title{font-size:1.05rem;font-weight:700;line-height:1.4}
+
+/* 區塊 */
+.sec-wrap{background:var(--card);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.acu-sec .sec-toggle{background:#edf3fb}
+.sec-toggle{
+  width:100%;display:flex;justify-content:space-between;align-items:center;
+  padding:13px 15px;border:none;background:var(--sec-bg);
+  font-family:var(--font);font-size:.92rem;font-weight:700;color:var(--text);
+  cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;
+}
+.sec-toggle:focus{outline:2px solid var(--focus)}
+.sec-label{color:#1a2a4a}
+.sec-arrow{font-size:.75rem;color:var(--muted);transition:transform .15s}
+.sec-toggle[aria-expanded="false"] .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:12px 14px 14px}
+.sec-body[hidden]{display:none}
+
+/* 穴位 */
+.acu-summary{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+.acu-summary strong{color:#1a3a6e;font-size:.95rem}
+.acu-group{background:#fff;border:1px solid var(--acu-bd);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.acu-group:last-child{margin-bottom:0}
+.acu-header{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--acu-bg);border-bottom:1px solid var(--acu-bd)}
+.acu-seg{font-size:.75rem;font-weight:700;color:#1a3a6e;background:#c4d8f0;padding:1px 7px;border-radius:10px}
+.acu-region{font-size:.8rem;font-weight:600;color:#1a3a6e;flex:1}
+.acu-cnt{font-size:.75rem;color:var(--muted)}
+.acu-pts{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px}
+.acu-tag{
+  display:inline-block;padding:4px 11px;border-radius:14px;
+  background:var(--acu-bg);border:1px solid var(--acu-bd);
+  color:var(--acu-txt);font-size:.92rem;font-weight:600;
+}
+
+/* 步驟 */
+.steps{padding-left:1.3em}
+.steps li{margin-bottom:8px;font-size:.93rem;line-height:1.7}
+
+/* 段落文字 */
+.sec-body p{font-size:.93rem;line-height:1.72;margin-bottom:6px}
+.sec-body p:last-child{margin-bottom:0}
+.empty{color:var(--empty);font-style:italic;font-size:.86rem}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- 選題頁 -->
+<div id="pickScreen" role="main" aria-label="考試模式：選題">
+  <div class="pick-hero">
+    <h1>按摩乙級術科</h1>
+    <p>考試複習工具 · 選擇抽到的題號</p>
+  </div>
+  <div class="pick-body">
+    <div class="pick-row">
+      <label for="sel1">第一題題號</label>
+      <select id="sel1" class="pick-sel" aria-label="選擇第一題">
+        <option value="">── 請選擇 ──</option>
+        <option value="01">題01 關節損傷－頸椎退行性變化之按摩</option><option value="02">題02 關節損傷－腰肌急性扭傷之按摩</option><option value="03">題03 關節損傷－慢性腰部損傷之按摩</option><option value="04">題04 關節損傷－腰椎滑脫之按摩</option><option value="05">題05 關節損傷－第三腰椎橫突過長之按摩</option><option value="06">題06 關節損傷－腰骶部病變之按摩</option><option value="07">題07 關節損傷－骶髂關節損傷之按摩</option><option value="08">題08 關節損傷－腕溝管損傷之按摩</option><option value="09">題09 關節損傷－膝關節髕下脂肪墊損傷之按摩</option><option value="10">題10 關節損傷－踝關節急性扭傷之按摩</option><option value="11">題11 關節損傷－踝溝管損傷之按摩</option><option value="12">題12 關節損傷－足跟退行性變化之按摩</option><option value="13">題13 關節炎－腰退行性脊椎炎之按摩</option><option value="14">題14 關節炎－強直性脊椎炎之按摩</option><option value="15">題15 關節炎－髖關節股關節炎之按摩</option><option value="16">題16 關節炎－肩關節周圍炎（五十肩）之按摩</option><option value="17">題17 關節炎－肘關節肱骨外上髁炎（網球肘）之按摩</option><option value="18">題18 關節炎－肘關節肱骨內上髁炎（學生肘）之按摩</option><option value="19">題19 關節炎－腕部橈側伸腕肌腱周圍炎之按摩</option><option value="20">題20 關節炎－膝關節滑膜炎之按摩</option><option value="21">題21 關節炎－踝部跟腱炎之按摩</option><option value="22">題22 關節炎－類風濕性關節炎（上肢）之按摩</option><option value="23">題23 關節炎－類風濕性關節炎（下肢）之按摩</option><option value="24">題24 麻痺－臂神經叢麻痺之按摩</option><option value="25">題25 麻痺－正中神經麻痺之按摩</option><option value="26">題26 麻痺－尺神經麻痺之按摩</option><option value="27">題27 麻痺－橈神經麻痺之按摩</option><option value="28">題28 麻痺－腓總神經麻痺之按摩</option><option value="29">題29 麻痺－顏面神經麻痺之按摩</option><option value="30">題30 麻痺－半身不遂（上肢）之按摩</option><option value="31">題31 麻痺－半身不遂（下肢）之按摩</option><option value="32">題32 神經痛－頭痛之按摩</option><option value="33">題33 神經痛－三叉神經痛之按摩</option><option value="34">題34 神經痛－肋間神經痛之按摩</option><option value="35">題35 神經痛－坐骨神經痛（腰椎間盤突出）之按摩</option><option value="36">題36 神經痛（梨狀肌病變）之按摩</option><option value="37">題37 急性頸部軟組織痙攣（落枕）之按摩</option><option value="38">題38 肩頸凝之按摩</option><option value="39">題39 便秘之按摩</option><option value="40">題40 失眠之按摩</option>
+      </select>
+    </div>
+    <div class="pick-row">
+      <label for="sel2">第二題題號</label>
+      <select id="sel2" class="pick-sel" aria-label="選擇第二題">
+        <option value="">── 請選擇 ──</option>
+        <option value="01">題01 關節損傷－頸椎退行性變化之按摩</option><option value="02">題02 關節損傷－腰肌急性扭傷之按摩</option><option value="03">題03 關節損傷－慢性腰部損傷之按摩</option><option value="04">題04 關節損傷－腰椎滑脫之按摩</option><option value="05">題05 關節損傷－第三腰椎橫突過長之按摩</option><option value="06">題06 關節損傷－腰骶部病變之按摩</option><option value="07">題07 關節損傷－骶髂關節損傷之按摩</option><option value="08">題08 關節損傷－腕溝管損傷之按摩</option><option value="09">題09 關節損傷－膝關節髕下脂肪墊損傷之按摩</option><option value="10">題10 關節損傷－踝關節急性扭傷之按摩</option><option value="11">題11 關節損傷－踝溝管損傷之按摩</option><option value="12">題12 關節損傷－足跟退行性變化之按摩</option><option value="13">題13 關節炎－腰退行性脊椎炎之按摩</option><option value="14">題14 關節炎－強直性脊椎炎之按摩</option><option value="15">題15 關節炎－髖關節股關節炎之按摩</option><option value="16">題16 關節炎－肩關節周圍炎（五十肩）之按摩</option><option value="17">題17 關節炎－肘關節肱骨外上髁炎（網球肘）之按摩</option><option value="18">題18 關節炎－肘關節肱骨內上髁炎（學生肘）之按摩</option><option value="19">題19 關節炎－腕部橈側伸腕肌腱周圍炎之按摩</option><option value="20">題20 關節炎－膝關節滑膜炎之按摩</option><option value="21">題21 關節炎－踝部跟腱炎之按摩</option><option value="22">題22 關節炎－類風濕性關節炎（上肢）之按摩</option><option value="23">題23 關節炎－類風濕性關節炎（下肢）之按摩</option><option value="24">題24 麻痺－臂神經叢麻痺之按摩</option><option value="25">題25 麻痺－正中神經麻痺之按摩</option><option value="26">題26 麻痺－尺神經麻痺之按摩</option><option value="27">題27 麻痺－橈神經麻痺之按摩</option><option value="28">題28 麻痺－腓總神經麻痺之按摩</option><option value="29">題29 麻痺－顏面神經麻痺之按摩</option><option value="30">題30 麻痺－半身不遂（上肢）之按摩</option><option value="31">題31 麻痺－半身不遂（下肢）之按摩</option><option value="32">題32 神經痛－頭痛之按摩</option><option value="33">題33 神經痛－三叉神經痛之按摩</option><option value="34">題34 神經痛－肋間神經痛之按摩</option><option value="35">題35 神經痛－坐骨神經痛（腰椎間盤突出）之按摩</option><option value="36">題36 神經痛（梨狀肌病變）之按摩</option><option value="37">題37 急性頸部軟組織痙攣（落枕）之按摩</option><option value="38">題38 肩頸凝之按摩</option><option value="39">題39 便秘之按摩</option><option value="40">題40 失眠之按摩</option>
+      </select>
+    </div>
+    <button class="pick-go" onclick="startExam()" aria-label="開始複習選定題目">
+      開始複習
+    </button>
+    <p class="pick-hint">選一題或兩題皆可，選好後按開始複習</p>
+  </div>
+</div>
+
+<!-- 考試頁 -->
+<div id="examScreen" role="main" aria-label="考試複習">
+  <nav class="exam-nav" aria-label="題目切換">
+    <button class="nav-btn active" id="navBtn1" onclick="switchTopic(0)" aria-pressed="true">
+      <span class="nb-num" id="navNum1">題──</span>
+      <span class="nb-name" id="navName1">──</span>
+    </button>
+    <button class="nav-btn" id="navBtn2" onclick="switchTopic(1)" aria-pressed="false">
+      <span class="nb-num" id="navNum2">題──</span>
+      <span class="nb-name" id="navName2">──</span>
+    </button>
+    <button class="nav-exit" onclick="exitExam()" aria-label="返回選題">✕</button>
+  </nav>
+  <div class="exam-content" id="examContent">
+    <section class="topic" id="t01" data-num="01">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題01</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－頸椎退行性變化之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>16</strong> 穴 · 3 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">1穴</span></div><div class="acu-pts"><span class="acu-tag">缺盆</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【頸部】</span><span class="acu-cnt">3穴</span></div><div class="acu-pts"><span class="acu-tag">風池</span><span class="acu-tag">天柱</span><span class="acu-tag">完骨</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第3段</span><span class="acu-region">【肩部】</span><span class="acu-cnt">12穴</span></div><div class="acu-pts"><span class="acu-tag">肩井</span><span class="acu-tag">天髎</span><span class="acu-tag">秉風</span><span class="acu-tag">肩外俞</span><span class="acu-tag">肩中俞</span><span class="acu-tag">肩髃</span><span class="acu-tag">臂臑</span><span class="acu-tag">曲池</span><span class="acu-tag">手三里</span><span class="acu-tag">外關</span><span class="acu-tag">合谷</span><span class="acu-tag">後谿</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥或俯臥位，先以拇指揉捏頸椎兩側斜方肌，從枕骨下緣至肩峰處。</li><li>(二) 以四指揉捏側頸部胸鎖乳突肌及頸側肌群，從風池至缺盆穴。</li><li>(三) 揉捏、按壓風池、天柱、完骨等穴。</li><li>(四) 揉捏、按壓肩部附近的肩井、天髎、秉風、肩外俞、肩中俞等穴。</li><li>(五) 兩掌對搓肩關節，按壓肩髃、臂臑、曲池、手三里、外關、合谷和後谿等穴。</li><li>(六) 施予肩、肘、腕、指等關節的運動法。</li><li>(七) 被術者採坐姿或仰臥位，施頸部運動及牽引法。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>頸椎病是頸椎間盤以慢性退行性為主的病變，多見於中老年人。由於頸部失穩，引起頸椎骨、關節與頸部軟組織一系列的病理變化，而刺激並壓迫了脊髓神經根、脊髓、交感神經、椎動靜脈和周圍軟組織等。出現有肩、頸、上臂痛，頭暈、心悸，甚至大小便失禁等相應的臨床表現。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(四) 椎動脈型頸椎病：臨床上有頭暈的現象（原因是椎動脈的血液供應不足所致）。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>頸椎病的類型及特徵是：</p><p>(一) 頸型頸椎病：又稱功能性頸椎病，臨床上有肌肉酸痛等徵象。</p><p>即剛開始是頭暈，兩三週之後會出現心悸、噁心等症狀，臨床上有心悸、噁心、嘔吐等現象。</p><p>(五)  脊髓型頸椎病：臨床上有腳踩棉花樣的暈眩感，脊髓型頸椎病有致殘的危險。</p><p>(六) 混合型頸椎病：含兩種以上類型者稱之為混合型頸椎病。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(二) 神經根型頸椎病：因椎間盤突出、骨刺。</p><p>頸椎結構排列出問題而引起臂叢神經受壓迫，臨床上有上肢麻痺等現象。</p><p>(三) 交感型頸椎病：大多是椎動脈型頸椎病的繼發性症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t02" data-num="02">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題02</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－腰肌急性扭傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>11</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿、膝腿】</span><span class="acu-cnt">1穴</span></div><div class="acu-pts"><span class="acu-tag">委中</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【腰部、臀腿、膝腿】</span><span class="acu-cnt">10穴</span></div><div class="acu-pts"><span class="acu-tag">腎俞</span><span class="acu-tag">志室</span><span class="acu-tag">大腸俞</span><span class="acu-tag">胞肓</span><span class="acu-tag">秩邊</span><span class="acu-tag">環跳</span><span class="acu-tag">承山</span><span class="acu-tag">足臨泣</span><span class="acu-tag">崑崙</span><span class="acu-tag">陽陵泉</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，先以誘導按摩揉捏、按壓臀部至下肢後側肌群，並加強委中穴。</li><li>(二) 用輕柔的揉捏、按壓病變的豎脊肌遠端，再逐漸向主痛部位移進，重複數次。</li><li>(三) 揉捏、按壓腰臀部及下肢的壓痛點。</li><li>(四) 揉捏、按壓腎俞、志室、大腸俞、胞肓、秩邊、環跳、委中、承山、足臨泣、崑崙、陽陵泉等穴。</li><li>(五) 以姆指或掌根揉捏兩側豎脊肌及下肢，再沿豎脊肌的纖維走向，用掌根強擦， 以熱透為宜。</li><li>(六) 被術者改側臥位，患側在上，施旋腰運動，再採仰臥位施雙下肢的屈膝屈髖運動（韌帶型不適用）。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>急性腰扭傷，俗稱「閃腰」，是指腰部一切軟組織的急性損傷（多見於青壯年、運動員、體力勞動者）。病症的輕重程度不一，如果辨症正確，而及時復健，可有立竿見影的效果；如果判斷錯誤，或處理不當，可能造成損傷加重，而遺留了「損傷性腰部疼痛症」。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要病因可分為外因和內因：</p><p>外因：活動時沒有做好熱身，姿勢不正確或者彎腰又扭身，容易導致急性腰扭傷。</p><p>內因：體弱者或腰部之生理結構異常者。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(五) 特徵：主要症狀為腰部疼痛。</p><p>可從輕微的不適感至劇烈的疼痛，嚴重時患者無法動彈。</p><p>(六) 急性腰扭傷的三種類型：</p><p>肌肉型：兩側豎脊肌損傷時，會在疼痛的一邊因保護性痙攣而出現肌肉緊繃變硬。</p><p>受傷的體位若在右側損傷，患者會出現向右再向後的體徵。</p><p>韌帶型：</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腰部之軟組織包括：</p><p>(一) 肌肉：</p><p>腰方肌：與左右側屈有關。</p><p>橫突間肌：與左右旋轉有關。</p><p>腹直肌和髂腰肌：與向前屈曲有關。</p><p>豎脊肌：與向後伸展有關。</p><p>(二) 胸腰筋膜：淺層包圍在豎脊肌的表面，深層則隔於豎脊肌與腰方肌之間。</p><p>(三) 韌帶：</p><p>棘上韌帶：連接於胸腰椎的棘突間，有限制脊柱過度前彎的作用。</p><p>棘間韌帶：由上一椎的棘突肌底，連接至下一椎的棘突尖端。</p><p>(四) 後關節囊：包覆脊椎後方的小面關節，可作為關節的緩衝並提供潤滑效益。</p><p>棘上韌帶：輕壓督脈各穴時，會有痛感。</p><p>(2)棘間韌帶：重壓督脈各穴時，會有痛感。</p><p>(3)受傷體位：體位向後，無法順利往前彎腰。</p><p>滑膜牽頓（後關節囊損傷）：受傷體位向前，無法順利做挺腰動作。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症之治療原則，應以緩解疼痛，減緩腰部肌肉緊張與痙攣為主。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>若患部有劇烈疼痛時，應切忌在患部施各種壓揉等手法，應從周圍軟組織開始施術。</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t03" data-num="03">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題03</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－慢性腰部損傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>9</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、臀腿】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">腎俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">八髎</span><span class="acu-tag">秩邊</span><span class="acu-tag">環跳</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">承扶</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">崑崙</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，先以掌根輕擦、揉捏、按壓兩側豎脊肌，由輕而重，以緩解腰部肌肉的緊張度。</li><li>(二) 用重刺激的揉捏、按壓腰部兩側膀胱經，重複數次。</li><li>(三) 仍以重刺激的揉捏、按壓腎俞、大腸俞、八髎、秩邊和環跳等穴。</li><li>(四) 用掌側強擦腰、背部兩側膀胱經，再橫擦腰骶部，以熱透為宜。</li><li>(五) 拍打腰、背部豎脊肌，使表皮達到微熱為宜。</li><li>(六) 按壓雙下肢後側的承扶、殷門、委中、承山及崑崙等穴，再以掌根揉大腿與小腿後側肌群。</li><li>(七) 被術者採仰臥位，施屈膝屈髖運動，做腹部按摩以降低腹部內壓，並放鬆髂腰肌。</li><li>(八) 施腰部屈曲、伸展及側旋等運動。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>慢性腰部損傷，主要是指腰骶部肌肉和筋膜等軟組織的慢性勞損。在慢性的腰痛中，本病佔有相當高的比例。主要病因為：兩腰椎間之軟組織，如椎間軟骨或髓核的退行性變化，使纖維環及周圍的韌帶鬆弛而失穩，為了維持腰椎的穩定性，周圍的肌肉就會變得緊張僵直。椎間軟組織的退行性變化，可能使神經根出來的椎孔變小，而壓迫到神經根。腰椎椎體之骨刺增生，若接近神經根，則可能壓迫到神經根。腰部周圍之肌肉因過度使用而勞損，如搬運工等體力勞動者。本症患者以中、高年齡為多。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要症狀為疼痛：在初期患者僅覺得腰部乏力、僵直、活動不靈而已，但是當外傷或勞累，持不良姿勢過久或著涼等，則腰部突顯脹痛、頓痛或束緊腰帶的感覺。</p><p>早晨起床或久坐起立時，也常有若干腰痛，但活動後，症狀會明顯減緩或消失。</p><p>嚴重之患者，脊椎兩旁之肌肉僵硬，且可找到壓痛點，腰椎前凸的生理弧度減少，而變得平坦，且運動會有若干障礙。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t04" data-num="04">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題04</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－腰椎滑脫之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>10</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、臀腿、腹部】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">腎俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">關元俞</span><span class="acu-tag">小腸俞</span><span class="acu-tag">八髎</span><span class="acu-tag">秩邊</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">承扶</span><span class="acu-tag">委中</span><span class="acu-tag">承筋</span><span class="acu-tag">崑崙</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，掌根輕擦、揉捏腰骶部兩側的豎脊肌，手法不宜過重。</li><li>(二) 拇指揉捏、按壓腎俞、大腸俞、關元俞、小腸俞、八髎、秩邊等穴。</li><li>(三) 拇指、掌根揉捏、按壓臀部、大腿及小腿後側肌群。</li><li>(四) 拇指揉捏、按壓承扶、委中、承筋、承山及崑崙等穴。</li><li>(五) 抓舉揉捏大腿及小腿後側肌群。</li><li>(六) 強擦腰骶部，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>椎弓上下關節突之間，有一部分稱為峽部。由於某些原因，造成了峽部的缺損和斷裂，又稱「峽部不相連」。此病變可發生在單側或雙側。如果僅在單側，則易造成椎體的扭轉；如不幸雙側均波及，則整個脊椎必定分成兩部分：以椎體、椎弓根、橫突和上關節突為前部：以椎板、下關節突和棘突做後部。如果這時前後兩部分，不慎分離，或椎體中一部分向前移位，就叫做脊椎滑脫。病變以第四和第五腰椎最為常見。主要病因可分為內外兩種：</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>內因：椎弓峽部本身發育不全，故當受外力作用時，容易斷裂。</p><p>外因：椎弓峽部原已發育不盡完善，若再受外力撞擊，或腰部經常做扭轉的動作， 可能使峽部分離。</p><p>本症多發生在三十至四十歲之男性。</p><p>在揹負重物或運動時，出現腰痛，有時也會出現單側或雙側性之坐骨神經痛。</p><p>在滑脫部位的棘突部，有凹陷的明顯異狀。</p><p>觸摸病變的棘突部，似有階梯形狀的感覺，可能出現局部的肌肉痙攣和扭轉運動受限。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症施術目的乃在鬆弛腰臀部及下肢肌群因腰部疼痛所引起的緊張，施術時， 應切記不可使用暴力，或做各式腰椎之運動及牽引，避免已有裂痕之椎弓峽部分離而滑脫。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t05" data-num="05">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題05</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－第三腰椎橫突過長之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>7</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、臀腿、膝腿】</span><span class="acu-cnt">7穴</span></div><div class="acu-pts"><span class="acu-tag">腎俞</span><span class="acu-tag">氣海俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">秩邊</span><span class="acu-tag">環跳</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，掌根輕擦、揉捏、按壓患側的軟組織遠端。</li><li>(二) 拇指揉捏、按壓壓痛點，力量由輕而重；再以壓痛點為中心向四周做推擦。</li><li>(三) 揉捏、按壓沿腰椎兩側膀胱經而下，經臀部和大腿後側肌群，重複數次，過程中以第三腰椎橫突周圍軟組織為主。</li><li>(四) 揉捏、按壓腎俞、氣海俞、大腸俞、秩邊、環跳、委中和承山等穴。</li><li>(五) 拇指及掌根揉捏、按壓大腿及小腿後側肌群。</li><li>(六)  以旋腰動作伸展第三腰椎橫凸周圍的軟組織。</li><li>(七) 最後強擦腰、骶部，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>第三腰椎乃是腰部眾多肌肉、韌帶及筋膜之附著點，而腰椎在做各種屈、伸及旋轉運動時，都以第三腰椎為中心點，所以第三腰椎橫突若過長，會導致在做各種腰椎運動時，附著在周圍的軟組織可能與其相互摩擦而造成傷害。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>長期姿勢不良，造成腰部周圍肌肉、韌帶及筋膜等軟組織過度疲乏而引起腰痛。</p><p>脊椎後關節左右不對稱，使腰部活動不協調而引起腰痛。</p><p>腰部長期受寒， 以致肌肉痙攣，或供給軟組織之血管收縮，造成供血不足。</p><p>本症以青壯年者較易罹患，腰部常有酸脹疲乏無力之感覺，持重物或固定姿勢不能長久。</p><p>久坐、久立後必須更換姿勢或做伸腰活動，才會感到輕鬆。</p><p>疼痛可向臀部或大腿內側放射。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>陰雨天時可能使腰部疼痛加劇。</p><p>腰椎平坦，肌張力增高，在第三腰椎橫突處有壓痛點。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要病因為：急性腰部軟組織受傷，形成組織沾黏或硬塊壓迫到脊神經根，而引起疼痛。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症之施術目的：以解除腰部肌肉痙攣，並鬆解局部粘黏。</p><p>促進腰腿部功能的恢復等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t06" data-num="06">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題06</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－腰骶部病變之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>6</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、臀腿、膝腿】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">關元俞</span><span class="acu-tag">小腸俞</span><span class="acu-tag">秩邊</span><span class="acu-tag">環跳</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，揉捏、按壓下背部至腰骶部兩側豎脊肌，力量不可太重， 也不得施術腰椎按壓及腰部的後伸運動等手法。</li><li>(二) 對出現有下肢放射痛的患者，可沿膀胱經自腰部、臀部、大腿、膝膕窩到小腿後側肌群，重複揉捏、按壓數次。</li><li>(三) 揉捏、按壓關元俞、小腸俞、秩邊、環跳、委中、承山等穴。</li><li>(四) 強擦腰、骶部，以熱透為宜。</li><li>(五) 被術者採仰臥位，施雙下肢屈髖屈膝運動。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本病是指腰骶部椎骨先天性發育異常所引起的病症，常見的有腰骶椎隱裂和移行椎。腰骶椎隱裂主要是因胚胎時期骨發育不良所致，表現為椎弓板變性及棘突短小、游離、偏歪或缺損，從而使豎脊肌、韌帶及筋膜失去固有的附著點，易發生腰肌勞損而出現症狀。</p><p>移行椎在腰骶段主要是指腰椎骶化或骶椎腰化。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>由於腰椎活動範圍受限，且固有的平衡被打破，從而加速了椎間盤的退變，如果影響到周圍組織或神經根，則出現症狀。</p><p>慢性腰痛，酸軟無力，遇勞則甚，休息後減輕。</p><p>典型隱性裂可出現尿失禁或尿滯留，下肢不全癱瘓及馬蹄內翻足等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t07" data-num="07">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題07</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－骶髂關節損傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>10</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、臀腿】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">大腸俞</span><span class="acu-tag">小腸俞</span><span class="acu-tag">八髎</span><span class="acu-tag">秩邊</span><span class="acu-tag">胞肓</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">承扶</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">承筋</span><span class="acu-tag">崑崙</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，掌根揉捏腰骶部兩側豎脊肌，重複數次。</li><li>(二) 掌根揉捏髂骨棘沿骶骨外緣至尾骨部，重複數次。</li><li>(三) 雙拇指揉捏、按壓髂骨棘下方之臀大肌，重複數次。</li><li>(四) 雙拇指揉捏、按壓大腸俞、小腸俞、八髎、秩邊、胞肓等穴。</li><li>(五) 掌根揉捏、按壓大腿及小腿後側肌群。</li><li>(六) 拇指揉捏、按壓承扶、殷門、委中、承筋、承山及崑崙等穴。</li><li>(七) 強擦腰骶部，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>骶髂關節是由骶骨和髂骨的耳狀關節面所形成之微動關節，是軀幹與骨盆連接之重要關節，周圍有強韌的韌帶保護，但在婦女產後關節周圍的韌帶鬆弛，或受強大的外力作用，都有可能使骶髂關節脫位，而表現出種種臨床症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要病因：受到外力打擊、擠壓、衝撞等的直接外傷。</p><p>從高處墜落或跌倒時單足或單臀著地，可能因瞬間強力衝擊而使骶髂關節脫位。</p><p>婦女分娩或久臥病床者， 可能使骶髂關節周圍韌帶鬆弛，若再受外力作用，就容易脫位。</p><p>股四頭肌或膕肌突然而強烈的收縮，亦可能造成骶髂關節損傷。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要症狀：一側下腰部疼痛，特別是在走路或行走時加遽，腰部運動明顯受限。</p><p>軀幹略向患側前傾，患側下肢不敢著地。</p><p>骶髂關節處有壓痛點及扣擊痛。</p><p>以雙手按髂骨棘，做骨盆的分離及擠壓測試時均有痛感。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>施術目的主要為緩解腰部肌肉痙攣及減緩疼痛。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t08" data-num="08">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題08</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－腕溝管損傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>2</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">2穴</span></div><div class="acu-pts"><span class="acu-tag">內關</span><span class="acu-tag">大陵</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採坐姿或仰臥位，前臂和腕部墊枕，掌心朝上。</li><li>(二) 輕緩地揉捏前臂屈指肌腱，重複數次，以放鬆肌肉。</li><li>(三) 揉捏腕溝管部位，手法宜緩慢柔和，並配合腕部各方向的搖動。</li><li>(四) 按壓內關和大陵等穴。</li><li>(五) 輕柔地拇指揉捏、按壓，沿著通過腕溝管的肌腱，作垂直方向的揉捏，重複數次。</li><li>(六) 強擦掌側到前臂，以熱透為宜，然後雙掌對搓腕關節。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腕溝管損傷，是指正中神經在腕溝管內，受到壓迫所引起的手指麻木等神經症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>常因：</p><p>(一) 腕骨增生、骨折、脫位。</p><p>(二) 腕橫韌帶增厚。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(三) 損傷或疾病引起腕管內容物（肌腱）的腫脹，而引起腕管容積減小。</p><p>其中第三項為多見。</p><p>按摩治療也以此種原因為最適宜。</p><p>主要症狀為：手指麻木、刺痛，病程後期則有大魚際肌萎縮、麻痺、肌力減弱和手指的感覺消失。</p><p>施術前可先由手掌，掌心往手肘，利用拇指或手掌，往上做輕觸檢測，其目的在檢查病灶部位與發炎狀況。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t09" data-num="09">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題09</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－膝關節髕下脂肪墊損傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>6</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【膝腿】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">梁丘</span><span class="acu-tag">血海</span><span class="acu-tag">膝眼</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">足三里</span><span class="acu-tag">委中</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，在膝膕窩處墊一薄枕。</li><li>(二) 在膝關節處，做上、下、左、右測試，以瞭解髕下脂肪墊損傷情形。</li><li>(三) 揉捏、按壓膝關節周圍和髕下脂肪墊部位，重複數次，以達酸脹為宜。</li><li>(四) 掌根揉捏膝關節周圍，重複數次。</li><li>(五) 拇指彈撥髕骨下緣的髕韌帶兩側，重複數次，手法可稍重。</li><li>(六) 揉捏、按壓梁丘、血海、膝眼、陽陵泉、足三里和委中等穴。</li><li>(七) 施術者兩手握住踝關節上部，在作牽引時，配合將小腿內、外旋，一面再將小腿向前推，使膝關節盡量屈曲後，隨即緩緩伸直，如此重複數次。</li><li>(八) 伸直下肢，強擦髕骨下部，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>髕下脂肪墊勞損，是指膝關節損傷和退行性改變，引起脂肪墊纖維與髕韌帶粘黏，而發生膝關節隱痛和屈伸不利的病症。髕下脂肪墊是填充於臏骨、股骨髁、脛骨髁之間的關節間隙。它具有填充和潤滑作用。常因膝部外傷、過度活動而導致髕下脂肪墊發炎疼痛，也可能是脂肪墊肥厚而嵌頓在關節間隙，而發生疼痛與活動障礙。亦可因炎症而使脂肪墊與臏韌帶發生粘黏。主要症狀是膝部疼痛與伸膝時產生疼痛。治療原則是以消炎止痛、鬆解粘黏、解除嵌頓為目的。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t10" data-num="10">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題10</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－踝關節急性扭傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>7</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【足踝、頭面】</span><span class="acu-cnt">3穴</span></div><div class="acu-pts"><span class="acu-tag">解谿</span><span class="acu-tag">崑崙</span><span class="acu-tag">丘墟</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【膝腿、足踝】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">足三里</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">陽輔</span><span class="acu-tag">懸鐘</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，由足背與足外側往膝蓋，利用拇指或手掌往上做輕觸檢測， 以瞭解發炎部位與發炎狀況。</li><li>(二) 揉捏、按壓扭傷部位的上下關節附近，由小腿外側至外踝，施以誘導按摩手法，重複數次。接著配合輕巧靈活地揉捏解谿、崑崙、丘墟等穴。</li><li>(三) 急性期時，可用輕柔而緩和地揉捏法施在損傷的患部周圍，如果疼痛稍減， 即可施輕度的踝關節搖法。</li><li>(四) 揉捏、按壓足三里、陽陵泉、陽輔、懸鐘等穴。</li><li>(五) 輕擦踝部至小腿部，以熱透為宜。</li><li>(六) 一手托足跟，另一手握住腳背做牽引法，接著再做踝關節的搖法。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>踝關節扭傷是全身關節扭傷的首位，佔百分之八十左右。常因行於不平路面， 或下樓、下坡，踝關節蹠屈位時，突然向內或向外翻，而發生韌帶的損傷、撕裂、或斷裂，甚至骨折。臨床以足內翻為多見。主要症狀是：踝部腫脹、疼痛、足部不能著地。傷處有明顯壓痛、瘀血。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本復健方法僅適用於單純的韌帶扭傷或韌帶部分纖維撕裂，關節穩定性正常者，用按摩手法有相當高的復健效果。</p><p>其目的主要是在促進血液循環，以去瘀消腫止痛為原則。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t11" data-num="11">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題11</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－踝溝管損傷之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>6</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【足踝】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">復溜</span><span class="acu-tag">太谿</span><span class="acu-tag">照海</span><span class="acu-tag">中封</span><span class="acu-tag">商丘</span><span class="acu-tag">湧泉</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，患肢外旋，足內翻。揉捏、按壓脛骨後側，經足跟到足弓部，重點在復溜、太谿、照海、中封、商丘、湧泉等穴，手法宜輕柔而緩和。</li><li>(二) 輕巧而快速地拇指揉捏、按壓內踝後方，沿肌腱行走路線到足弓部；揉捏時， 與肌腱行走成垂直方向，接著施術踝關節內翻、外翻和背屈、蹠屈等運動。</li><li>(三) 輕擦足弓部及沿踝溝管的肌腱走向，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>踝溝管綜合症就是踝溝管相對狹窄，使脛神經受壓，而出現足跟內側和足底麻木等症狀的一種病症。踝溝管是位於距骨、跟骨與分裂韌帶之間的骨纖維管。常因足部活動增加或踝關節反覆扭傷，導致通過管內的肌腱發炎、腫脹，而壓迫到脛神經的症狀。亦可因分裂韌帶肥厚、跟骨骨刺、骨折而發生本病症。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要症狀有：內踝後部不適、跟骨內側和足底麻木等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>治療以舒筋通絡，活血化瘀為主。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t12" data-num="12">
+  <div class="topic-head" style="border-top:4px solid #1e5799">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1e5799">題12</span>
+      <span class="topic-cat" style="color:#1e5799">關節損傷</span>
+    </div>
+    <h2 class="topic-title">關節損傷－足跟退行性變化之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>8</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【足踝】</span><span class="acu-cnt">1穴</span></div><div class="acu-pts"><span class="acu-tag">然谷</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【足踝】</span><span class="acu-cnt">7穴</span></div><div class="acu-pts"><span class="acu-tag">三陰交</span><span class="acu-tag">照海</span><span class="acu-tag">中封</span><span class="acu-tag">太衝</span><span class="acu-tag">崑崙</span><span class="acu-tag">申脈</span><span class="acu-tag">金門</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，患足屈膝，足底朝上。揉捏、按壓足跟，重點在足跟的壓痛點周圍。接著強擦足根部，以熱透為宜。</li><li>(二) 拇指揉捏、按壓足跟部及蹠筋膜，重複數次，重點在跟骨附著點周圍和然谷穴。然後順著蹠筋膜走向用擦法，以熱透為宜。</li><li>(三) 輕擦、揉捏、按壓、扣打小腿腓腸肌至跟骨基底部，使局部產生熱脹與輕鬆感。重點取穴在：三陰交、照海、中封、太衝、崑崙、申脈和金門等穴。</li><li>(四) 足底朝上，一手握住踝部，掌擦足跟，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>足跟痛很常見，站立或行走時，在足跟底部發生疼痛。常見的原因有：足跟皮下脂肪墊萎縮、跟下滑囊炎、跟骨骨刺、蹠筋膜勞損等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>主要症狀是：站立或行走時，足跟疼痛。</p><p>如果是滑囊炎者，疼痛劇烈。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>接受按摩復健，主要在刺激骨刺部位，使軟組織對疼痛逐漸產生了適應性，並鬆解黏連。</p><p>軟組織炎症，經按摩後而消散，但骨刺依然存在，不過已經沒有痛感了。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t13" data-num="13">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題13</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－腰退行性脊椎炎之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>10</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、腹部】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">命門</span><span class="acu-tag">腰陽關</span><span class="acu-tag">氣海俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">關元俞</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【腰部、膝腿、足踝】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">委中</span><span class="acu-tag">承山</span><span class="acu-tag">崑崙</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">足三里</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，首先作擺腰揉背手法，鬆弛腰部與背部肌群。掌根揉捏腰部病變部位和其兩側豎脊肌，重複數次。</li><li>(二) 拇指揉捏、按壓命門、腰陽關、氣海俞、大腸俞、關元俞和局部的壓痛點， 重複數次。</li><li>(三) 掌根揉捏、按壓腰部和臀部肌群，重複數次。</li><li>(四) 掌擦腰部兩側肌群，以熱透為宜。</li><li>(五) 如有下肢牽涉痛者： 揉捏、按壓大腿後側經膕窩至小腿，重複數次，並配合做腰部和腰骶部的後伸運動。 被術者採仰臥位，揉捏、按壓大腿前側、外側向下至小腿前外側肌群，重複數次。 揉捏、按壓委中、承山、崑崙、陽陵泉、足三里等穴。</li><li>(六) 患者採側臥位，施側臥斜扳法，以活動腰椎，左右各一次。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本病是中年後發生的一種慢性、退行性疾病。常累及負重和活動度較大的關節。臨床上以腰椎第四和第五椎體增生最早。本病是因脊椎退變而出現椎體邊緣、小關節的骨刺、增生、唇樣改變。而產生腰部的酸脹與疼痛。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>若因椎體後緣骨刺及後關節突增生而嚴重地壓迫到神經根者，則應考慮以手術切除。</p><p>按摩復健，僅能增加腰部血液和淋巴液的循環，增強腰部肌肉的張力，進而控制了腰脊柱的穩定度，而達到腰痛症狀的緩解而已。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腰椎退行性脊椎炎，屬於生理的退行性疾病，所以復健方法，目前只是減輕患者症狀，緩解疼痛，增加腰椎的活動度和豎脊肌的張力等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t14" data-num="14">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題14</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－強直性脊椎炎之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>11</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">11穴</span></div><div class="acu-pts"><span class="acu-tag">髀關</span><span class="acu-tag">伏兔</span><span class="acu-tag">梁丘</span><span class="acu-tag">風市</span><span class="acu-tag">血海</span><span class="acu-tag">膝眼</span><span class="acu-tag">鶴頂</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">足三里</span><span class="acu-tag">崑崙</span><span class="acu-tag">解谿</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，上胸部墊枕，用於弓形背者。</li><li>(二) 揉捏、按壓背部兩側膀胱經，由大柱向下至秩邊；並施在督脈，由大椎向下至骶骨，重複數次。</li><li>(三) 揉捏兩側骶髂關節，重複數次。</li><li>(四) 揉捏、按壓臀部經大腿後側、膕窩、小腿後側，重複數次。</li><li>(五) 在腰、腰骶、骶髂和髖部，做背伸的被動運動。</li><li>(六) 掌根強擦背、腰、臀的督脈和膀胱經路線與骶髂關節部，以熱透為宜。</li><li>(七) 在脊椎兩側，做挺胸壓脊法。</li><li>(八) 被術者採仰臥位，揉捏髖關節前部和大腿內側肌群，重複數次，並配合髖關節外展、外旋的被動運動。</li><li>(九) 如有累及膝關節者： 揉捏大腿前側，經膝關節、小腿外側至足背，重複數次。重點在膝關節。 配合膝關節的按壓與被動運動。 拇指揉捏、按壓髀關、伏兔、梁丘、風市、血海、膝眼、鶴頂、陽陵泉、足三里、崑崙、解谿等穴。</li><li>(十) 如病情累及頸椎者： 被術者採坐姿，揉捏、按壓項韌帶、頸椎兩側斜方肌、兩側頸部、肩上部、肩胛間部。 施頸部被動運動。</li><li>(十一) 被術者兩手十指交叉，置於後枕部，施擴胸運動。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本病屬於一種侵蝕脊柱各關節的炎症，包括骶髂關節、肋椎關節和關節周圍組織。發病多自骶髂關節起始，漸漸向上蔓延。發病後期，脊柱各關節呈現骨性溶合、韌帶鈣化、強直畸形。對本症按摩，僅能對其早期患者緩解疼痛，幫助脊椎和兩側髖關節恢復運動功能，遏止駝背的發生和惡化。然則一旦成為了骨性強直，則任何復健方法都無濟於事。即使是早期的強直性脊椎患者，在施按摩復健時，也應因人而施。以柔克剛，切忌操之過急，更不宜求效心切，手法過於粗暴。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t15" data-num="15">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題15</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－髖關節股關節炎之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>4</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">環跳</span><span class="acu-tag">居髎</span><span class="acu-tag">承扶</span><span class="acu-tag">髀關</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，患側在上。以柔和的揉捏、按壓髖關節及其周圍至下肢， 施以誘導按摩，重複數次。</li><li>(二) 揉捏、按壓環跳、居髎等穴，配合髖關節屈伸及外展運動，幅度由小到大， 被術者略感疼痛時，立即停止。</li><li>(三) 掌擦髖關節，以熱透為宜。</li><li>(四) 被術者採俯臥位，揉捏、按壓承扶穴到膝膕窩，重複數次。</li><li>(五) 被術者採仰臥位，以深沉而柔和的揉捏、按壓患側腹股溝到膝部，重複數次。</li><li>(六) 揉捏、按壓大腿內側肌群。</li><li>(七) 揉捏、按壓髀關穴，並配合髖關節外展、外旋運動手法。</li><li>(八) 掌擦大腿前側、外側、內側肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>髖關節由髖臼和股骨頭所組成，加上關節軟骨、關節囊、滑膜、韌帶、肌肉、神經等，構成髖關節的整體構造，而形成髖關節的完整生理負重與運動功能。本病症因關節壓力過大，或持續受壓過久，妨礙了正常代謝功能，影響關節軟骨的體液交換，促使關節退化。嚴重的創傷、輕微的長久反覆多次勞損，都會讓關節軟骨引起退行性變化，而產生鈣化現象。沉重受壓者，會造成股骨頭凹陷性的畸形。關節端變的粗短而扁平，又影響了血液循環，而成骨質緻密，骨髓纖維化。關節面既有變形，自能引起關節間隙的紊亂，更增加了骨髓和骨質的破壞。於是骨質的碎屑在關節內刺激關節囊，加速關節囊的纖維化和斑化。軟骨受傷，也會造成關節黏連， 關節腔消失。滑膜充血，關節囊增厚，活動時，刺激囊內神經，而產生疼痛。</p><p>本病多發生在中年之後，病情漸漸發展，速度緩慢，初期時，有關節輕度不靈活的現象，中、晚期後，關節囊短縮，走路時就會刺激囊內神經，而出現疼痛症狀， 有時甚至是一種持續性疼痛。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>雖然骨刺初期無明顯症狀，如過度活動、輕微外傷、感受風寒等等刺激，增生的骨刺就會立即刺激到周圍組織而造成嚴重的創傷性炎症，引發關節疼痛和活動障礙。</p><p>本病復健原則以促進血液循環和潤滑關節為主。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t16" data-num="16">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題16</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－肩關節周圍炎（五十肩）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>6</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【肩部】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">肩髃</span><span class="acu-tag">肩貞</span><span class="acu-tag">天宗</span><span class="acu-tag">秉風</span><span class="acu-tag">肩井</span><span class="acu-tag">巨骨</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，揉捏、按壓肩前部，以及上臂前側到肘關節，並配合患肢外展、內收和迴旋等運動（重點在肩前部）。</li><li>(二) 被術者採側臥位，揉捏、按壓三角肌、肱三頭肌。</li><li>(三) 施肩關節屈曲動作，並在肩外側和腋後施揉捏、按壓手法。</li><li>(四) 揉捏、按壓肩髃、肩貞、天宗和秉風等穴。</li><li>(五) 被術者採坐姿或側臥位，揉捏、按壓頸部和肩胛部。</li><li>(六) 揉捏、按壓肩井、巨骨、秉風、天宗等穴。</li><li>(七) 施肩關節屈曲伸展、外展、迴旋及上肢牽引等運動。</li><li>(八) 掌擦肩部，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本病是肩關節周圍組織退行性、炎症性的病變。初起肩部有瀰漫性疼痛，具有臨床上的「靜止痛」。患者局部伴有廣泛性的壓痛，外展和外旋動作受到很大的限制。隨著病情的進展，肩部周圍組織產生黏連，功能障礙加重。因此，本病表現早期以疼痛為主，晚期以功能障礙比較顯著。</p><p>五十肩包括肱二頭肌長腱滑落、肱二頭肌長腱腱鞘炎、肱二頭肌短腱損傷、棘上肌肌腱炎、三角肌下滑膜囊炎五種。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>肱二頭肌長腱滑落：肱二頭肌長腱常因肩部過度做外展、外旋活動，或突然用力向</p><p>外展旋，而發生滑脫現象。</p><p>肌腱與腱鞘間的互相摩擦，形成腱鞘滑膜慢性勞損而成。</p><p>其他如退行性改變和二頭肌常見習慣性滑脫也容易形成本病。</p><p>骨小結節和短腱常會有滾滑摩擦情形，故易有慢性勞損和急性損傷。</p><p>尤其因經常或突然用力做肩部外展或後伸活動時，受牽拉而損傷者。</p><p>中年以後，肌肉張力明顯減退，彈性減弱，也是病因之一。</p><p>作用於三角肌或中年以後肌腱退行性變化而造成滑囊的變性都會引發滑囊炎。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>臨床上二頭肌長腱部位、肩前部都有明顯疼痛、上臂無力和肩部活動困難等，肱骨成內旋位，並喪失關節外展、內收、外旋等活動；走路時上肢不能前後擺動。</p><p>臨床症狀以肩前部或整個肩部的疼痛為主，活動時，疼痛更是劇烈；且疼痛常向三角肌下方擴散。</p><p>外展外旋肩部、由屈肘在平伸肩位時，疼痛更甚。</p><p>肱二頭肌常見有銳利的壓痛感，肱二頭肌收縮時，可觸及輕微的摩擦感的現象。</p><p>肱二頭肌短腱損傷：肱二頭肌短腱損傷，是指起於喙突的短腱，在上臂旋轉時，肱</p><p>肩前喙突有明顯的壓痛，外展、後伸時疼痛加重； 並可摸到腫脹或黏連的肱二頭肌短頭。</p><p>肩部外展啟動三十度內及外展六十度到一百二十度兩範圍內，疼痛加劇。</p><p>三角肌下滑囊炎：肩峰下囊和三角肌下囊是肩關節周圍最大的滑液囊。</p><p>若外力直接</p><p>臨床上，肩外側深部的疼痛常從肩峰下放射至三角肌的止端，當上臂外展、外旋或內收運動時，肩部疼痛劇烈， 三角肌和肩峰下都有壓痛感覺。</p><p>五十肩初期因局部較為疼痛，應以較輕柔的手法按摩，在局部反覆操作，藉以疏通經絡、活血止痛，和加強局部肌腱和韌帶的功能；晚期則可用較重的手法，如迴旋、牽引、背伸等，以鬆解肩關節的黏連，促使功能逐漸恢復。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>棘上肌肌腱炎：棘上肌位於斜方肌的深層，起自棘上窩，肌束跨越肩關節，而止於肱骨大結節的上部，是啟動上臂外展的主要肌肉。</p><p>經常大幅度的外展肩部或在肩外展時啟動用力過度，都可使棘上肌受損。</p><p>本病疼痛侷限於肩峰大結節處，但可放射至頸、肩部，並向下到肘部、前臂和手指。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>此病復健方法，應善用鎮痛和整復兩種手法。</p><p>肱二頭肌長腱腱鞘炎：肱二頭肌長腱腱鞘炎是人們經常用力做肩部外展外旋運動，</p><p>本病復健時，喙突處之壓痛點要多加揉捏、按壓。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t17" data-num="17">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題17</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－肘關節肱骨外上髁炎（網球肘）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>5</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【上臂、前臂】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">肘髎</span><span class="acu-tag">曲池</span><span class="acu-tag">手三里</span><span class="acu-tag">天井</span><span class="acu-tag">尺澤</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採坐姿、側臥位或仰臥位（採坐姿者，可將患肢放在適當高度之治療臺上）。輕柔地掌擦、揉捏和按壓肱骨外上髁，經肱橈關節，再向下沿前臂伸肌群到腕部。</li><li>(二) 在上述部位，施深沉的掌擦、揉捏和按壓。</li><li>(三) 揉捏、按壓肘髎、曲池、手三里、天井、尺澤和附近壓痛點。</li><li>(四) 一手握住肱骨下端，另一手握住尺橈關節遠側端，做拔伸手法。</li><li>(五) 以相同姿勢，施各式運動法於肘部。同時，握肱骨下端的手，以拇指配合揉捏橈骨小頭。</li><li>(六) 以同樣姿勢，做肘關節屈曲、伸展運動。</li><li>(七) 掌擦前臂伸側肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈側伸腕肌腱附著於肱骨外上髁，以肌腱底止於第二、三掌骨的基底部，每當前臂旋前位時，腕關節若主動的背伸，使橈側伸腕肌處於強烈收縮狀態，遂使肘關節產生病變。如橈側伸腕肌骨膜撕裂，造成肱骨外上髁的骨質增生，產生了小結節或銳利的邊緣刺激肌腱而產生疼痛。許多活動也可能牽引到肌腱附著部的軟組織， 日久就會發生慢性的損傷。在屈肘位時，若突然用力，做前臂旋前、伸腕、伸肘等動作，關節囊滑膜可能會嵌入肱橈關節間隙而發生病變。肱骨外上髁及肱橈關節附近的疼痛是臨床上主要的症狀，尤其在前臂旋轉，腕關節牽動背伸時，肘部疼痛症狀更為明顯，疼痛沿著伸腕肌向下，有放射痛。握物無力，手掌向下不能持重物或平舉也是其典型症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本病復健應準確判明病因，分別就伸腕肌腱起點損傷、肘關節滑膜嵌頓或環狀韌帶鬆弛、肌肉痙攣或神經血管受擠壓等，分別給予適切的按摩手法。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t18" data-num="18">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題18</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－肘關節肱骨內上髁炎（學生肘）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>7</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">7穴</span></div><div class="acu-pts"><span class="acu-tag">少海</span><span class="acu-tag">尺澤</span><span class="acu-tag">小海</span><span class="acu-tag">靈道</span><span class="acu-tag">通里</span><span class="acu-tag">陰郄</span><span class="acu-tag">神門</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採坐姿、側臥位或仰臥位（採坐姿者，可將患肢放在適當高度之治療臺上）。輕柔地掌擦、揉捏和按壓肱骨內上髁，沿前臂屈肌群到腕部。</li><li>(二) 在上述部位，施深沉的掌擦、揉捏和按壓法。</li><li>(三) 揉捏、按壓少海、尺澤、小海、靈道、通里、陰郄、神門等穴和壓痛點。</li><li>(四) 一手握住肱骨下端，另一手握住尺橈關節遠側端，做拔伸手法。</li><li>(五) 以相同姿勢，施各式運動法於肘部。同時，握肱骨下端的手，以拇指配合輕揉肱骨內上髁周圍。</li><li>(六) 以同樣姿勢，做肘關節屈曲、伸展運動。</li><li>(七) 掌擦前臂屈側肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>前臂屈肌和旋前圓肌的總腱附著於肱骨內上髁，因而經常用力做屈肘屈腕後， 突然前臂旋前時，尺側屈腕肌處於強烈收縮狀態，因此容易導致肌腱附著點的慢性勞損或急性扭傷。損傷後的局部炎症、腫脹會壓迫到尺神經皮支而造成疼痛。臨床上，肱骨內上髁及其周圍有明顯的疼痛，尤其在前臂旋前，屈腕牽動肌腱時，更為明顯，同時，疼痛還會沿尺側屈腕肌向下放射，且屈腕無力。除了肱骨內上髁有明顯壓痛外，尺側屈腕肌和屈指淺肌也有廣泛性的疼痛。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t19" data-num="19">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題19</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－腕部橈側伸腕肌腱周圍炎之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>8</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【前臂】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><span class="acu-tag">曲池</span><span class="acu-tag">手三里</span><span class="acu-tag">溫溜</span><span class="acu-tag">偏歷</span><span class="acu-tag">陽谿</span><span class="acu-tag">尺澤</span><span class="acu-tag">列缺</span><span class="acu-tag">太淵</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採坐姿、側臥位或仰臥位（採坐姿者，可將患肢放在適當高度之治療臺上），患肢背側向上。輕快而柔和地掌擦、揉捏和按壓橈側伸腕肌（沿肌肉走向施術）。</li><li>(二) 在上述部位，施深沉的掌擦、揉捏和按壓法。</li><li>(三) 揉捏、按壓曲池、手三里、溫溜、偏歷、陽谿、尺澤、列缺、太淵各穴和壓痛點。</li><li>(四) 輕揉地揉捏、按壓腕部橈側肌群（沿外展拇長肌和伸拇短肌走向進行）。</li><li>(五) 掌擦腕部橈側肌群，以熱透為宜。</li><li>(六) 施腕關節拔伸、迴旋、屈伸運動，要注意幅度由小漸大、力度由輕到重的原則，不可過於勉強。</li><li>(七) 掌擦橈側伸腕肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈側伸腕肌腱周圍炎，是肌腱滑動組織損傷性炎症的病變中，最常見的一種。經常發現於前臂的橈側伸腕肌腱部位，亦可發生在大腿股四頭肌，和小腿的跟腱部，但以前臂最為常見。本病發病的部位和平日工作負荷及肌肉、肌腱的解剖位置有密切的關係。當拇指和腕部過度活動時，橈側伸腕長肌腱、橈側伸腕短肌腱、外展拇長肌腱和伸拇短肌腱會互相摩擦，腱旁組織就會產生炎症反應。局部組織水腫、積液性滲出，纖維因而變性，導致黏連。常出現於前臂持久重複運動或經常處於高度緊張狀態的肌肉。臨床上，腕部有疼痛、酸痛或壓痛點，握拳或伸拇指時疼痛加重，腕部無力，活動時前臂背側的腕上部有細微的摩擦聲音，沿著病變的伸腕肌有條索狀或硬結出現。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t20" data-num="20">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題20</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－膝關節滑膜炎之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>11</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【膝腿】</span><span class="acu-cnt">7穴</span></div><div class="acu-pts"><span class="acu-tag">陽陵泉</span><span class="acu-tag">膝陽關</span><span class="acu-tag">梁丘</span><span class="acu-tag">陰陵泉</span><span class="acu-tag">血海</span><span class="acu-tag">膝關</span><span class="acu-tag">曲泉</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【膝腿、足踝】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">委中</span><span class="acu-tag">委陽</span><span class="acu-tag">浮郄</span><span class="acu-tag">承山</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，揉捏、按壓股四頭肌，以防止肌肉萎縮。</li><li>(二) 揉捏、按壓小腿脛骨前肌。</li><li>(三) 揉捏、按壓膝關節周圍，重點在髕骨上方和內膝眼。</li><li>(四) 揉捏、按壓陽陵泉、膝陽關、梁丘、陰陵泉、血海、膝關、曲泉和膝關節周圍壓痛點。</li><li>(五) 掌擦膝關節兩側，以熱透為宜。</li><li>(六) 被術者改採俯臥位，在膝膕窩和兩側，施輕緩的揉捏和按壓手法。</li><li>(七) 揉捏、按壓委中、委陽、浮郄和承山等穴。</li><li>(八) 施膝關節屈曲、伸展等手法。</li><li>(九) 掌擦膝膕窩，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>膝關節滑囊是指臏上囊，位於膝關節的前方，在股四頭肌下部和股骨之間，與膝關節腔相通。滑膜附有血管，分泌滑液，血管能夠將運動後產生的熱散掉。若滑膜炎因膝關節扭傷、外力創傷，就會造成局部充血和滲血，產生大量積液，而滑液積聚日久，必有纖維素沉澱，而引發纖維性肌化。在長期慢性刺激下，滑膜炎逐漸增厚，引起關節黏連，又加股四頭肌的萎縮，終致關節不穩，影響正常的膝關節功能。本症以膝關節疼痛、腫脹、乏力、滑膜有摩擦發澀的聲音和局部發熱為主。膝關節極度伸直、抗阻力伸膝運動或以外力將膝關節屈曲時，髕骨下部疼痛都會加重。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t21" data-num="21">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題21</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－踝部跟腱炎之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>8</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【足踝】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><span class="acu-tag">跗陽</span><span class="acu-tag">承山</span><span class="acu-tag">崑崙</span><span class="acu-tag">申脈</span><span class="acu-tag">僕參</span><span class="acu-tag">太谿</span><span class="acu-tag">大鐘</span><span class="acu-tag">水泉</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，足踝部下墊枕頭。揉捏、按壓小腿及跟腱，須注意手法應由輕而重，由淺及深。</li><li>(二) 深層地揉捏小腿後側肌群及跟腱。</li><li>(三) 揉捏、按壓跗陽、承山、崑崙、申脈、僕參、太谿、大鐘、水泉等穴。</li><li>(四) 輕柔地抓舉揉捏小腿後側肌群，兩指揉捏跟腱周圍。</li><li>(五) 掌擦小腿後側肌群及跟腱周圍，以熱透為宜。</li><li>(六) 患者採仰臥位，施踝關節背屈、蹠屈、迴旋、牽引等手法，在生理容許範圍內，幅度可以儘量加大。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>踝部跟腱炎是跟腱及其附近的黏液囊，因外傷、勞損或骨刺的刺激，而引起的炎症。本症以跟腱疼痛為主要臨床表現，以運動創傷最為常見。腓腸肌肌腱和比目魚肌肌腱結合而成跟腱，止於跟骨結節。其中，跟骨後滑囊、跟腱後滑囊都有保護跟腱的功能。急性外傷，如運動員暖身準備活動不足，突然猛力彈跳或急速起跑， 就會引起急性跟腱拉傷；慢性損傷，如反覆持續超量運動訓練，也會逐漸損傷肌腱。另外，跟腱退行性變化引起跟腱鈣化或感染，也都會造成跟腱炎或滑囊炎。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症臨床主要症狀是跟腱疼痛；早期疼痛多發生於活動剛開始或猛力跑跳時， 一旦活動開始過後，疼痛會及時減輕。</p><p>若病情繼續發展，就會嚴重到凡是牽扯跟腱的動作時，都將引起疼痛，雖休息後仍可緩解，但每當劇烈運動，疼痛又會復發而加重，甚至促使跟腱和滑囊鈣化、骨化的可能。</p><p>急性損傷者，跟腱和滑囊腫脹，皮膚溫度增高，膚色潮紅，跟腱有壓痛點。</p><p>慢性損傷者，常見跟腱僵硬或變形，且有硬塊、結節，輾動捻動時會吱吱作響，跟腱失去韌性和彈性，局部變粗而成梭形。</p><p>輾動跟腱時，有強烈的疼痛感；做抗阻力牽拉時，疼痛明顯。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>按摩對本症早期效果頗佳，主要在促進局部血液循環，加速修復創傷組織。</p><p>在後期只能逐漸鬆解組織黏連。</p><p>接受按摩復健期間，應讓患者適當休息。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t22" data-num="22">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題22</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－類風濕性關節炎（上肢）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">12穴</span></div><div class="acu-pts"><span class="acu-tag">曲池</span><span class="acu-tag">少海</span><span class="acu-tag">外關</span><span class="acu-tag">內關</span><span class="acu-tag">大陵</span><span class="acu-tag">勞宮</span><span class="acu-tag">陽池</span><span class="acu-tag">中渚</span><span class="acu-tag">養老</span><span class="acu-tag">合谷</span><span class="acu-tag">天宗</span><span class="acu-tag">肩貞</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位、側臥位或俯臥位，輕擦、揉捏、按壓前臂、腕部的伸肌群和屈肌群。</li><li>(二) 輕柔地揉捏前臂、腕部、手指；如被術者感到疼痛，可改為輕擦法，以熱透為宜。</li><li>(三) 揉捏、按壓曲池、少海、外關、內關、大陵、勞宮、陽池、中渚、養老、合谷等穴。</li><li>(四) 被術者採側臥位，揉捏、按壓天宗、肩貞等穴。</li><li>(五) 拇指推擦掌指關節，兩指輕擦和夾壓指關節，並在指關節處施屈伸運動，以增加關節活動度。</li><li>(六) 夾壓陽池、大陵及內關、外關穴，並配合腕關節的屈伸、迴旋、尺側偏移和 橈側偏移等運動，最後在各關節不痛的範圍內施以拔伸牽引，並強擦各關節， 以熱 透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>類風濕性關節炎簡稱類風濕，屬全身免疫性疾病，發生的原因截至目前為止仍不很明確，但已知道和自體的免疫障礙有關，且任何年齡都可能發生，以 30-50 歲最多，男、女發生比例約為 1：3。直係親屬有類風濕性關節炎的患者與直係親屬沒有類風濕性關節炎的比率為 4:1，顯示與基因有關。類風濕性關節炎是一種以周圍小關節病變為主的全身性疾病，以手、腕、膝和足等多關節成對稱性受累的臨床表現最為突出。早期有紅、腫、熱、痛和運動障礙；晚期則關節變為強硬和畸形。患者還會出現發熱、疲乏無力、體重減輕，以及皮下結節、心血管病變、周圍神經受損，還有肺、胸膜病變等多種關節以外的併發症。受累的關節以上肢較常見，病程較長，常出現明顯的腫脹、疼痛、壓痛和僵硬等，晨起時症狀較重，白天的症狀會隨著活動而減輕。病損關節的早期多以對稱性的梭狀腫脹、活動受限為特徵，晚期雙手將成為雞爪樣的尺側偏移屈曲畸形。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>以下的症狀有四點以上符合則可能是類風濕性關節炎：</p><p>(一) 晨間關節僵硬。</p><p>(二) 一個以上的關節腫脹或疼痛。</p><p>(三) 一個關節腫脹六星期以上。</p><p>(四) 對稱性的關節侵犯。</p><p>(五) 產生小結節。</p><p>(六) X 光片上的典型變化，早期在關節周圍常發生骨質疏鬆的現象，晚期可見到滑膜侵入髖骨內所產生的空洞，甚至嚴重變形的關節架構。</p><p>(七) 血液中存有類風濕性關節炎因子呈陽性反應。</p><p>本症復健原則是促進血液循環、舒筋理氣，鎮痛消腫和靈活關節。</p><p>到了晚期，如發生畸形和關節僵硬者， 僅能舒緩疼痛而已。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>早期按摩效果較佳，達到改善症狀，和保護關節的功能。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t23" data-num="23">
+  <div class="topic-head" style="border-top:4px solid #6b3fa0">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#6b3fa0">題23</span>
+      <span class="topic-cat" style="color:#6b3fa0">關節炎</span>
+    </div>
+    <h2 class="topic-title">關節炎－類風濕性關節炎（下肢）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>17</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><span class="acu-tag">居髎</span><span class="acu-tag">環跳</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span><span class="acu-tag">崑崙</span><span class="acu-tag">太谿</span><span class="acu-tag">湧泉</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【膝腿、足踝】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">膝陽關</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">足三里</span><span class="acu-tag">曲泉</span><span class="acu-tag">陰陵泉</span><span class="acu-tag">丘墟</span><span class="acu-tag">解谿</span><span class="acu-tag">水泉</span><span class="acu-tag">照海</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位或俯臥位，輕擦、揉捏、按壓臀部、大腿後側、小腿後側、踝關節 至腳趾，並配合髖關節後伸、外展、外旋，及膝關節屈曲、伸展的被動運動。</li><li>(二) 揉捏、按壓居髎、環跳、殷門、委中、承山、崑崙、太谿、湧泉等穴。</li><li>(三) 被術者採仰臥位，揉捏、按壓大腿前側、大腿外側、小腿外側，並配合髖關節屈曲、膝關節屈伸的被動運動。</li><li>(四) 揉捏、按壓膝陽關、陽陵泉、足三里、曲泉、陰陵泉、崑崙、丘墟、解谿、太谿、水泉、照海等穴。</li><li>(五) 揉捏、按壓踝關節周圍及足背，配合踝關節屈伸及內外翻、迴旋等運動。</li><li>(六) 拇指揉捏、按壓蹠趾關節，兩指揉捏及夾壓腳趾關節，並配合關節拔伸牽引等運動。</li><li>(七) 強擦各關節，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>類風濕性關節炎簡稱類風濕，屬全身免疫性疾病，發生的原因截至目前為止仍不很明確，但已知道和自體的免疫障礙有關，且任何年齡都可能發生，以 30-50 歲最多，男、女發生比例約為 1：3。直係親屬有類風濕性關節炎的患者與直係親屬沒有類風濕性關節炎的比率為 4：1，顯示與基因有關。類風濕性關節炎是一種以周圍小關節病變為主的全身性疾病，以手、腕、膝和足等多關節成對稱性受累的臨床表現最為突出。早期有紅、腫、熱、痛和運動障礙；晚期則關節變為強硬和畸形。患者還會出現發熱、疲乏無力、體重減輕，以及皮下結節、心血管病變、周圍神經受損，還有肺、胸膜病變等多種關節以外的併發症。受累的關節以上肢較常見，病程較長，常出現明顯的腫脹、疼痛、壓痛和僵硬等，晨起時症狀較重，白天的症狀會隨著活動而減輕。病損關節的早期多以對稱性的梭狀腫脹、活動受限為特徵，晚期雙手將成為雞爪樣的尺側偏移屈曲畸形。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>以下的症狀有四點以上符合則可能是類風濕性關節炎：</p><p>(一) 晨間關節僵硬。</p><p>(二) 一個以上的關節腫脹或疼痛。</p><p>(三) 一個關節腫脹六星期以上。</p><p>(四) 對稱性的關節侵犯。</p><p>(五) 產生小結節。</p><p>(六) X 光片上的典型變化，早期在關節周圍常發生骨質疏鬆的現象，晚期可見到滑膜侵入髖骨內所產生的空洞，甚至嚴重變形的關節架構。</p><p>(七) 血液中存有類風濕性關節炎因子呈陽性反應。</p><p>本症復健原則是促進血液循環、舒筋理氣，鎮痛消腫和靈活關節。</p><p>到了晚期，如發生畸形和關節僵硬者， 僅能舒緩疼痛而已。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>早期按摩效果較佳，達到改善症狀，和保護關節的功能。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t24" data-num="24">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題24</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－臂神經叢麻痺之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>16</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">10穴</span></div><div class="acu-pts"><span class="acu-tag">天柱</span><span class="acu-tag">風池</span><span class="acu-tag">天牖</span><span class="acu-tag">天窗</span><span class="acu-tag">天鼎</span><span class="acu-tag">肩井</span><span class="acu-tag">天宗</span><span class="acu-tag">氣舍</span><span class="acu-tag">缺盆</span><span class="acu-tag">極泉</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【上臂、前臂手部】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">曲池</span><span class="acu-tag">小海</span><span class="acu-tag">尺澤</span><span class="acu-tag">手三里</span><span class="acu-tag">內關</span><span class="acu-tag">合谷</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位或俯臥位，先用輕擦、揉捏、按壓法放鬆頸項兩側、鎖骨上窩及肩胛肩部的各肌群；重點揉捏、按壓頸四至胸三棘突旁的軟組織，以及肩胛部向下到手指的肌群。揉捏、按壓時，力量由輕到重，重複數次。捏到肌肉感到酸脹為宜。</li><li>(二) 揉捏、按壓天柱、風池、天牖、天窗、天鼎、肩井、天宗等穴；再以輕柔的手法揉捏氣舍、缺盆兩穴。</li><li>(三) 四指揉捏、按壓腋窩附近的極泉穴，以及上臂內側的臂神經叢沿線。</li><li>(四) 輕擦、揉捏、按壓上臂到手指後，再按壓曲池、小海、尺澤、手三里、內關和合谷等穴。</li><li>(五) 在肩關節、肘關節、腕關節、指關節等依次作屈曲、迴旋、牽引和抖搖等運動。</li><li>(六) 揉捏、按壓肩部和上肢的麻痺肌群部位，重複數次，最後再強擦麻痺肌群， 以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>臂神經叢麻痺是指神經叢損傷後引起其支配區的肌肉運動障礙和皮膚的感覺障礙的症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>一般症狀是：運動麻痺為主、感覺障礙較輕，在頸部、肩頸部、鎖骨上窩部有間歇性疼痛，牽引上肢時疼痛加劇，且在鎖骨上窩處有明顯的壓痛與放射痛，患側肌張力降低、感覺障礙、病程稍久者可見到肌肉萎縮。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>臂神經叢是由來自 C5 到 C8 和 T1 脊神經的前支所組成。</p><p>上訴神經在前斜角肌的外緣組成神經幹，包括上幹、中幹、下幹等三幹。</p><p>每一神經幹在鎖骨的內側三分之一處附近，各分成兩股。</p><p>上述個股再編織成臂叢神經的內側束、外側束、後側束， 三束包圍著腋動脈。</p><p>這些神經根、幹、股、束，分出許多分支，支配前胸、上背和上肢的肌肉與皮膚。</p><p>臂叢神經的分支包括肩胛背神經、鎖骨下神經、肩胛上神經、肩胛下神經、胸長神經、胸外側神經、胸內側神經、胸背神經、肌皮神經、腋神經、上臂及前臂內側皮神經、尺神經、正中神經、橈神經、……等。</p><p>臂叢神經麻痺的原因：常因上肢的外傷、過度牽拉、牽拉時間過長、柺杖的壓迫、骨折、脫臼、肩上受重壓、神經根炎、鎖骨上窩的腫瘤、頸肋、前斜角肌綜合症……等所致。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>神經麻痺的按摩：在初期時以消除血腫、水腫、炎症的吸收為主，後期則以增加血液循環、提供組織營養為主，並施以關節被動運動，以改善肌力和矯正關節的畸形。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t25" data-num="25">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題25</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－正中神經麻痺之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>16</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">10穴</span></div><div class="acu-pts"><span class="acu-tag">天柱</span><span class="acu-tag">風池</span><span class="acu-tag">天牖</span><span class="acu-tag">天窗</span><span class="acu-tag">天鼎</span><span class="acu-tag">肩井</span><span class="acu-tag">天宗</span><span class="acu-tag">氣舍</span><span class="acu-tag">缺盆</span><span class="acu-tag">極泉</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">郄門</span><span class="acu-tag">間使</span><span class="acu-tag">內關</span><span class="acu-tag">大陵</span><span class="acu-tag">勞宮</span><span class="acu-tag">魚際</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，先用輕擦、揉捏、按壓法放鬆頸項兩側、鎖骨上窩、肩胛肩部及上肢各肌群，重點揉捏、按壓頸四至胸三棘突旁的軟組織。揉捏、按壓時，主要的部位是由肩前沿上臂內側到肘關節的正面，再向下達掌心及手指等正中神經分佈區域。力量由輕到重，重複數次，揉捏、按壓到主要部位肌肉感到酸脹為宜。</li><li>(二) 揉捏、按壓天柱、風池、天牖、天窗、天鼎、肩井、天宗等穴；再以輕柔的手法揉捏氣舍、缺盆兩穴。</li><li>(三) 被術者採仰臥位，揉捏、按壓極泉穴及正中神經分佈區之肌群，重複數次。</li><li>(四) 揉捏、按壓曲澤、郄門、間使、內關、大陵、勞宮等穴。</li><li>(五) 以拇指推擦腕前側，雙拇指分推及按壓掌心，兩指輕擦、揉捏及拔伸各手指。</li><li>(六) 揉捏、按壓前臂、大魚際等肌群。</li><li>(七) 最後在上肢各關節，施各式運動手法。</li><li>(八) 強擦正中神經分佈肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症是指正中神經受牽拉而損傷或因壓迫到神經而產生其支配區內出現運動障礙與感覺障礙等症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>正中神經麻痺的症狀：猿手畸形（拇指無法對掌）；手掌橈側三個半手指與相應的掌面皮膚感覺障礙（以拇指與食指的末節最甚），神經不完全損傷時常伴有劇痛；大魚際肌萎縮，拇指無法屈曲和對掌，拇指、食指末節無法屈曲，手掌皮膚乾燥、發冷，指甲粗糙……等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>正中神經來自臂叢的外側束和內側束，含有 C5 到 C8 和 T1 的神經纖維和植物神經的交感神經纖維。</p><p>它沿著上臂的內側肌間溝下行至肘窩，通過旋前圓肌的兩頭，行於屈指淺肌與屈指深肌之間下行，通過腕管進入手掌。</p><p>正中神經支配的肌肉有：前臂的所有屈肌（除尺側屈腕肌與屈指深肌的尺側部之外），和手內在肌（包括屈姆短肌、拇指對掌肌、第一蚓狀肌、第二蚓狀肌）。</p><p>感覺支則支配掌面橈側三個半手指與其相應手掌掌面的皮膚和手指背面橈側三個半手指中節與末節的皮膚。</p><p>正中神經麻痺的原因有：骨折、外傷、直接壓迫、外科手術意外傷害、神經纖維瘤、全身代謝疾病、鉛或酒精中毒、特殊用腕工作者……等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>神經麻痺的按摩：在初期時以消除血腫、水腫、炎症的吸收為主，後期則以增加血液循環、提供組織營養為主，並施以關節被動運動，以改善肌力和矯正關節的畸形。</p><p>註：腕關節或前臂損傷者，需加強對大魚際肌的處理；肘部或肘關節以上部位損傷者，應加強對前臂屈肌群和大魚際肌的處理。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t26" data-num="26">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題26</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－尺神經麻痺之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>18</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">10穴</span></div><div class="acu-pts"><span class="acu-tag">天柱</span><span class="acu-tag">風池</span><span class="acu-tag">天牖</span><span class="acu-tag">天窗</span><span class="acu-tag">天鼎</span><span class="acu-tag">肩井</span><span class="acu-tag">天宗</span><span class="acu-tag">氣舍</span><span class="acu-tag">缺盆</span><span class="acu-tag">極泉</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【前臂手部】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><span class="acu-tag">小海</span><span class="acu-tag">少海</span><span class="acu-tag">靈道</span><span class="acu-tag">通里</span><span class="acu-tag">陰郄</span><span class="acu-tag">神門</span><span class="acu-tag">少府</span><span class="acu-tag">中渚</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，先用輕擦、揉捏、按壓法放鬆頸項兩側、鎖骨上窩、肩胛肩部及上肢各肌群，重點揉捏、按壓頸四至胸三棘突旁的軟組織。力量由輕到重，重複數次。揉捏、按壓到主要部位肌肉感到酸脹為宜。</li><li>(二) 揉捏、按壓天柱、風池、天牖、天窗、天鼎、肩井、天宗等穴；再以輕柔的手法揉捏 氣舍、缺盆兩穴。</li><li>(三) 被術者採仰臥位，揉捏、按壓極泉穴及上臂內側面臂神經叢沿線及前臂內側心經路線，力量由輕到重，重複數次，揉捏、按壓到主要部位肌肉感到酸脹為宜。</li><li>(四) 揉捏、按壓小海、少海、靈道、通里、陰郄、神門、少府和中渚等穴。</li><li>(五) 揉捏小指掌側的尺側肌群，以及在第三、四和第四、五的掌骨間肌。</li><li>(六) 在腕關節處的尺側伸腕肌和尺側屈腕肌處，用拇指推擦，並在無名指和小指施兩指揉捏及夾壓。</li><li>(七) 最後在上肢各關節作屈曲、迴旋、拔伸、抖搖等運動，再強擦麻痺肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症是指尺神經因受牽拉、受壓、外傷等損傷，引起其神經支配區內的運動和感覺障礙。尺神經來自臂叢神經的內側束，含有 C8 和 T1 的神經纖維。尺神經從腋窩處，沿上臂內側肌間溝下行至肘窩，經肱骨內上髁與鷹嘴凸之間的尺神經溝進入前臂，行於尺側屈腕肌與屈指伸肌之間下行，經豆骨的橈側進入手部。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>尺神經麻痺的病因有：肱骨內上髁與鷹嘴凸處受傷、肱骨肘部骨折、摩擦性神經炎、肱骨幹的壓迫與挫傷、肩關節脫臼……等。</p><p>臨床症狀：鷹爪變形（掌指關節過伸、指間關節過屈）、上肢內側尺神經支配區感覺缺失、手指內收和外展受限、小魚際肌萎縮……等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>尺神經支配的肌肉有：尺側屈腕肌、屈指深肌的尺側半、小魚際肌、所有的骨間肌、尺側兩個蚓狀肌、內收拇肌和屈拇短肌的橫頭。</p><p>感覺支配手掌掌面尺側一個半手指與其相應的皮膚，還有手背以中指中心線為界的尺側手指、手背的皮膚（但不包括正中神經的支配區）。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>神經麻痺的按摩：在初期時以消除血腫、水腫、炎症的吸收為主，後期則以增加血液循環、提供組織營養為主，並施以關節被動運動，以改善肌力和矯正關節的畸形。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t27" data-num="27">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題27</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－橈神經麻痺之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>25</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">天柱</span><span class="acu-tag">風池</span><span class="acu-tag">天牖</span><span class="acu-tag">天窗</span><span class="acu-tag">天鼎</span><span class="acu-tag">肩井</span><span class="acu-tag">天宗</span><span class="acu-tag">氣舍</span><span class="acu-tag">缺盆</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【上臂、前臂手部】</span><span class="acu-cnt">16穴</span></div><div class="acu-pts"><span class="acu-tag">極泉</span><span class="acu-tag">臂臑</span><span class="acu-tag">天井</span><span class="acu-tag">曲池</span><span class="acu-tag">手三里</span><span class="acu-tag">列缺</span><span class="acu-tag">經渠</span><span class="acu-tag">太淵</span><span class="acu-tag">魚際</span><span class="acu-tag">合谷</span><span class="acu-tag">偏歷</span><span class="acu-tag">溫溜</span><span class="acu-tag">三陽絡</span><span class="acu-tag">外關</span><span class="acu-tag">陽池</span><span class="acu-tag">養老</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，先用輕擦、揉捏、按壓法放鬆頸項兩側、鎖骨上窩、肩胛肩部及上肢各肌群，重點揉捏、按壓頸四至胸三棘突旁的軟組織。力量由輕到重，重複數次。揉捏、按壓到主要部位肌肉感到酸脹為宜。</li><li>(二) 揉捏、按壓天柱、風池、天牖、天窗、天鼎、肩井、天宗等穴；再以輕柔的手法揉捏氣舍、缺盆兩穴。</li><li>(三) 揉捏、按壓肱三頭肌及橈神經溝。四指揉捏、按壓極泉穴及上臂內側臂神經叢沿線，再用揉捏、按壓臂臑、天井、曲池、手三里、列缺、經渠、太淵、魚際、合谷、偏歷、溫溜、三陽絡、外關、陽池、養老等穴。</li><li>(四) 在掌背用拇指推擦並揉捏掌骨縫，兩指揉捏及夾壓各手指。</li><li>(五) 最後在上肢各關節做迴旋、牽引、抖搖等運動，再強擦麻痺肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症是指神經受損後，引起神經支配區內的肌肉運動障礙和感覺障礙。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈神經麻痺常見的病因有：上臂的骨折、肩關節脫臼、外傷、刀傷、子彈傷、長時間用手當枕入睡、不當藥物注射、酒精與鉛中毒、肘關節外傷、肘關節重複性勞動、肌肉痙攣、佔位性病變（如脂肪瘤、血管瘤）……等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈神經麻痺的症狀：下垂手、屈肌群拘縮。</p><p>神經高位受損時，可引起肱三頭肌麻痺、肘關節無法伸直、前臂下垂、拇指無法伸直和外展、拇指處於內收位（夾在食指旁邊）。</p><p>知覺障礙，較厲害處在虎口區。</p><p>有時伴有神經營養性改變，如手臂腫脹、發涼、發紫。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>橈神經來自臂叢的後側束，含有 C5 到 C7 的神經纖維，C8 和 T1 神經纖維較少。</p><p>橈神經由腋窩處，經腋窩後面，斜向下外方，繞過肱骨後方，由橈神經溝下行至肘部。</p><p>越過肱骨外上髁的前方進入前臂。</p><p>橈神經經肱橈關節出來後分成淺支和深支。</p><p>深支又叫前臂背側骨間神經，它穿過旋後肌的深、淺兩頭，行於前臂背面伸肌群的深、淺兩層之間下行。</p><p>淺支則沿肱橈肌內側面下行，在前臂下三分之一處出體表，成為前臂背側指神經。</p><p>橈神經的分支如下：</p><p>(一) 在肱骨上段：肌支支配肱三頭肌。</p><p>皮支有上臂背側皮神經和前臂背側皮神經， 支配上臂和前臂背側的皮膚。</p><p>(二) 在肱骨下段分出的肌支支配肘肌、部分的肱肌、肱橈肌和橈側伸腕長肌。</p><p>(三) 前臂的淺支有肌支和皮支。</p><p>肌支支配橈側伸腕短肌，皮支支配手背的橈側半和</p><p>與中指中心線為界橈側兩個半手指基節背面的皮膚。</p><p>(四) 前臂的深支無感覺支，在前臂上部發出的肌支支配旋後肌、伸指總肌、伸小指肌、尺側伸腕肌……等。</p><p>在外展姆長肌的表面處的分支支配外展姆長肌、伸姆短肌、伸姆長肌、伸食指肌……等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>神經麻痺的按摩：在初期時以消除血腫、水腫、炎症的吸收為主，後期則以增加血液循環、提供組織營養為主，並施以關節被動運動，以改善肌力和矯正關節的畸形。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t28" data-num="28">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題28</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－腓總神經麻痺之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">12穴</span></div><div class="acu-pts"><span class="acu-tag">居髎</span><span class="acu-tag">環跳</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span><span class="acu-tag">浮郄</span><span class="acu-tag">委陽</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">足三里</span><span class="acu-tag">崑崙</span><span class="acu-tag">丘墟</span><span class="acu-tag">解谿</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位或俯臥位，先用輕擦、揉捏、按壓法施在臀部、大腿後側、小腿後側及踝關節以下至腳趾。</li><li>(二) 輕擦、揉捏、按壓膝膕窩外側，循腓骨肌群、脛骨前肌及腓總神經的分布肌群而下至外踝，再沿足背到腳趾，施術時力量由輕而重，使肌肉感到酸脹為宜。</li><li>(三)揉捏、按壓居髎、環跳、殷門、委中、承山、浮郄、委陽、陽陵泉、足三里、崑崙、丘墟、解谿等穴。</li><li>(四) 施作膝關節、踝關節及足趾各關節運動。</li><li>(五) 再強擦各麻痺肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腓總神經是下肢較容易受傷的神經，主要因它圍繞著腓骨頸淺層。當腓骨頸骨折或膝關節受傷時，常因局部受壓、強力拉傷，或神經炎以及下肢姿勢不適當等所致，此時腓總神經會受到嚴重的拉傷。嚴重的腓總神經受傷，會造成踝關節背屈肌肉和足部外翻肌肉的麻痺。足部失去外翻動作和踝關節失去背屈動作時，造成足部懸著稱之為落足。病患踏者較高的步伐，腳提的較正常高，所以腳指沒有接觸地面。當腳突然放下會造成足痙攣，因此會使小腿前外側和足背的皮膚感覺，有了相當障礙的現象。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t29" data-num="29">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題29</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－顏面神經麻痺之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>18</strong> 穴 · 3 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頭面】</span><span class="acu-cnt">7穴</span></div><div class="acu-pts"><span class="acu-tag">睛明</span><span class="acu-tag">攢竹</span><span class="acu-tag">陽白</span><span class="acu-tag">瞳子髎</span><span class="acu-tag">太陽</span><span class="acu-tag">四白</span><span class="acu-tag">印堂</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【頸部、頭面】</span><span class="acu-cnt">7穴</span></div><div class="acu-pts"><span class="acu-tag">迎香</span><span class="acu-tag">水溝</span><span class="acu-tag">下關</span><span class="acu-tag">頰車</span><span class="acu-tag">大迎</span><span class="acu-tag">翳風</span><span class="acu-tag">完骨</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第3段</span><span class="acu-region">【頸肩、手部】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">風池</span><span class="acu-tag">肩井</span><span class="acu-tag">合谷</span><span class="acu-tag">側合谷</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，以患側顏面為主，健側施輔助手法即可。</li><li>(二) 四指輕擦及指腹揉捏、點壓由印堂穴沿睛明、攢竹、陽白、瞳子髎、太陽、四白等穴。</li><li>(三) 輕擦、揉捏、點壓印堂、迎香、水溝、承漿、下關、頰車、大迎、翳風、完骨等穴。</li><li>(四) 被術者採坐姿，揉捏、按壓風池、肩井與對側合谷等穴。</li><li>(五) 用尺側掌緣或小指側強擦患部肌群，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>顏面神經為第七對腦神經。顏面神經麻痺，可分為中樞性和周圍性兩種：中樞性顏面神經麻痺多因腦血管疾病或腦腫瘤所致、周圍性顏面神經麻痺多是由於面部血液循環障礙，病毒感染或遇風寒所致。顏面神經麻痺還可能誘發中耳炎，乳突炎，以及腮腺炎等症。患者多為青壯年，且發病突然，多在清晨醒來時，發現一側的面部痲痺，肌肉鬆弛，口眼歪斜，鼻唇溝變淺等症狀。</p><p>在急性期，先改善患部血液循環，促使局部水腫和發炎消退，以免顏面神經繼續受損。</p><p>待急性期過後，即應促進顏面神經機能的恢復，以防止肌肉痙攣免於受到損壞或感染。</p><p>按摩時手法宜輕快柔和，藉以提高神經的興奮性，加速局部血液循環，增加血液供氧，改善顏面神經局部缺血，以減輕水腫與受壓現象，增加顏面神經之復健效益。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t30" data-num="30">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題30</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－半身不遂（上肢）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 3 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【肩部、上臂、前臂】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">肩髃</span><span class="acu-tag">肩內陵</span><span class="acu-tag">臂臑</span><span class="acu-tag">曲池</span><span class="acu-tag">手三里</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【上臂、前臂手部】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">極泉</span><span class="acu-tag">小海</span><span class="acu-tag">少海</span><span class="acu-tag">合谷</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第3段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">3穴</span></div><div class="acu-pts"><span class="acu-tag">天宗</span><span class="acu-tag">肩貞</span><span class="acu-tag">秉風</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，輕擦、揉捏肩關節至腕關節各肌群。</li><li>(二) 揉捏、按壓肩髃、肩內陵、臂臑、曲池、手三里等穴，接著揉捏掌指關節及指間關節。</li><li>(三) 按壓極泉、小海、少海、合谷等穴。</li><li>(四) 被術者採側臥位，患肢在上。揉捏、按壓頸、肩、背部及手臂肌群，並按壓天宗、肩貞、秉風、曲垣等穴。</li><li>(五) 於上肢各關節緩緩施作被動關節運動。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>半身不遂又稱中風，係腦血管意外或腦部血管性疾患，所導致的後遺症。所謂半身不遂，是指患者出現一側肢體麻痺（癱瘓），或兼有口、眼、嘴歪斜、舌強語澀等現象的一種疾患。因半身不遂居多由中風引起，而中風程度的不同，臨床症狀又有輕重之分。例如腦出血則後果較嚴重，易危及生命，而腦栓塞一般程度較輕。用按摩復健中風患者的臨床效果，要視：</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>從半身不遂者的恢復情況來看，普遍下肢較上肢恢復較快，這是由於解剖生理上的原因，另方面是下肢的活動也比上肢較為頻繁，所以應鼓勵患者自行多作肢體活動，即是此故。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>而患腦血栓形成，或腦栓塞者，安靜期比較短，有的患者甚至在發作過後，在醫師指示下，就可以先用輕擦法。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(一) 與發病的程度有關：一般來說，因腦血栓形成、和腦栓塞等效果較好，恢復亦較快。</p><p>而腦出血者，效果相對較差，恢復期則較長。</p><p>(二) 與發病後的病程長短有關：凡發病後在半年之內，效果較理想，如已超過了兩年，則很難恢復。</p><p>因此對半身不遂者復健按摩，是愈早愈好，所以因腦出血者，一般都需要安靜期，但也不能超過三個星期，較為合適。</p><p>本按摩復健主要在促進血液循環，增加腦部血液供應，有利於出血和水腫的吸收，緩解肢體痙攣， 靈活關節，穩定與降低血壓等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t31" data-num="31">
+  <div class="topic-head" style="border-top:4px solid #b85c1a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#b85c1a">題31</span>
+      <span class="topic-cat" style="color:#b85c1a">麻痺</span>
+    </div>
+    <h2 class="topic-title">麻痺－半身不遂（下肢）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>18</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">髀關</span><span class="acu-tag">伏兔</span><span class="acu-tag">梁丘</span><span class="acu-tag">風市</span><span class="acu-tag">血海</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">足三里</span><span class="acu-tag">崑崙</span><span class="acu-tag">太衝</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【腰部、臀腿、膝腿】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">腎俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">八髎</span><span class="acu-tag">環跳</span><span class="acu-tag">居髎</span><span class="acu-tag">承扶</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，輕擦、揉捏大腿前側股四頭肌，向下經膝關節、小腿外側至足背，重複數次。</li><li>(二) 揉捏、按壓髀關、伏兔、梁丘、風市、血海、陽陵泉、足三里、崑崙、太衝等穴。</li><li>(三) 被術者採側臥位，輕擦、揉捏、按壓腰骶部、臀部、大腿後側、膝膕窩、小腿後側至跟腱。</li><li>(四) 揉捏、按壓腎俞、大腸俞、八髎、環跳、居髎、承扶、殷門、委中、承山和跟腱。</li><li>(五) 於下肢各關節緩緩施作被動運動。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>半身不遂又稱中風，係腦血管意外或腦部血管性疾患，所導致的後遺症。所謂半身不遂，是指患者出現一側肢體麻痺（癱瘓），或兼有口、眼、嘴歪斜、舌強語澀等現象的一種疾患。因半身不遂居多由中風引起，而中風程度的不同，臨床症狀又有輕重之分。例如腦出血則後果較嚴重，易危及生命，而腦栓塞一般程度較輕。用按摩復健中風患者的臨床效果，要視：</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>從半身不遂者的恢復情況來看，普遍下肢較上肢恢復較快，這是由於解剖生理上的原因，另方面是下肢的活動也比上肢較為頻繁，所以應鼓勵患者自行多作肢體活動，即是此故。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>而患腦血栓形成，或腦栓塞者，安靜期比較短，有的患者甚至在發作過後，在醫師指示下，就可以先用輕擦法。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(一) 與發病的程度有關：一般來說，因腦血栓形成，和腦栓塞等效果較好，恢復亦較</p><p>快。</p><p>而腦出血者，效果相對較差，恢復期則較長。</p><p>(二) 與發病後的病程長短有關：凡發病後在半年之內，效果較理想，如已超過了兩年，則很難恢復。</p><p>因此對半身不遂者復健按摩，是愈早愈好。</p><p>所以因腦出血者，一般都需要安靜期，但也不能超過三個星期，較為合適。</p><p>本按摩復健主要在促進血液循環，增加腦部血液供應，有利於出血和水腫的吸收，緩解肢體痙攣， 靈活關節，穩定與降低血壓等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t32" data-num="32">
+  <div class="topic-head" style="border-top:4px solid #1a7a5e">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1a7a5e">題32</span>
+      <span class="topic-cat" style="color:#1a7a5e">神經痛</span>
+    </div>
+    <h2 class="topic-title">神經痛－頭痛之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>24</strong> 穴 · 3 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、頭面】</span><span class="acu-cnt">1穴</span></div><div class="acu-pts"><span class="acu-tag">印堂</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【手部、頭面】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">攢竹</span><span class="acu-tag">太陽</span><span class="acu-tag">百會</span><span class="acu-tag">合谷</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第3段</span><span class="acu-region">【腰部、足踝、腹部】</span><span class="acu-cnt">19穴</span></div><div class="acu-pts"><span class="acu-tag">肺俞</span><span class="acu-tag">心俞</span><span class="acu-tag">肝俞</span><span class="acu-tag">脾俞</span><span class="acu-tag">胃俞</span><span class="acu-tag">腎俞</span><span class="acu-tag">命門</span><span class="acu-tag">關元俞</span><span class="acu-tag">照海</span><span class="acu-tag">湧泉</span><span class="acu-tag">角孫</span><span class="acu-tag">頭維</span><span class="acu-tag">風府</span><span class="acu-tag">天柱</span><span class="acu-tag">風池</span><span class="acu-tag">完骨</span><span class="acu-tag">翳風</span><span class="acu-tag">肩井</span><span class="acu-tag">大杼</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，輕擦、揉捏自印堂穴向上至前額髮際，再循線推至頭維、太陽、魚腰、攢竹後，再回到印堂穴。</li><li>(二) 揉捏、按壓印堂、攢竹、太陽、百會和合谷等穴。</li><li>(三) 四指揉捏顱頂、抓舉揉捏顱側，重複數次。</li><li>(四) 以拇指或四指推擦頸部兩側橋弓。</li><li>(五) 被術者採俯臥位，揉捏脊柱兩側膀胱經路線，再按壓肺俞、心俞、肝俞、脾俞、胃俞、腎俞、命門、關元俞、照海和湧泉等穴。</li><li>(六)被術者採坐姿，先於顱部施柳手打，再揉捏斜方肌，按壓角孫、太陽、頭維、百會、風 府、天柱、風池、完骨、翳風、肩井和大杼等穴。最後再以四指輕擦兩頸側橋弓 部位</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>頭痛是一種常見的臨床症狀，但不是一個獨立的疾病，其病理因素較為複雜。導致頭痛的疾病和原因很多，頭部本身的疾病以及全身性疾病都可能引起頭痛，而臨床最常見的是一些非器質性病變引起的頭痛，如氣候變化、感受風寒、或由於精神緊張，壓力過大、情緒惡劣、生活失調、環境汙染、過度疲憊等。從頭痛的性質上可分為脹痛、劇痛、抽痛、持續性痛、陣發性痛。從部位上可分為前頭痛（多為五官、咽喉疾患所致）、側頭痛（多為耳、牙、婦科疾患所致）、頭頂痛（多為神經官能症）、後枕痛（多為高血壓、頸椎病所致）和全頭痛（多為動脈硬化、腦震盪和感染所致）。以按摩手法復健，除了顱內疾病中的腦膿腫、腦血管遽變急性期、顱內佔位性疾病、腦挫裂傷、外傷顱內血腫的急性期等，不宜運用外，對其他僅以自訴頭痛為主的，一般多能緩解痛楚。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t33" data-num="33">
+  <div class="topic-head" style="border-top:4px solid #1a7a5e">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1a7a5e">題33</span>
+      <span class="topic-cat" style="color:#1a7a5e">神經痛</span>
+    </div>
+    <h2 class="topic-title">神經痛－三叉神經痛之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>6</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、頭面】</span><span class="acu-cnt">1穴</span></div><div class="acu-pts"><span class="acu-tag">陽白</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【頭面】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">四白</span><span class="acu-tag">巨髎</span><span class="acu-tag">顴髎</span><span class="acu-tag">迎香</span><span class="acu-tag">水溝</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，輕擦、揉捏手指至上臂、肩部、背部，施以向心性誘導按摩。</li><li>(二) 被術者採仰臥位，輕擦、揉捏、按壓睛明、攢竹、魚腰、絲竹空至瞳子髎， 再由魚腰經陽白至本神，接著由印堂上推至神庭，最後以輕擦法結束。如在攢竹、魚腰或陽白穴有較明顯的壓痛點，則可能累及第一支。</li><li>(三) 輕擦、揉捏、按壓四白、巨髎、顴髎、迎香、水溝，再從懸厘經頜厭至頭維， 最後以輕擦法結束。如在四白、顴髎穴有較明顯的痛點，則可能累及第二支。</li><li>(四) 輕擦、揉捏、按壓下關、耳門、聽宮、聽會、翳風、頰車、大迎達口輪匝肌 處，最後以輕擦結束。如在夾車、大迎有明顯的痛點，則可能累及第三支。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>三叉神經是指由腦橋發出的第五對腦神經，它負責面部皮膚、上頜、牙齦、角膜等處的淺表感覺，同時還負責控制咀嚼運動。共分三支，即眼支、上頜支、下頜支。</p><p>所謂三叉神經痛是指面部三叉神經分布區內發生的突發性、陣發性疼痛。</p><p>四十到六十歲發病率較高，以女性為多見。</p><p>該病有原發性和續發性之分。</p><p>原發性者一般與受寒、病毒感染、牙齒等部位的感染以及某些傳染病有關。</p><p>續發性者多與眼、鼻、牙齒等疾病以及腫瘤壓迫有關。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>原發性三叉神經痛：臨床上以上頜支、下頜支同時疼痛較多見。</p><p>疼痛呈陣發性燒灼痛或鑽刺樣痛，也有患者呈刀割樣痛，撕裂樣痛，每次可持續數秒至數分鐘， 一日可發作數次不等，個別案例可延長數月。</p><p>在眼眶周圍及鼻翼旁、口角、鼻唇溝等處有輕重不同的壓痛點，觸診可能誘發疼痛，並可伴有面部局部抽搐、流淚、流涎以及皮膚潮紅等。</p><p>續發性三叉神經痛：疼痛呈持續性，面部皮膚感覺障礙，嚴重者針刺局部皮膚而不覺疼痛，以及角膜、下頜反射消失。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>對於續發性患者，要首先排除腫瘤患者引起的三叉神經痛，並禁止按摩。</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t34" data-num="34">
+  <div class="topic-head" style="border-top:4px solid #1a7a5e">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1a7a5e">題34</span>
+      <span class="topic-cat" style="color:#1a7a5e">神經痛</span>
+    </div>
+    <h2 class="topic-title">神經痛－肋間神經痛之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【背部】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">肺俞</span><span class="acu-tag">厥陰俞</span><span class="acu-tag">心俞</span><span class="acu-tag">膈俞</span><span class="acu-tag">肝俞</span><span class="acu-tag">脾俞</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【前臂手部、肩部】</span><span class="acu-cnt">6穴</span></div><div class="acu-pts"><span class="acu-tag">肩井</span><span class="acu-tag">缺盆</span><span class="acu-tag">內關</span><span class="acu-tag">外關</span><span class="acu-tag">合谷</span><span class="acu-tag">膻中</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，患側在上，在下肢施輕擦、揉捏之誘導按摩。</li><li>(二) 手掌輕擦、揉捏背部膀胱經，從風門、肺俞、厥陰俞、心俞、膈俞、肝俞、膽俞至脾俞。</li><li>(三) 揉捏肩部及上肢肌群，重點在肩井和缺盆兩穴。接著按壓內關、外關和合谷等穴。</li><li>(四) 被術者採仰臥位，雙手四指朝外，由胸骨沿肋間向外輕擦。</li><li>(五) 揉捏、按壓胸部肋間和腹部，再按壓期門、日月、章門及膻中穴，並施以手掌輕拍及輕擦手法。</li><li>(六) 被術者採坐姿或側臥位，施上肢肩關節及肘關節運動，接著配合按住肋間做推扳 運動。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>肋間神經痛是指胸神經根或肋間神經，由於不同原因受損，而產生的一種胸部肋間或腹部呈帶狀區疼痛綜合症。肋間神經痛可能因以下疾病所產生的壓迫、刺激，出現炎症反應。引發肋間神經痛的因素可分爲以下幾種：</p><p>(一) 全身性疾病所引起的：如糖尿病、傷寒、流行性感冒、病毒感染、酒精中毒、藥品中毒、遺傳等。</p><p>(二)	脊柱的病變：如胸椎退變、胸椎結核病、胸椎損傷、胸椎硬脊髓膜炎、腫瘤、僵直性脊椎炎等。</p><p>(三)	胸、腹腔內臟器官的病變：如肋骨、縱膈、胸膜、帶狀皰疹、婦女乳房變異及肋膜炎、肺炎、肺結核、胃病、肝臟病等。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(四)	肋骨的外傷：如外力撞擊所導致。</p><p>肋間神經痛又分為原發性及繼發性兩種，原發性肋間神經痛極少見；繼發性者多與病毒感染、毒素刺激、機械損傷及異物壓迫等有關。</p><p>其疼痛性質多為刺痛或灼熱痛，並沿肋間神經分布區擴散。</p><p>症狀：</p><p>(一)	從胸椎沿相應的肋間至胸骨呈半環形的劇烈放射性疼痛，並可由背部向腹部呈帶狀區放射。</p><p>(二)	多為刺痛或灼熱痛，呈持續性或陣發性出現，並且常伴有患區的肌肉痙攣。</p><p>在接受按摩復健之先，如由於全身性或局部性的某種疾患所引發，則應針對治</p><p>本入手。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(三)	深吸氣、咳嗽、打噴嚏或脊柱活動時，常使疼痛明顯加劇。</p><p>此病症特別要注意：</p><p>(一)	第一到第三的肋間神經痛，會擴散到上臂。</p><p>(二)		第八到第十二的肋間神經痛，常併發腹部的作痛，因此多被誤認是胃腸疾患。</p><p>在略告好轉時，如肋間尚遺留若干疼痛，或純由肋間神經自發的症狀，則可依下述方式進行。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t35" data-num="35">
+  <div class="topic-head" style="border-top:4px solid #1a7a5e">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1a7a5e">題35</span>
+      <span class="topic-cat" style="color:#1a7a5e">神經痛</span>
+    </div>
+    <h2 class="topic-title">神經痛－坐骨神經痛（腰椎間盤突出）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腰部、臀腿、膝腿】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">腎俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">環跳</span><span class="acu-tag">居髎</span><span class="acu-tag">承扶</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span><span class="acu-tag">崑崙</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">3穴</span></div><div class="acu-pts"><span class="acu-tag">風市</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">解谿</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，輕擦、揉捏、按壓腰部的兩側，沿著膀胱經，經臀部、大腿、小腿至跟腱，重複數次（大、小腿只做患側）。</li><li>(二) 在腹部前墊枕頭，使腰部後伸，拇指重點按壓腎俞、大腸俞、環跳、居髎、承扶、殷門、委中、承山、崑崙等穴，重複數次。繼以雙掌重疊掌壓從第十一胸椎以下的正中線到尾骨，重複數次。</li><li>(三) 被術者採側臥位，做旋腰運動。</li><li>(四) 被術者採仰臥位，揉捏、按壓患肢的大腿前側和外側、小腿外側及足背，重複數次。</li><li>(五) 掌根揉捏、按壓大腿外側和小腿外側，繼之作直腿抬高運動，重複數次。</li><li>(六) 拇指揉捏、按壓風市、陽陵泉、解谿、委中、承山、崑崙等穴，最後雙掌搓揉下肢，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腰椎間盤突出症，是由於椎間盤損傷、退行性變化、纖維環破裂等致髓核組織從破裂的纖維環處，向後外側或正後方突出，於是壓迫了脊神經根或馬尾神經，而引發下腰部疼痛，和下肢的坐骨神經痛。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>然其疼痛多在單側，呈持續性的頓痛，一般來說，其疼痛早晨較輕，午後加重，臥床休息又減輕，而勞累後更加遽。</p><p>(六) 直腿抬高試驗低於 60 度，如再高舉則有劇痛。</p><p>患側下肢可出現腱反射減弱或消失，皮膚知覺的減退，和肌力減弱等徵象。</p><p>病程較長者，可能出現患肢的肌肉萎縮。</p><p>肌力測試：檢查者用雙手拇指從患者的兩腳拇指的背側同時下壓， 囑患者將拇指向上翹，在正常情形下，兩拇指上翹的力量應該是對稱的，若出現一側的力量減弱，甚至無力，則多屬第四、五腰椎之間的椎間盤突出症。</p><p>如果用雙手拇指頂住患者的兩足拇指腹，然後讓患者用力向下屈，在正常情形下，兩下屈的力量應該是相等的，若出現一側的力量減弱，甚至無力，則多屬於第五腰椎和第一骶椎之間的椎間盤突出症。</p><p>在臨床上，屬於活動型，是按摩復健的適應症。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(一) 椎間盤是連接相鄰兩個椎體的纖維軟骨盤，屬非滑膜關節。</p><p>是由上下兩個相鄰椎體的椎間軟骨板、纖維環和髓核三部分組成。</p><p>(二) 纖維環於上下軟骨板，是和脊柱的前縱韌帶以及後縱韌帶緊密相連著，能將髓核包裹在其中，有防止髓核組織突出，和連結各椎體以及維持負重等的功能。</p><p>纖維環的排列不是很均勻。</p><p>一般來說，前面較厚，後面較薄；但由於後部正中有後縱韌帶的加強，因此在纖維環的後外側部分就顯得特別薄弱，極易發生破裂，以致造成髓核多向後外側部位突出。</p><p>(三) 髓核是位於上下兩個椎間軟骨板和纖維環之間的膠凍狀物質，含有較高的水分，並具有增加椎間盤彈性的功能，有吸收震盪和緩衝外力的作用。</p><p>隨著年齡的增長，髓核的水分含量會逐步遞減，組織則發生退行性變化，遂失去了原有的功能。</p><p>(四) 發病以青壯年為多，年齡在二十至四十五歲間，而男性又多於女性，臨床以腰椎第四、五椎間盤，或腰五骶一的椎間盤突出最為常見。</p><p>(五) 坐骨神經痛，一般是由臀部開始向下，沿大腿後側經膝膕窩、小腿後外側， 直達足背而至足趾。</p><p>(七) 有些青中年人，出現左側或右側交替式的坐骨神經痛，這是由於髓核組織在鬆弛的纖維環後外側，或左右的滑動，而刺激和壓迫了脊神經的緣故。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t36" data-num="36">
+  <div class="topic-head" style="border-top:4px solid #1a7a5e">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1a7a5e">題36</span>
+      <span class="topic-cat" style="color:#1a7a5e">神經痛</span>
+    </div>
+    <h2 class="topic-title">神經痛（梨狀肌病變）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">胞肓</span><span class="acu-tag">秩邊</span><span class="acu-tag">環跳</span><span class="acu-tag">居髎</span><span class="acu-tag">承扶</span><span class="acu-tag">殷門</span><span class="acu-tag">委中</span><span class="acu-tag">承山</span><span class="acu-tag">崑崙</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【臀腿、膝腿、足踝】</span><span class="acu-cnt">3穴</span></div><div class="acu-pts"><span class="acu-tag">風市</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">解谿</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採俯臥位，先以掌根揉捏臀部肌群和大轉子周圍，重點在大轉子後缘； 再以拇指按壓骶骨外緣、臀部肌群和大轉子周圍，重複數次。</li><li>(二) 拇指彈撥患側大轉子周圍，並配合做髖關節的內旋運動。</li><li>(三) 揉捏、按壓下肢後側的膀胱經路線至足跟，重複數次。接著揉捏、按壓胞肓、秩邊、環跳、居髎、承扶、殷門、委中、承山、崑崙等穴。</li><li>(四) 被術者採仰臥位，揉捏、按壓患側下肢前側及外側到足背，重複數次。</li><li>(五) 做直腿抬高運動數次，接著按壓風市、陽陵泉、解谿、委中、承山和崑崙等穴。</li><li>(六) 被術者採側臥位，沿梨狀肌走向施強擦手法，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>梨狀肌起於骨盆內骶骨前面，在第二、三、四骶前孔外側，向下穿過坐骨大孔直達臀部，以肌腱止於股骨大轉子，是髖關節的外旋肌。</p><p>(一) 梨狀肌的上方有臀上神經和動脈管穿出，其下方也有臀下神經及血管經過， 而坐骨神經則緊貼在外側通過。</p><p>梨狀肌可由變異、痙攣、炎症、水腫等因素， 壓迫坐骨神經而出現症狀。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>(二) 將患側下肢作直腿抬高試驗時，低於 60 度即感疼痛，就是患了坐骨神經痛， 如果再將下肢作內旋動作，出現疼痛加劇，則是合併有梨狀肌病變。</p><p>(三) 患者採俯臥位，患肢屈膝，以一手按患側臀部，另一手握住踝關節向外扳， 使髖關節產生內旋動作，也會出現坐骨神經疼痛加重現象。</p><p>(四) 患側的下肢會出現膝、踝反射減弱或消失，皮膚知覺減退，肌力減弱和肌肉萎縮。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t37" data-num="37">
+  <div class="topic-head" style="border-top:4px solid #7a6218">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#7a6218">題37</span>
+      <span class="topic-cat" style="color:#7a6218">落枕</span>
+    </div>
+    <h2 class="topic-title">急性頸部軟組織痙攣（落枕）之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>8</strong> 穴 · 1 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩、背部】</span><span class="acu-cnt">8穴</span></div><div class="acu-pts"><span class="acu-tag">風府</span><span class="acu-tag">風池</span><span class="acu-tag">風門</span><span class="acu-tag">肩井</span><span class="acu-tag">膏肓</span><span class="acu-tag">天宗</span><span class="acu-tag">列缺</span><span class="acu-tag">後谿</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採坐姿，在患側上肢及上背部作誘導按摩。</li><li>(二) 輕擦、揉捏、按壓頸部、肩上部、肩胛間部，重複數次。以患側為主，健側為輔。</li><li>(三) 揉捏、按壓風府、風池、風門、肩井、膏肓和天宗等穴，以及痙攣部位肌群， 重複數次。</li><li>(四) 輕柔地抓舉揉捏痙攣的肌群，並在壓痛點進行長壓法數次。</li><li>(五) 再次在頸部、肩上部、肩胛間部，施以輕揉手法，並配合頸部運動。</li><li>(六) 再次輕柔地抓舉揉捏痙攣的肌群，並在壓痛點進行長壓法數次，最後按壓患側的列缺和後谿兩穴。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>睡眠時因枕頭高低不適，臥床姿勢不良，使一側肌群在長時間內處於過度伸展狀態，以致</p><p>發生痙攣時，即是一般所稱的落枕。</p><p>主要受累的肌肉有：胸鎖乳突肌、斜方肌和提肩</p><p>胛肌。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>常因頸部突然扭轉，或肩挑重物不當，致頸部肌肉損傷而發生疼痛，或睡眠時露肩，局部感受風寒，氣血凝滯，經絡受阻而引起。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>多數患者以一側胸鎖乳突肌， 或斜方肌局部性疼痛、痙攣和僵硬為主要症狀。</p><p>重者可波及上背部、枕部、肩背部。</p><p>落枕的臨床表現以急性頸部肌肉痙攣、疼痛、僵硬、板滯和頸部運動功能障礙</p><p>為主。</p><p>輕者一、兩天休息後可自癒；重者頸和上背部有嚴重的疼痛，同時可向後腦部及肩背部擴散，常延至數週不癒。</p><p>中年以後，如反覆出現落枕者，可能是頸椎病的前趨徵兆，應多注意。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>本症復健以舒筋活血，溫通經絡為原則，使頸部氣血通暢，痙攣的肌肉放鬆， 而疼痛的僵硬等症狀，自然隨之緩解。</p><p>施術時手法宜輕快柔和，幅度不宜過大扳動。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t38" data-num="38">
+  <div class="topic-head" style="border-top:4px solid #5c3d6e">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#5c3d6e">題38</span>
+      <span class="topic-cat" style="color:#5c3d6e">肩頸凝</span>
+    </div>
+    <h2 class="topic-title">肩頸凝之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>12</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頸肩、背部】</span><span class="acu-cnt">3穴</span></div><div class="acu-pts"><span class="acu-tag">膏肓</span><span class="acu-tag">肩中俞</span><span class="acu-tag">大杼</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【頸肩】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">天柱</span><span class="acu-tag">風池</span><span class="acu-tag">完骨</span><span class="acu-tag">肩井</span><span class="acu-tag">巨骨</span><span class="acu-tag">肩髃</span><span class="acu-tag">肩髎</span><span class="acu-tag">肩外俞</span><span class="acu-tag">天宗</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採側臥位，施上肢誘導按摩手法，重複數次。</li><li>(二) 輕擦、揉捏、按壓沿脊柱兩側肩胛骨內緣到肩胛骨下角。拇指彈撥膏肓穴， 再按壓肩中俞和大杼兩穴。</li><li>(三) 輕擦、揉捏、按壓沿頸部後側和外側的斜方肌、提肩胛肌，以及前側的胸鎖乳突肌，重複數次。</li><li>(四) 揉捏、按壓天柱、風池、完骨、肩井、巨骨、肩髃、肩髎、肩外俞、肩中俞、天宗等穴。</li><li>(五) 在後頸部、肩部施以橫手式和切打法。</li><li>(六) 小指側強擦後頸部、肩部。雙掌搓擦肩峰，以熱透為宜。</li><li>(七) 揉捏、按壓肩井穴，並施肩部及頸部運動法。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>肩頸凝僅為症候，而非病名。形成這種症狀的原因很複雜，也很難診斷出患者的真正病因，不過大多由於骨骼的病變和肌肉疼痛所引發。肩頸凝最常見的病因為：外傷、感染病毒或退行性變化、對疼痛的防禦性緊張、椎骨變形的僵直、軟組織的痙攣、自主神經支配失常所引致的局部變化、內臟病變的反射、因肌緊張所產生的壓迫、瘀血、滲出性發炎等。</p><p>由肌肉組織的病變所引起：支持軀幹的肌肉，就是骨骼肌，神經和血管等也都分布在這區域，肌膜覆蓋著骨骼肌，而且兩端與肌腱相連，肌腱又和骨骼相接，所以肌肉、肌腱與骨骼成為一體，而共同支撐著身體。</p><p>故當肌肉異常時，不但肌肉上的神經和血管受到牽連，甚至連骨骼也不免連帶受影響。</p><p>肩頸凝在開始時，通常都很輕微，而且不久又能自行消失。</p><p>因此有不少人並不會把這種感覺當做症狀，甚至完全忽視，或雖有了肩頸凝而不自覺。</p><p>例如較耗體力的運動員，絕不把肌肉僵硬視作病痛，勞力的職業者，對肩頸部的不靈活當為正常。</p><p>另外患了頭痛、失眠、高血壓的人，多半有肩頸凝，他們雖然知道與此有關連，但卻不認為這是症狀。</p><p>所以本病隨著個人的感覺差異很大。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t39" data-num="39">
+  <div class="topic-head" style="border-top:4px solid #2d7a4f">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#2d7a4f">題39</span>
+      <span class="topic-cat" style="color:#2d7a4f">便秘</span>
+    </div>
+    <h2 class="topic-title">便秘之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>9</strong> 穴 · 2 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【腹部】</span><span class="acu-cnt">4穴</span></div><div class="acu-pts"><span class="acu-tag">中脘</span><span class="acu-tag">天樞</span><span class="acu-tag">大橫</span><span class="acu-tag">關元</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【腰部、背部】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">肝俞</span><span class="acu-tag">脾俞</span><span class="acu-tag">腎俞</span><span class="acu-tag">大腸俞</span><span class="acu-tag">八髎</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，先用輕巧地拇指揉捏、按壓中脘、天樞、大橫、關元等穴。</li><li>(二) 以手掌順大腸走向輕擦，其次用雙手四指重疊揉捏中脘、天樞、大橫等穴位， 接著用手掌順大腸走向揉捏，以增強蠕動，促進排便。</li><li>(三) 被術者採俯臥位，沿脊柱兩側的膀胱經路線，施稍加重力的拇指揉捏，特別加強肝俞、脾俞、腎俞、大腸俞和八髎等穴。</li><li>(四) 掌側強擦八髎穴，以熱透為宜</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>腸的蠕動速度緩慢，導致腸內的排泄物推進遲滯，或排便時間超長，以及有便意後，卻艱澀難下的一種現象，就屬於便秘。本症多見於各種急慢性疾病中。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>便秘的原因，大致分為器質性和機能性兩種。</p><p>器質性便秘是結腸病變，使腸管內腔變狹，影響到排泄物不易通過，或者由於乙狀結腸過長，也會使蠕動速度減弱， 排泄物推進趨緩，水分遂被吸收殆盡，以致影響了通便。</p><p>機能性便秘：如過敏性大腸症候群等，其中以痙攣性較為多見。</p><p>另外如飽食後運動量不足，食物中缺植物纖維，或濫用強瀉劑和經常灌腸等，都可能造成便秘。</p><p>急性腸梗阻，病變可發生在小腸或大腸，可導致某一段腸管壁的壞死，或引起腹膜炎，所以不要延誤就醫。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>便秘的症狀一般表現是：排便次數減少，經常三五日甚至更久才能解便一次。</p><p>或者次數微減，但大便乾硬難排，或者有便意，卻不容易排解等。</p><p>便秘日久者，常可引起下腹部脹滿、胸悶、打嗝、食慾不振、失眠、心煩、情緒低落，或伴有頭暈頭痛等。</p><p>如長期習慣性便秘者，則亦患痔瘡。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+<section class="topic" id="t40" data-num="40">
+  <div class="topic-head" style="border-top:4px solid #1a4f7a">
+    <div class="topic-meta">
+      <span class="topic-badge" style="background:#1a4f7a">題40</span>
+      <span class="topic-cat" style="color:#1a4f7a">失眠</span>
+    </div>
+    <h2 class="topic-title">失眠之按摩</h2>
+  </div>
+  <div class="topic-body">
+    <div class="sec-wrap acu-sec">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">一【穴位】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><div class="acu-summary">共 <strong>29</strong> 穴 · 3 區段</div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第1段</span><span class="acu-region">【頭面】</span><span class="acu-cnt">5穴</span></div><div class="acu-pts"><span class="acu-tag">神庭</span><span class="acu-tag">太陽</span><span class="acu-tag">迎香</span><span class="acu-tag">印堂</span><span class="acu-tag">攢竹</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第2段</span><span class="acu-region">【前臂手部、頸肩、頭面】</span><span class="acu-cnt">9穴</span></div><div class="acu-pts"><span class="acu-tag">角孫</span><span class="acu-tag">頭維</span><span class="acu-tag">百會</span><span class="acu-tag">完骨</span><span class="acu-tag">風池</span><span class="acu-tag">肩井</span><span class="acu-tag">內關</span><span class="acu-tag">神門</span><span class="acu-tag">合谷</span></div></div><div class="acu-group"><div class="acu-header"><span class="acu-seg">第3段</span><span class="acu-region">【腰部、足踝、腹部】</span><span class="acu-cnt">15穴</span></div><div class="acu-pts"><span class="acu-tag">肺俞</span><span class="acu-tag">心俞</span><span class="acu-tag">脾俞</span><span class="acu-tag">腎俞</span><span class="acu-tag">命門</span><span class="acu-tag">關元俞</span><span class="acu-tag">照海</span><span class="acu-tag">湧泉</span><span class="acu-tag">八髎</span><span class="acu-tag">中脘</span><span class="acu-tag">氣海</span><span class="acu-tag">關元</span><span class="acu-tag">足三里</span><span class="acu-tag">陽陵泉</span><span class="acu-tag">三陰交</span></div></div></div>
+    </div>
+    <div class="sec-wrap">
+      <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+        <span class="sec-label">二【施術步驟】</span>
+        <span class="sec-arrow">▼</span>
+      </button>
+      <div class="sec-body"><ol class="steps"><li>(一) 被術者採仰臥位，輕擦印堂到神庭穴，再從印堂沿著上眼眶到兩旁的太陽穴， 重複數次。</li><li>(二) 兩指輕擦，自眉間沿兩邊鼻梁骨向下到迎香穴，四指推擦顴骨下緣到耳前， 重複數次。</li><li>(三)  兩指夾擦口輪匝肌，然後改為四指輕擦，沿著下巴兩旁到耳後，重複數次。</li><li>(四)  揉捏印堂、神庭、攢竹、太陽等穴，以及眼眶周圍的眼輪匝肌，重複數次。</li><li>(五) 被術者採俯臥位，揉捏、按壓角孫、頭維、百會、完骨、風池、肩井，以及 內關、神門、合谷等穴。</li><li>(六) 在顱頂施以柳手式後，接著用四指推擦兩頸側橋弓。</li><li>(七) 手掌輕擦兩側後頸部、肩部、背部，直達尾椎。</li><li>(八) 沿著脊柱兩側的膀胱經，用稍重的拇指揉捏到第三腰椎附近。重點按壓肺俞、心俞、脾俞、腎俞、命門、關元俞、照海、申脈以及湧泉等穴，另外用輕手法按揉八髎穴，重複數次。</li><li>(九) 被術者採仰臥位，掌擦腹部，接著揉捏中脘、氣海、關元，再按壓足三里、陽陵泉、三陰交等穴，各重複數次。最後手掌輕擦腹部，以熱透為宜。</li></ol></div>
+    </div>
+    
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">三【概述】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>失眠，是指無法獲得正常性睡眠。此現象並非病名，而是由各種因素所引起。輕者入眠困難，或眠而不酣，時睡時醒，醒後又不易再睡，在嚴重時幾乎整夜都無法入眠。若以按摩手法復健，則有較多的病例能恢復正常。</p><p>當睡眠時，維持身體姿勢的抗重力肌肉遲緩、心跳趨慢、血壓降低、呼吸徐緩、分泌量減少，各種感覺逐漸消失。</p><p>睡眠的時間長短，可隨年齡不同而有差異。</p><p>整夜在睡眠過程中，其淺睡、深睡、酣睡等階段，雖是漸進或遞減，然又是反覆無常。</p><p>故腦電波頻率在過程中，也隨之變化。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)">
+    <span class="sec-label">四【病因病理】</span>
+    <span class="sec-arrow">▼</span>
+  </button>
+  <div class="sec-body"><p>失眠的原因有：</p><p>(一) 由於全身性或局部疾患，以及老化所導致。</p><p>(二) 環境影響，如打鼾、噪音、室溫、亮度、睡具、通風、空氣污濁等。</p><p>(三) 新環境尚未能適應，或長期因職業慢性受害等。</p><p>(四) 習慣的改變，睡前刺激，如飲用茶、咖啡、酒、吸煙和能提神飲料，以及刺激食物等。</p><p>(五)  有神經質、神經官能症，以及工作壓力，精神緊張等。</p><p>患者無顯著的外徵，僅出現精神恍惚、無精打采、思慮渙散、步履蹣跚、身心疲乏，以及工作效率低落，或兼有頭痛、眩暈、胸悶、頭重、心悸、健忘、便秘、腰酸背痛等，由於身體抵抗力較弱，也容易感染其他疾病。</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">五【臨床表現】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">六【相關解剖】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">七【施術目的】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+<div class="sec-wrap">
+  <button class="sec-toggle" aria-expanded="false" onclick="toggleSec(this)">
+    <span class="sec-label">八【注意事項】</span>
+    <span class="sec-arrow">▶</span>
+  </button>
+  <div class="sec-body" hidden><p class="empty">（待補充）</p></div>
+</div>
+  </div>
+</section>
+  </div>
+</div>
+
+<script>
+var selectedNums = [];
+
+function startExam() {
+  var n1 = document.getElementById('sel1').value;
+  var n2 = document.getElementById('sel2').value;
+  var nums = [n1, n2].filter(Boolean);
+  if (!nums.length) {
+    alert('請至少選擇一個題號');
+    document.getElementById('sel1').focus();
+    return;
+  }
+  selectedNums = nums;
+
+  // 隱藏所有題目，顯示選中的
+  document.querySelectorAll('.topic').forEach(function(t) {
+    t.classList.remove('active');
+  });
+
+  // 設定導航按鈕
+  for (var i = 0; i < 2; i++) {
+    var btn = document.getElementById('navBtn' + (i+1));
+    var numEl = document.getElementById('navNum' + (i+1));
+    var nameEl = document.getElementById('navName' + (i+1));
+    if (nums[i]) {
+      var card = document.getElementById('t' + nums[i]);
+      var title = card ? card.querySelector('.topic-title').textContent : '';
+      numEl.textContent = '題' + nums[i];
+      nameEl.textContent = title;
+      btn.style.display = '';
+      btn.setAttribute('aria-pressed', i===0 ? 'true' : 'false');
+      btn.classList.toggle('active', i===0);
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  // 顯示第一題
+  switchTopic(0);
+
+  // 切換畫面
+  document.getElementById('pickScreen').style.display = 'none';
+  var examEl = document.getElementById('examScreen');
+  examEl.style.display = 'flex';
+  window.scrollTo(0, 0);
+  document.getElementById('navBtn1').focus();
+}
+
+function switchTopic(idx) {
+  if (!selectedNums[idx]) return;
+  // 切換 active
+  document.querySelectorAll('.nav-btn').forEach(function(b, i) {
+    b.classList.toggle('active', i===idx);
+    b.setAttribute('aria-pressed', i===idx ? 'true' : 'false');
+  });
+  document.querySelectorAll('.topic').forEach(function(t) {
+    t.classList.remove('active');
+  });
+  var card = document.getElementById('t' + selectedNums[idx]);
+  if (card) {
+    card.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function exitExam() {
+  document.getElementById('examScreen').style.display = 'none';
+  document.getElementById('pickScreen').style.display = 'flex';
+  window.scrollTo(0,0);
+  document.getElementById('sel1').focus();
+}
+
+function toggleSec(btn) {
+  var expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !expanded);
+  btn.querySelector('.sec-arrow').textContent = expanded ? '▶' : '▼';
+  var body = btn.nextElementSibling;
+  if (expanded) body.setAttribute('hidden', '');
+  else body.removeAttribute('hidden');
+}
+</script>
+</body>
+</html>
