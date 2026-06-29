@@ -88,6 +88,53 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
 .acu-modal-close:focus{outline:2px solid var(--focus)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(min-width:600px){.pick-body{max-width:480px;margin:0 auto;width:100%}.exam-content{max-width:700px;margin:0 auto}}
+
+/* ── 密碼保護彈窗 ── */
+.pwd-modal-bg{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.65);align-items:center;justify-content:center;
+  padding:20px;
+}
+.pwd-modal-bg.open{display:flex}
+.pwd-modal{
+  background:#fff;border-radius:16px;
+  padding:28px 24px 24px;width:100%;max-width:360px;
+  box-shadow:0 8px 32px rgba(0,0,0,.25);
+}
+.pwd-modal h3{font-size:1.1rem;font-weight:800;color:#1a2a4a;margin-bottom:6px}
+.pwd-modal p{font-size:.85rem;color:#666;margin-bottom:16px;line-height:1.5}
+.pwd-input-wrap{position:relative;margin-bottom:12px}
+.pwd-input{
+  width:100%;padding:13px 44px 13px 14px;border-radius:10px;
+  border:1.5px solid #ddd;font-size:1rem;font-family:var(--font);
+  background:#f8f8f8;color:#1a1a1a;
+}
+.pwd-input:focus{outline:2px solid var(--focus);border-color:var(--focus);background:#fff}
+.pwd-toggle{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  border:none;background:transparent;color:#888;font-size:1rem;cursor:pointer;padding:4px;
+}
+.pwd-submit{
+  width:100%;padding:13px;border-radius:10px;border:none;
+  background:#1e5799;color:#fff;font-size:1rem;font-weight:700;
+  font-family:var(--font);cursor:pointer;margin-bottom:8px;
+  -webkit-tap-highlight-color:transparent;
+}
+.pwd-submit:hover{background:#2a6abf}
+.pwd-submit:focus{outline:2px solid var(--focus);outline-offset:2px}
+.pwd-cancel{
+  width:100%;padding:10px;border-radius:10px;border:1.5px solid #ddd;
+  background:transparent;color:#666;font-size:.9rem;
+  font-family:var(--font);cursor:pointer;
+}
+.pwd-cancel:focus{outline:2px solid var(--focus)}
+.pwd-error{
+  font-size:.83rem;color:#c0392b;margin-bottom:8px;
+  display:none;font-weight:600;
+}
+.pwd-error.show{display:block}
+.pwd-lock-msg{font-size:.83rem;color:#c0392b;text-align:center;margin-bottom:8px;display:none}
+.pwd-lock-msg.show{display:block}
 </style>
 </head>
 <body>
@@ -219,7 +266,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-01-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(1,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-01-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-01-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(1,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-01-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(1,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -318,7 +365,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-02-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(2,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-02-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-02-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(2,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-02-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(2,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -422,7 +469,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-03-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(3,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-03-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-03-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(3,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-03-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(3,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -520,7 +567,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-04-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(4,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-04-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-04-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(4,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-04-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(4,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -619,7 +666,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-05-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(5,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-05-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-05-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(5,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-05-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(5,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -717,7 +764,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-06-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(6,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-06-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-06-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(6,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-06-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(6,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -815,7 +862,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-07-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(7,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-07-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-07-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(7,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-07-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(7,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -913,7 +960,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-08-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(8,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-08-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-08-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(8,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-08-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(8,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1012,7 +1059,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-09-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(9,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-09-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-09-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(9,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-09-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(9,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1110,7 +1157,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-10-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(10,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-10-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-10-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(10,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-10-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(10,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1208,7 +1255,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-11-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(11,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-11-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-11-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(11,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-11-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(11,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1306,7 +1353,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-12-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(12,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-12-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-12-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(12,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-12-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(12,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1404,7 +1451,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-13-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(13,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-13-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-13-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(13,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-13-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(13,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1502,7 +1549,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-14-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(14,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-14-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-14-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(14,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-14-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(14,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1600,7 +1647,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-15-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(15,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-15-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-15-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(15,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-15-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(15,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1698,7 +1745,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-16-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(16,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-16-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-16-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(16,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-16-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(16,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1802,7 +1849,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-17-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(17,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-17-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-17-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(17,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-17-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(17,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1900,7 +1947,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-18-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(18,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-18-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-18-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(18,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-18-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(18,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -1997,8 +2044,8 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <h2 class="topic-title" id="topic-title-19">關節炎－腕部橈側伸腕肌腱周圍炎之按摩</h2>
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-19-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(19,'spec',this)">規範版</button>
-  <button class="ver-tab" role="tab" id="vt-19-teacher" aria-selected="false" aria-label="萬老師重點整理" onclick="switchVer(19,'teacher',this)">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-19-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(19,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-19-teacher" aria-selected="false" aria-label="萬老師重點整理" onclick="requirePassword(19,'teacher',this)">萬重</button>
+  <button class="ver-tab" role="tab" id="vt-19-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(19,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -2368,7 +2415,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-24-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(24,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-24-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-24-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(24,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-24-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(24,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -2466,7 +2513,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-25-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(25,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-25-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-25-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(25,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-25-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(25,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -2564,7 +2611,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-26-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(26,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-26-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-26-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(26,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-26-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(26,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -2662,7 +2709,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-27-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(27,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-27-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-27-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(27,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-27-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(27,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -2762,7 +2809,7 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-28-spec" aria-selected="true" aria-label="規範版" onclick="switchVer(28,'spec',this)">規範版</button>
   <button class="ver-tab disabled" role="tab" id="vt-28-teacher" aria-selected="false" aria-label="萬老師重點整理" aria-disabled="true">萬重</button>
-  <button class="ver-tab" role="tab" id="vt-28-detail" aria-selected="false" aria-label="萬老師講義" onclick="switchVer(28,'detail',this)">萬詳</button>
+  <button class="ver-tab" role="tab" id="vt-28-detail" aria-selected="false" aria-label="萬老師講義" onclick="requirePassword(28,'detail',this)">萬詳</button>
   <button class="ver-tab disabled" role="tab" aria-disabled="true" aria-label="同學整理">同學</button>
 </div>
   </div>
@@ -3547,6 +3594,25 @@ button.acu-tag:focus{outline:2px solid var(--focus)}
   </main>
 </div>
 
+
+<!-- 密碼保護彈窗 -->
+<div class="pwd-modal-bg" id="pwdModal" role="dialog" aria-modal="true" aria-labelledby="pwdTitle">
+  <div class="pwd-modal">
+    <h3 id="pwdTitle">🔒 輸入密碼</h3>
+    <p>萬老師整理版需要輸入密碼才能查看</p>
+    <div class="pwd-input-wrap">
+      <input type="password" id="pwdInput" class="pwd-input"
+        placeholder="請輸入密碼" autocomplete="current-password"
+        aria-label="密碼" onkeydown="if(event.key==='Enter')submitPwd()">
+      <button class="pwd-toggle" onclick="togglePwdShow()" aria-label="顯示或隱藏密碼">👁</button>
+    </div>
+    <div class="pwd-error" id="pwdError">密碼錯誤，請再試一次</div>
+    <div class="pwd-lock-msg" id="pwdLockMsg">輸入錯誤次數過多，請重新整理頁面</div>
+    <button class="pwd-submit" onclick="submitPwd()">確認</button>
+    <button class="pwd-cancel" onclick="closePwdModal()">取消</button>
+  </div>
+</div>
+
 <div class="acu-modal-bg" id="acuModal" role="dialog" aria-modal="true" aria-labelledby="acuModalName" onclick="if(event.target===this)closeAcu()">
   <div class="acu-modal">
     <div class="acu-modal-name" id="acuModalName"></div>
@@ -3633,6 +3699,81 @@ function showAcu(name,text){
 }
 function closeAcu(){document.getElementById('acuModal').classList.remove('open');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAcu();});
+
+// ── 密碼保護 ──
+var PWD_HASH = '65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
+var pwdVerified = false;
+var pwdFailCount = 0;
+var pendingVer = null;
+var pendingNum = null;
+var pendingTab = null;
+
+async function sha256(str) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function requirePassword(topicNum, ver, tabEl) {
+  // 已驗證過直接切換
+  if (pwdVerified) {
+    switchVer(topicNum, ver, tabEl);
+    return;
+  }
+  // 需要密碼
+  pendingVer = ver;
+  pendingNum = topicNum;
+  pendingTab = tabEl;
+  document.getElementById('pwdInput').value = '';
+  document.getElementById('pwdError').classList.remove('show');
+  document.getElementById('pwdLockMsg').classList.remove('show');
+  document.getElementById('pwdModal').classList.add('open');
+  setTimeout(function(){ document.getElementById('pwdInput').focus(); }, 50);
+}
+
+async function submitPwd() {
+  if (pwdFailCount >= 3) {
+    document.getElementById('pwdLockMsg').classList.add('show');
+    return;
+  }
+  var input = document.getElementById('pwdInput').value;
+  var hash = await sha256(input);
+  if (hash === PWD_HASH) {
+    pwdVerified = true;
+    pwdFailCount = 0;
+    closePwdModal();
+    if (pendingVer && pendingTab) {
+      switchVer(pendingNum, pendingVer, pendingTab);
+    }
+  } else {
+    pwdFailCount++;
+    document.getElementById('pwdError').classList.add('show');
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').focus();
+    if (pwdFailCount >= 3) {
+      document.getElementById('pwdError').classList.remove('show');
+      document.getElementById('pwdLockMsg').classList.add('show');
+    }
+  }
+}
+
+function closePwdModal() {
+  document.getElementById('pwdModal').classList.remove('open');
+  pendingVer = null; pendingNum = null; pendingTab = null;
+}
+
+function togglePwdShow() {
+  var inp = document.getElementById('pwdInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+// ESC 關閉密碼彈窗
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeAcu();
+    closePwdModal();
+  }
+});
+
 </script>
 </body>
 </html>
