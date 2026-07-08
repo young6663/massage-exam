@@ -651,10 +651,97 @@ dialog.sheet-modal::backdrop{background:rgba(0,0,0,.55)}
     <div class="ver-tabs" role="tablist" aria-label="選擇版本">
   <button class="ver-tab active" role="tab" id="vt-35-spec" aria-selected="true" aria-label="規範版" onkeydown="verTabKeyNav(event,35,this)" onclick="switchVer(35,'spec',this)">規</button>
   <button class="ver-tab disabled" role="tab" id="vt-35-teacher" aria-selected="false" aria-label="萬老師重點整理" onkeydown="verTabKeyNav(event,35,this)" aria-disabled="true">重</button>
-  <button class="ver-tab disabled" role="tab" id="vt-35-detail" aria-selected="false" aria-label="萬老師講義" onkeydown="verTabKeyNav(event,35,this)" aria-disabled="true">講</button>
+  <button class="ver-tab" role="tab" id="vt-35-detail" aria-selected="false" aria-label="萬老師講義" onkeydown="verTabKeyNav(event,35,this)" onclick="requirePassword(35,'detail',this)">講</button>
 </div>
   </div>
-  <div class="topic-body"><div class="ver-panel active" id="vp-35-spec" role="tabpanel" aria-labelledby="vt-35-spec"><div class="sec-wrap acu-sec"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-spec-acu"><span class="sec-label" role="heading" aria-level="3">一【穴位】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-spec-acu"><p class="acu-summary">共 <strong>12</strong> 穴</p><div class="acu-pts"><button class="acu-tag has-detail" onclick="showAcu('腎俞','第二腰椎棘突下旁開1.5寸。\n\n【來源：講義】')">腎俞</button><button class="acu-tag has-detail" onclick="showAcu('大腸俞','第四腰椎棘穴下旁開1.5寸\n\n【來源：講義】')">大腸俞</button><button class="acu-tag has-detail" onclick="showAcu('環跳','1、俯臥，大轉子最高點與尾骶骨(骶骨裂孔)連線之中間點，以手按之有孔甚大是穴。2、側臥，也有書籍為大轉子最高點與尾骶骨(骶骨裂孔)連線之外1/3處是穴。\n\n【來源：講義】')">環跳</button><button class="acu-tag has-detail" onclick="showAcu('居髎','側臥，在髂前上棘與大轉子最高點連線中點凹陷處\n\n【來源：講義】')">居髎</button><button class="acu-tag has-detail" onclick="showAcu('承扶','臀橫紋中央取穴\n\n【來源：講義】')">承扶</button><button class="acu-tag has-detail" onclick="showAcu('殷門','承扶與委中連線上，承扶下六寸(承扶至委中為十四寸)\n\n【來源：講義】')">殷門</button><button class="acu-tag has-detail" onclick="showAcu('委中','膝膕橫紋正中央兩筋間(股二頭肌腱、半腱肌腱)，動脈應手處\n\n【來源：講義】')">委中</button><button class="acu-tag has-detail" onclick="showAcu('承山','足跟離地腓腸下出現人字紋處取之(委中至腳後跟上與外踝尖平                        齊處連線的中間取穴)\n\n【來源：講義】')">承山</button><button class="acu-tag has-detail" onclick="showAcu('崑崙','外髁骨與跟腱之間陷中取之\n\n【來源：講義】')">崑崙</button><button class="acu-tag has-detail" onclick="showAcu('風市','直立，兩手下垂，當中指尖處(當膝上七寸外廉兩筋間)\n\n【來源：講義】')">風市</button><button class="acu-tag has-detail" onclick="showAcu('陽陵泉','正坐，屈膝垂足，按取膝外側腓骨小頭微前下方陷中                   在腓骨小頭前下方、腓骨長短肌陷中。\n\n【來源：講義】')">陽陵泉</button><button class="acu-tag has-detail" onclick="showAcu('解谿','踝關節橫紋上，伸趾長肌肌腱和伸姆長肌肌腱間陷中。\n\n【來源：講義】')">解谿</button></div></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-spec-steps"><span class="sec-label" role="heading" aria-level="3">二【施術步驟】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-spec-steps"><div class="steps"><div class="step-item">(一) 被術者採俯臥位，輕擦、揉捏、按壓腰部的兩側，沿著膀胱經，經臀部、大腿、小腿至跟腱，重複數次（大、小腿只做患側）。</div><div class="step-item">(二) 在腹部前墊枕頭，使腰部後伸，拇指重點按壓腎俞、大腸俞、環跳、居髎、承扶、殷門、委中、承山、崑崙等穴，重複數次。繼以雙掌重疊掌壓從第十一胸椎以下的正中線到尾骨，重複數次。</div><div class="step-item">(三) 被術者採側臥位，做旋腰運動。</div><div class="step-item">(四) 被術者採仰臥位，揉捏、按壓患肢的大腿前側和外側、小腿外側及足背，重複數次。</div><div class="step-item">(五) 掌根揉捏、按壓大腿外側和小腿外側，繼之作直腿抬高運動，重複數次。</div><div class="step-item">(六) 拇指揉捏、按壓風市、陽陵泉、解谿、委中、承山、崑崙等穴，最後雙掌搓揉下肢，以熱透為宜。</div></div></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-spec-exp"><span class="sec-label" role="heading" aria-level="3">三【試題說明】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-spec-exp"><p>腰椎間盤突出症，是由於椎間盤損傷、退行性變化、纖維環破裂等致髓核組織從破裂的纖維環處，向後外側或正後方突出，於是壓迫了脊神經根或馬尾神經，而引發下腰部疼痛，和下肢的坐骨神經痛。</p><p>(一) 椎間盤是連接相鄰兩個椎體的纖維軟骨盤，屬非滑膜關節。是由上下兩個相鄰椎體的椎間軟骨板、纖維環和髓核三部分組成。</p><p>(二) 纖維環於上下軟骨板，是和脊柱的前縱韌帶以及後縱韌帶緊密相連著，能將髓核包裹在其中，有防止髓核組織突出，和連結各椎體以及維持負重等的功能。纖維環的排列不是很均勻。一般來說，前面較厚，後面較薄；但由於後部正中有後縱韌帶的加強，因此在纖維環的後外側部分就顯得特別薄弱，極易發生破裂，以致造成髓核多向後外側部位突出。</p><p>(三) 髓核是位於上下兩個椎間軟骨板和纖維環之間的膠凍狀物質，含有較高的水分，並具有增加椎間盤彈性的功能，有吸收震盪和緩衝外力的作用。隨著年齡的增長，髓核的水分含量會逐步遞減，組織則發生退行性變化，遂失去了原有的功能。</p><p>(四) 發病以青壯年為多，年齡在二十至四十五歲間，而男性又多於女性，臨床以腰椎第四、五椎間盤，或腰五骶一的椎間盤突出最為常見。</p><p>(五) 坐骨神經痛，一般是由臀部開始向下，沿大腿後側經膝膕窩、小腿後外側， 直達足背而至足趾。然其疼痛多在單側，呈持續性的頓痛，一般來說，其疼痛早晨較輕，午後加重，臥床休息又減輕，而勞累後更加遽。</p><p>(六) 直腿抬高試驗低於 60 度，如再高舉則有劇痛。患側下肢可出現腱反射減弱或消失，皮膚知覺的減退，和肌力減弱等徵象。病程較長者，可能出現患肢的肌肉萎縮。肌力測試：檢查者用雙手拇指從患者的兩腳拇指的背側同時下壓， 囑患者將拇指向上翹，在正常情形下，兩拇指上翹的力量應該是對稱的，若出現一側的力量減弱，甚至無力，則多屬第四、五腰椎之間的椎間盤突出症。如果用雙手拇指頂住患者的兩足拇指腹，然後讓患者用力向下屈，在正常情形下，兩下屈的力量應該是相等的，若出現一側的力量減弱，甚至無力，則多屬於第五腰椎和第一骶椎之間的椎間盤突出症。</p><p>(七) 有些青中年人，出現左側或右側交替式的坐骨神經痛，這是由於髓核組織在鬆弛的纖維環後外側，或左右的滑動，而刺激和壓迫了脊神經的緣故。在臨床上，屬於活動型，是按摩復健的適應症。</p></div></div></div></div>
+  <div class="topic-body"><div class="ver-panel active" id="vp-35-spec" role="tabpanel" aria-labelledby="vt-35-spec"><div class="sec-wrap acu-sec"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-spec-acu"><span class="sec-label" role="heading" aria-level="3">一【穴位】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-spec-acu"><p class="acu-summary">共 <strong>12</strong> 穴</p><div class="acu-pts"><button class="acu-tag has-detail" onclick="showAcu('腎俞','第二腰椎棘突下旁開1.5寸。\n\n【來源：講義】')">腎俞</button><button class="acu-tag has-detail" onclick="showAcu('大腸俞','第四腰椎棘穴下旁開1.5寸\n\n【來源：講義】')">大腸俞</button><button class="acu-tag has-detail" onclick="showAcu('環跳','1、俯臥，大轉子最高點與尾骶骨(骶骨裂孔)連線之中間點，以手按之有孔甚大是穴。2、側臥，也有書籍為大轉子最高點與尾骶骨(骶骨裂孔)連線之外1/3處是穴。\n\n【來源：講義】')">環跳</button><button class="acu-tag has-detail" onclick="showAcu('居髎','側臥，在髂前上棘與大轉子最高點連線中點凹陷處\n\n【來源：講義】')">居髎</button><button class="acu-tag has-detail" onclick="showAcu('承扶','臀橫紋中央取穴\n\n【來源：講義】')">承扶</button><button class="acu-tag has-detail" onclick="showAcu('殷門','承扶與委中連線上，承扶下六寸(承扶至委中為十四寸)\n\n【來源：講義】')">殷門</button><button class="acu-tag has-detail" onclick="showAcu('委中','膝膕橫紋正中央兩筋間(股二頭肌腱、半腱肌腱)，動脈應手處\n\n【來源：講義】')">委中</button><button class="acu-tag has-detail" onclick="showAcu('承山','足跟離地腓腸下出現人字紋處取之(委中至腳後跟上與外踝尖平                        齊處連線的中間取穴)\n\n【來源：講義】')">承山</button><button class="acu-tag has-detail" onclick="showAcu('崑崙','外髁骨與跟腱之間陷中取之\n\n【來源：講義】')">崑崙</button><button class="acu-tag has-detail" onclick="showAcu('風市','直立，兩手下垂，當中指尖處(當膝上七寸外廉兩筋間)\n\n【來源：講義】')">風市</button><button class="acu-tag has-detail" onclick="showAcu('陽陵泉','正坐，屈膝垂足，按取膝外側腓骨小頭微前下方陷中                   在腓骨小頭前下方、腓骨長短肌陷中。\n\n【來源：講義】')">陽陵泉</button><button class="acu-tag has-detail" onclick="showAcu('解谿','踝關節橫紋上，伸趾長肌肌腱和伸姆長肌肌腱間陷中。\n\n【來源：講義】')">解谿</button></div></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-spec-steps"><span class="sec-label" role="heading" aria-level="3">二【施術步驟】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-spec-steps"><div class="steps"><div class="step-item">(一) 被術者採俯臥位，輕擦、揉捏、按壓腰部的兩側，沿著膀胱經，經臀部、大腿、小腿至跟腱，重複數次（大、小腿只做患側）。</div><div class="step-item">(二) 在腹部前墊枕頭，使腰部後伸，拇指重點按壓腎俞、大腸俞、環跳、居髎、承扶、殷門、委中、承山、崑崙等穴，重複數次。繼以雙掌重疊掌壓從第十一胸椎以下的正中線到尾骨，重複數次。</div><div class="step-item">(三) 被術者採側臥位，做旋腰運動。</div><div class="step-item">(四) 被術者採仰臥位，揉捏、按壓患肢的大腿前側和外側、小腿外側及足背，重複數次。</div><div class="step-item">(五) 掌根揉捏、按壓大腿外側和小腿外側，繼之作直腿抬高運動，重複數次。</div><div class="step-item">(六) 拇指揉捏、按壓風市、陽陵泉、解谿、委中、承山、崑崙等穴，最後雙掌搓揉下肢，以熱透為宜。</div></div></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-spec-exp"><span class="sec-label" role="heading" aria-level="3">三【試題說明】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-spec-exp"><p>腰椎間盤突出症，是由於椎間盤損傷、退行性變化、纖維環破裂等致髓核組織從破裂的纖維環處，向後外側或正後方突出，於是壓迫了脊神經根或馬尾神經，而引發下腰部疼痛，和下肢的坐骨神經痛。</p><p>(一) 椎間盤是連接相鄰兩個椎體的纖維軟骨盤，屬非滑膜關節。是由上下兩個相鄰椎體的椎間軟骨板、纖維環和髓核三部分組成。</p><p>(二) 纖維環於上下軟骨板，是和脊柱的前縱韌帶以及後縱韌帶緊密相連著，能將髓核包裹在其中，有防止髓核組織突出，和連結各椎體以及維持負重等的功能。纖維環的排列不是很均勻。一般來說，前面較厚，後面較薄；但由於後部正中有後縱韌帶的加強，因此在纖維環的後外側部分就顯得特別薄弱，極易發生破裂，以致造成髓核多向後外側部位突出。</p><p>(三) 髓核是位於上下兩個椎間軟骨板和纖維環之間的膠凍狀物質，含有較高的水分，並具有增加椎間盤彈性的功能，有吸收震盪和緩衝外力的作用。隨著年齡的增長，髓核的水分含量會逐步遞減，組織則發生退行性變化，遂失去了原有的功能。</p><p>(四) 發病以青壯年為多，年齡在二十至四十五歲間，而男性又多於女性，臨床以腰椎第四、五椎間盤，或腰五骶一的椎間盤突出最為常見。</p><p>(五) 坐骨神經痛，一般是由臀部開始向下，沿大腿後側經膝膕窩、小腿後外側， 直達足背而至足趾。然其疼痛多在單側，呈持續性的頓痛，一般來說，其疼痛早晨較輕，午後加重，臥床休息又減輕，而勞累後更加遽。</p><p>(六) 直腿抬高試驗低於 60 度，如再高舉則有劇痛。患側下肢可出現腱反射減弱或消失，皮膚知覺的減退，和肌力減弱等徵象。病程較長者，可能出現患肢的肌肉萎縮。肌力測試：檢查者用雙手拇指從患者的兩腳拇指的背側同時下壓， 囑患者將拇指向上翹，在正常情形下，兩拇指上翹的力量應該是對稱的，若出現一側的力量減弱，甚至無力，則多屬第四、五腰椎之間的椎間盤突出症。如果用雙手拇指頂住患者的兩足拇指腹，然後讓患者用力向下屈，在正常情形下，兩下屈的力量應該是相等的，若出現一側的力量減弱，甚至無力，則多屬於第五腰椎和第一骶椎之間的椎間盤突出症。</p><p>(七) 有些青中年人，出現左側或右側交替式的坐骨神經痛，這是由於髓核組織在鬆弛的纖維環後外側，或左右的滑動，而刺激和壓迫了脊神經的緣故。在臨床上，屬於活動型，是按摩復健的適應症。</p></div></div></div><div class="ver-panel" id="vp-35-detail" role="tabpanel" aria-labelledby="vt-35-detail"><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s1"><span class="sec-label" role="heading" aria-level="3">一【概述】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s1"><p>腰椎間盤突出症是指腰椎間盤的變性、破壞、髓核從損傷的纖維壞處膨出
+、突出，其突出的部分和變性的纖維環引起脊髓、馬尾神經、腰神經根的壓迫刺激症狀，或者是因髓核的變性，軟骨板也相繼變性，以致髓核突向椎體內。臨床主症為腰痛及下肢放射痛。
+本症在推拿臨床中十分常見，好發於青壯年，男性多於女性。好發於20~40
+歲之間，兒童極少發病，典型的髓核突出症也不容易發生於老年人。臨床
+以腰4、5或 腰5、骶1椎間盤突出多見，偶見於腰3、4椎間盤突出。</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s2"><span class="sec-label" role="heading" aria-level="3">二【相關解剖】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s2"><p>椎間盤，顧名思義，即位於椎體間的盤狀組織結構，其長度約占脊柱
+的全長1/4。從組織結構看，分為下列3部分。</p><p>(1)  髓核：位於椎間盤的中間，為形似魚眼珠樣的半膠凍狀物質，成分是半盤凍狀的基質，含軟骨細胞和纖維母細胞的波狀纖維網。隨著年齡的增長，水分逐漸減少，成人時基本變為固體狀態，到老年時就成了固體。所以髓核突出，容易發生在青壯年，即髓核還沒有變成固體的時期。因為膠凍狀的髓核可變形，不穩定，當外力作　用時就容易擠壓變形並發生移位而突出。
+</p><p>(2)  纖維環：為環繞髓核的環狀纖維組織，由縱行和斜行的兩種纖維相互交錯，呈編織狀結構，其上下與軟骨板緊密相連，形成一個密封的纖維腔。若將腰段的椎間盤橫斷切　開，就可以看到纖維環的後方比前面相對的要薄，這就形成了解剖學上髓核容易向後方突出的薄弱環節。
+</p><p>(3)  軟骨板：可以認為是椎間盤的上蓋和下底，它與椎體的松質骨要緊密相連，有良好的　彈性和韌性，對於緩衝外力、維持脊柱椎體間內在平衡有著重要的作用。
+　            </p><p>(4)  與椎間盤突出有關的其他解剖生理特點：
+前縱韌帶和後縱韌帶維持著脊柱的穩定性，也從前後加固和限制著脊柱（包括椎間盤在內）的超生理範圍運動。但是，後縱韌帶在向下移行到腰骶部時就逐漸變窄（約只有上段的1/2寬），並且在人體正常運動時這裡的活動範圍又最大，這就形成了椎間盤容易由腰骶部突出的解剖學弱點。另外，椎間孔是神經根的必經之路，一但椎間盤向後外突出，有可能正好位於神經根的走行通道上，所以椎間盤突出後壓迫神經根的可能性很大，這就成了產生臨床症狀的一個
+　               主要原因。
+　            </p><p>(5)  椎間盤不但有連接椎體、穩固脊柱的作用，而且由於椎間盤在正常狀態下可以變形，彌補了椎體在運動時不能變形，影響脊柱活動範圍的不足，從而使脊柱的穩定性和靈　活性相統一。如人體前屈時，椎間盤的前緣由於椎體擠壓而上下變薄，其後緣則因牽　拉而上下變厚，髓核隨其前後緣的變化向後偏移，反之亦然，這樣就增加了脊柱的靈活性。
+</p><p>(6)  椎間盤在受力之後，還可以通過形態的變化改變作用力的方向，使外力均勻地分布於整個椎體上，以維持脊柱的內在平衡。由於椎間盤的墊襯避免了椎體骨之間的直接接觸，減慢了力的速度，從而起到緩衝作用。如人從高處跳下時，一般不會發生顱底和椎體的骨折，行走時頭所以感覺不到下肢傳來的衝擊力量，都與椎間盤的緩衝作用有關。
+
+
+</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s3"><span class="sec-label" role="heading" aria-level="3">三【病因病理】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s3"><p>(1)  內因：椎間盤的退行性改變及解剖學上的弱點。
+外因：進行損傷、慢性勞損，或受寒冷（涼）、潮濕的刺激等。 
+     其主要病理改變為纖維環破裂、髓核膨出和患椎骨凸關節錯位、椎間韌帶損傷、椎體旋轉、椎間孔的前後徑變狹，產生脊神經根受壓症狀。 如神經受壓長期得不到解除，則可出現損傷處的神經根變性，與周圍組織粘連在一起，同時可伴有腰臀部筋肉的代償性損傷。
+
+
+</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s4"><span class="sec-label" role="heading" aria-level="3">四【臨床表現】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s4"><p>(1)  發病年齡與病史本病常發生於二十到四十五歲之間的體力勞動者，男性多於女性。 多數病例有明顯的腰部外傷史，少數僅有過勞、受涼史。
+</p><p>(2)  症狀本病主要症狀是腰部疼痛和單雙側下肢沿一定的神經路線放射性疼痛或麻木。在站立、行走、咳嗽、噴嚏或大便用力時疼痛加重，屈膝屈髖或臥床休息，可使疼痛減輕。本病引起腰伴腿痛的類型有下列幾種：
+a、傷後突然腰痛，隨即出現一側下肢沿坐骨神經徑路的疼痛。 是突出物壓迫一側神經根所致。
+b、傷後僅感下腰部空虛，或暫時疼痛，次日起床後方感腰伴坐骨神經痛。
+c、傷後橫貫性腰區疼痛、僵硬，隔數日或數月后腰痛緩解，始出現坐骨神經痛。
+d、偶有傷后腰伴雙下肢疼痛，或交替性坐骨神經痛者，為突出物位於椎體後方，或突出物在椎管內左右移動所致。
+
+
+</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s5"><span class="sec-label" role="heading" aria-level="3">五【體徵及檢查】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s5"><p>(1)  脊柱畸形包括脊柱側彎、腰生理前凸減小、平直或後凸。 畸形的產生均係為了擴大椎間隙，使突出物變小，減輕對神經根的擠壓所致。 若突出物位於神經根的外上方，脊柱為了使突出物躲開神經根，則上身倒向健側，局部凸向傷側；反之，突出物在神經根的內下方（即神經根與馬尾的成角處），則上身傾向傷側，局部凸向健側。 若突出物在神經根的前方左右移動，則可出現交替性側凸，即在一次檢查時腰凸向健側。 若突出一次檢查時又凸向健側。 平腰或後凸是由於較大的突出物位於椎體後方，阻止腰部的後伸活動所致。
+</p><p>(2)  脊柱移動障礙脊柱移動受限的方向、程度，取決於椎間盤的病理改變與突出物和神經根的關係，一個典型的腰椎間盤突出，多半為腰後伸受限明顯，前屈或側彎受限較輕。 如輕度椎間盤突出，突出物將接觸到尚未擠壓神經根時，病人臥位休息則無腿痛，坐起或站立則產生腿痛，腰不能前屈，否則神經根被拉緊而腿痛，腰後伸時神經根離開突出物則腿痛減輕或消失；如突出物過大或椎管前後徑較小，則把神經根推擠到椎管後壁與黃韌帶靠緊，這時腰反而不能後伸，因腰部越後伸，黃韌帶形成的皺褶越嚴重（增厚），越加重對神經根的擠壓。
+</p><p>(3)  腰區觸診可發現患椎棘突旁壓痛并沿相應的神經徑路向下肢放射痛，該棘突常出現偏歪；偏歪棘突上、下間隙寬窄不等；傷處棘上韌帶條索樣縱行剝離、鈍厚、壓痛；棘間隙可有隆起的軟塊、壓痛；或單雙側腰肌緊張。
+</p><p>(4)  腱反射異常多數病例​​可表現為腱反射的異常。 腰3、4椎間盤突出，表現為髕腱反射異常；腰5骶1椎間突出，為跟腱反射異常；若腰4、5椎間盤的突出物過大，亦可壓迫骶1神經根，出現跟腱反射的改變。 檢查時應注意雙側對比，有無亢進、減弱或消失，有助於判定椎間盤突出的部位。
+</p><p>(5)  神經根牽張試驗陽性包括“直腿抬高試驗”在四十五度以下出現疼痛；“扳頸壓胸試驗”突出物位於神經根外上方時，出現腰伴腿痛；“屈曲試驗”出現腰伴腿痛時，則有利於確定病變部位。
+</p><p>(6)  神經根擠壓試驗陽性包括“挺腹閉氣試驗、挺腹咳嗽徵和隔掌擊頂試驗”，出現腰伴腿痛，對確定是否有椎間盤突出症有重要臨床意義。
+</p><p>(7)  肌力與肌張力改變突出物壓迫神經根時，可出現足背伸、或蹠屈力減弱；有明顯坐骨神經痛的病例，因長期行走不便，可出現小腿肌肉萎縮，其張力明顯降低。
+</p><p>(8)  小腿感覺異常多數病例​​有小腿外側、或後側酸脹、麻木及痛覺減退。 感覺減退區在小腿前外側及拇趾根部，為腰5神經根受壓；外踝部與足背外側感覺減退，則為骶1神經根受壓。
+</p><p>(9)  壓痛點本病壓痛點多位於腰4、5和腰5骶1之間棘突旁開2厘米處（按壓時，常伴有下肢放射痛）。
+
+
+</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s6"><span class="sec-label" role="heading" aria-level="3">六【注意事項】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s6"><p>(1)  患者平時用腰圍護腰，避免著涼，臥硬板床。
+              </p><p>(2)  加強腰背肌功能鍛練，促進康復。
+
+
+</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s7"><span class="sec-label" role="heading" aria-level="3">七【穴位應用】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s7"><p>(1)  <button class="acu-tag has-detail" onclick="showAcu('腎俞','第二腰椎棘突下旁開1.5寸。\n\n【來源：講義】')">腎俞</button>：第二腰椎下，命門旁開1.5寸(與臍眼同高)
+              </p><p>(2)  <button class="acu-tag has-detail" onclick="showAcu('大腸俞','第四腰椎棘穴下旁開1.5寸\n\n【來源：講義】')">大腸俞</button>：第四腰椎下，旁開1.5寸(約當骶髂平線上)
+              </p><p>(3)  <button class="acu-tag has-detail" onclick="showAcu('環跳','1、俯臥，大轉子最高點與尾骶骨(骶骨裂孔)連線之中間點，以手按之有孔甚大是穴。2、側臥，也有書籍為大轉子最高點與尾骶骨(骶骨裂孔)連線之外1/3處是穴。\n\n【來源：講義】')">環跳</button>：1、俯臥，大轉子最高點與尾骶骨(骶骨裂孔)連線之中間點，
+                          以手按之有孔甚大是穴。
+                       2、側臥，也有書籍為大轉子最高點與尾骶骨(骶骨裂孔)連線
+                          之外1/3處是穴。
+</p><p>(4)  <button class="acu-tag has-detail" onclick="showAcu('居髎','側臥，在髂前上棘與大轉子最高點連線中點凹陷處\n\n【來源：講義】')">居髎</button>：側臥，在髂前上棘與大轉子最高點連線中點凹陷處
+</p><p>(5)  <button class="acu-tag has-detail" onclick="showAcu('承扶','臀橫紋中央取穴\n\n【來源：講義】')">承扶</button>：臀橫紋中央取穴
+              </p><p>(6)  <button class="acu-tag has-detail" onclick="showAcu('殷門','承扶與委中連線上，承扶下六寸(承扶至委中為十四寸)\n\n【來源：講義】')">殷門</button>：承扶與委中連線上，承扶下六寸(承扶至委中為十四寸)
+              </p><p>(7)  <button class="acu-tag has-detail" onclick="showAcu('委中','膝膕橫紋正中央兩筋間(股二頭肌腱、半腱肌腱)，動脈應手處\n\n【來源：講義】')">委中</button>：膝膕橫紋正中央兩筋間(股二頭肌腱、半腱肌腱)，動脈應手處
+              </p><p>(8)  <button class="acu-tag has-detail" onclick="showAcu('承山','足跟離地腓腸下出現人字紋處取之(委中至腳後跟上與外踝尖平                        齊處連線的中間取穴)\n\n【來源：講義】')">承山</button>：足跟離地腓腸下出現人字紋處取之(委中至腳後跟上與外踝尖平
+</p><p>(9)  <button class="acu-tag has-detail" onclick="showAcu('崑崙','外髁骨與跟腱之間陷中取之\n\n【來源：講義】')">崑崙</button>：外髁骨與跟腱之間陷中
+             </p><p>(10)  <button class="acu-tag has-detail" onclick="showAcu('風市','直立，兩手下垂，當中指尖處(當膝上七寸外廉兩筋間)\n\n【來源：講義】')">風市</button>：直立，兩手下垂，當中指尖處
+(在闊筋膜下，股外側肌中，當膝上七寸外廉兩筋間)
+</p><p>(11)  <button class="acu-tag has-detail" onclick="showAcu('陽陵泉','正坐，屈膝垂足，按取膝外側腓骨小頭微前下方陷中                   在腓骨小頭前下方、腓骨長短肌陷中。\n\n【來源：講義】')">陽陵泉</button>：正坐，屈膝垂足，按取膝外側腓骨小頭微前下方陷中取之
+            在腓骨小頭前下方、腓骨長短肌陷中
+             </p><p>(12)  <button class="acu-tag has-detail" onclick="showAcu('解谿','踝關節橫紋上，伸趾長肌肌腱和伸姆長肌肌腱間陷中。\n\n【來源：講義】')">解谿</button>：踝關節橫紋上，伸趾長肌肌腱和伸姆長肌肌腱間陷中取之
+</p><p>(13)  <button class="acu-tag has-detail" onclick="showAcu('委中','膝膕橫紋正中央兩筋間(股二頭肌腱、半腱肌腱)，動脈應手處\n\n【來源：講義】')">委中</button>：膝膕橫紋正中央兩筋間(股二頭肌腱、半腱肌腱)，動脈應手處
+             </p><p>(14)  <button class="acu-tag has-detail" onclick="showAcu('承山','足跟離地腓腸下出現人字紋處取之(委中至腳後跟上與外踝尖平                        齊處連線的中間取穴)\n\n【來源：講義】')">承山</button>：足跟離地腓腸下出現人字紋處取之(委中至腳後跟上與外踝尖平齊處連線的中間取穴)
+             
+
+</p></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s8"><span class="sec-label" role="heading" aria-level="3">八【施術步驟】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s8"><div class="steps"><div class="step-item">(一)  被術者採俯臥位，輕擦、揉捏、按壓腰部的兩側，沿著膀胱經，經臀部、
+          大腿、小腿至跟腱，重複數次（大、小腿只做患側）。
+     </div><div class="step-item">(二)  在腹部前墊枕頭，使腰部後伸，拇指重點按壓腎俞、大腸俞、環跳、居髎、
+          承扶、殷門、委中、承山、崑崙等穴，重複數次。繼以雙掌重疊掌壓從第
+          十一胸椎以下的正中線到尾骨，重複數次。
+     </div><div class="step-item">(三)  被術者採側臥位，做旋腰運動。
+     </div><div class="step-item">(四)  被術者採仰臥位，揉捏、按壓患肢的大腿前側和外側、小腿外側及足背，
+          重複數次。
+     </div><div class="step-item">(五)  掌根揉捏、按壓大腿外側和小腿外側，繼之作直腿抬高運動，重複數次。
+     </div><div class="step-item">(六)  拇指揉捏、按壓風市、陽陵泉、解谿、委中、承山、崑崙等穴，最後雙掌搓
+          揉下肢，以熱透為宜。
+
+     
+
+</div></div></div></div><div class="sec-wrap"><button class="sec-toggle" aria-expanded="true" onclick="toggleSec(this)" aria-controls="sb-35-detail-s9"><span class="sec-label" role="heading" aria-level="3">九【規範】</span><span class="sec-arrow" aria-hidden="true">▼</span></button><div class="sec-body" id="sb-35-detail-s9"><p>規範：</p><p>腰椎間盤突出症，是由於椎間盤損傷、退行性變化、纖維環破裂等致髓核組織從破裂的纖維環處，向後外側或正後方突出，於是壓迫了脊神經根或馬尾神經，而引發下腰部疼痛，和下肢的坐骨神經痛。</p><p>(一)  椎間盤是連接相鄰兩個椎體的纖維軟骨盤，屬非滑膜關節。是由上下兩個相鄰椎體的椎間軟骨板、纖維環和髓核三部分組成。
+</p><p>(二)  纖維環於上下軟骨板，是和脊柱的前縱韌帶以及後縱韌帶緊密相連著，能將髓核包裹在其中，有防止髓核組織突出，和連結各椎體以及維持負重等的功能。纖維環的排列不是很均勻。一般來說，前面較厚，後面較薄；但由於後部正中有後縱韌帶的加強，因此在纖維環的後外側部分就顯得特別薄弱，極易發生破裂，以致造成髓核多向後外側部位突出。
+</p><p>(三)  髓核是位於上下兩個椎間軟骨板和纖維環之間的膠凍狀物質，含有較高的水分，並具有增加椎間盤彈性的功能，有吸收震盪和緩衝外力的作用。隨著年齡的增長，髓核的水分含量會逐步遞減，組織則發生退行性變化，遂失去了原有的功能。
+</p><p>(四)  發病以青壯年為多，年齡在二十至四十五歲間，而男性又多於女性，臨床以腰椎第四、五椎間盤，或腰五骶一的椎間盤突出最為常見。
+</p><p>(五)  坐骨神經痛，一般是由臀部開始向下，沿大腿後側經膝膕窩、小腿後外側， 直達足背而至足趾。然其疼痛多在單側，呈持續性的頓痛，一般來說，其疼痛早晨較輕，午後加重，臥床休息又減輕，而勞累後更加遽。
+</p><p>(六)  直腿抬高試驗低於 60 度，如再高舉則有劇痛。患側下肢可出現腱反射減弱或消失，皮膚知覺的減退，和肌力減弱等徵象。病程較長者，可能出現患肢的肌肉萎縮。肌力測試：檢查者用雙手拇指從患者的兩腳拇指的背側同時下壓， 囑患者將拇指向上翹，在正常情形下，兩拇指上翹的力量應該是對稱的，若出現一側的力量減弱，甚至無力，則多屬第四、五腰椎之間的椎間盤突出症。如果用雙手拇指頂住患者的兩足拇指腹，然後讓患者用力向下屈，在正常情形下，兩下屈的力量應該是相等的，若出現一側的力量減弱，甚至無力，則多屬於第五腰椎和第一骶椎之間的椎間盤突出症。
+</p><p>(七)  有些青中年人，出現左側或右側交替式的坐骨神經痛，這是由於髓核組織在鬆弛的纖維環後外側，或左右的滑動，而刺激和壓迫了脊神經的緣故。在臨床上，屬於活動型，是按摩復健的適應症。
+
+
+</p></div></div></div></div>
   <button class="next-topic-btn" onclick="goNextTopic()" aria-label="複習下一題">下一題 →</button>
 </article>
 <article class="topic-article" id="topic-36" data-num="36" data-name="神經痛（梨狀肌病變）之按摩" data-shortname="神經痛（梨狀肌病變）之按摩" data-cat="神經痛" hidden>
@@ -749,7 +836,7 @@ dialog.sheet-modal::backdrop{background:rgba(0,0,0,.55)}
     <button class="pwd-cancel" onclick="closePwdModal()">取消</button>
   </div>
 </div>
-<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v18・更新日期 2026-07-06</footer>
+<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v19・更新日期 2026-07-08</footer>
 <script>
 var selectedNums=[];
 var PWD_HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
