@@ -48,31 +48,63 @@ tbody th[scope="row"]{white-space:nowrap;font-weight:700}
 .hidecol{display:none}
 footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);
   font-size:.88rem;color:var(--muted)}
+/* 密碼彈窗（沿用主頁同一組密碼機制） */
+.pwd-modal-bg{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);align-items:center;justify-content:center;padding:20px}
+.pwd-modal-bg.open{display:flex}
+.pwd-modal{background:#fff;border-radius:16px;padding:28px 24px 24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.25);color:#1a1a1a}
+.pwd-modal h3{font-size:1.1rem;font-weight:800;color:#1a2a4a;margin-bottom:6px}
+.pwd-modal p{font-size:.85rem;color:#666;margin-bottom:16px;line-height:1.5}
+.pwd-input-wrap{position:relative;margin-bottom:12px}
+.pwd-input{width:100%;padding:13px 44px 13px 14px;border-radius:10px;border:1.5px solid #ddd;font-size:1rem;font-family:var(--font);background:#f8f8f8;color:#1a1a1a}
+.pwd-input:focus{outline:2px solid var(--focus);border-color:var(--focus);background:#fff}
+.pwd-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:#888;font-size:1rem;cursor:pointer;padding:4px}
+.pwd-submit{width:100%;padding:13px;border-radius:10px;border:none;background:#1e5799;color:#fff;font-size:1rem;font-weight:700;font-family:var(--font);cursor:pointer;margin-bottom:8px;-webkit-tap-highlight-color:transparent}
+.pwd-submit:hover{background:#2a6abf}
+.pwd-submit:focus{outline:2px solid var(--focus);outline-offset:2px}
+.pwd-cancel{width:100%;padding:10px;border-radius:10px;border:1.5px solid #ddd;background:transparent;color:#666;font-size:.9rem;font-family:var(--font);cursor:pointer}
+.pwd-cancel:focus{outline:2px solid var(--focus)}
+.pwd-error{font-size:.83rem;color:#c0392b;margin-bottom:8px;display:none;font-weight:600}
+.pwd-error.show{display:block}
+.pwd-lock-msg{font-size:.83rem;color:#c0392b;text-align:center;margin-bottom:8px;display:none}
+.pwd-lock-msg.show{display:block}
+.unlock-btn{font-family:var(--font);font-size:.95rem;padding:10px 16px;border:1.5px solid var(--focus);
+  border-radius:6px;background:#fff;color:var(--focus);cursor:pointer;font-weight:700}
+.unlock-status{font-size:.9rem;color:var(--muted);margin:8px 0}
+.unlock-status.done{color:#1a7a3a;font-weight:700}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <h1>按摩乙級術科 40 題比對索引表<span aria-hidden="true">－</span>索引頁</h1>
-<p class="ver">版本 v42・更新日期 2026-08-15　本頁公開、不需密碼</p>
+<p class="ver">版本 v43・更新日期 2026-08-16　本頁公開瀏覽；口訣類欄位需另行輸入密碼查看</p>
 
 <p><a href="index.html">回到主頁（40 題選題頁）</a></p>
 
 <div class="panel">
   <h2>這張表要解決什麼</h2>
   <p>用途是<strong>快速比對 40 題之間的口訣與重點差異</strong>，並跳轉回主頁對應題目看完整內容。
-  這是索引頁，不是把口訣攤開的頁面：口訣欄只顯示「有無口訣」與相似群組，
-  不顯示口訣文字本身；口訣全文請點各列「前往第 NN 題」連結，回主頁依原本的密碼機制查看。</p>
+  題號、類別、題名、穴數、步驟數、版本狀態、資料狀態備註這幾欄本頁一律公開顯示。
+  口訣類欄位（病因病理口訣、臨床表現口訣、事時口訣、相關解剖裡的口訣、施術目的、注意事項）
+  預設只顯示「有無口訣」狀態文字，輸入密碼後才會顯示口訣原文——沿用主頁 40 題選題頁
+  重點整理版／講義版本來就有的同一組密碼，不是另外設一組新密碼。口訣展開後的逐項解釋，
+  以及穴位／經穴的詳細定位描述，本頁自始至終都不提供，一律請前往主頁對應題目查看。</p>
   <p>全 40 題進度：已有重點整理版 <strong>25 題</strong>、
   口述簡易版（無口訣）<strong>2 題</strong>、
   尚未提供 <strong>13 題</strong>。</p>
+</div>
+
+<div class="panel">
+  <h2>解鎖口訣內容</h2>
+  <p id="unlock-desc" class="unlock-status">口訣類欄位目前為鎖定狀態，顯示「有口訣／該節無口訣／尚未提供」等狀態文字。按下方按鈕輸入密碼後即可顯示口訣原文（與主頁密碼相同）。</p>
+  <button type="button" class="unlock-btn" id="unlockBtn" onclick="requirePasswordSummary()">🔒 輸入密碼查看口訣內容</button>
 </div>
 
 <div class="panel note">
   <h2>「施術目的」與「注意事項」的通用口訣說明</h2>
   <p>絕大多數題目的「施術目的」與「注意事項」使用同一組全站通用口訣，
   第 11、12 欄逐題列出「全站通用口訣」或「與通用版不同」的狀態，方便比對哪些題目是例外。
-  口訣全文屬受保護內容，本頁不引用原文。</p>
+  口訣全文需輸入密碼後才會顯示（見上方「解鎖口訣內容」）。</p>
   <p>已知的特殊題目（有比對價值，故先列出）：</p>
   <ul>
     <li>題 16：注意事項節除通用口訣外，另加自我鍛鍊運動項目。</li>
@@ -733,15 +765,221 @@ footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);
 </div>
 
 <footer>
-  <p>按摩乙級術科 40 題比對索引表　版本 v42・更新日期 2026-08-15</p>
-  <p>本頁為 AI 輔助草稿，須經社工／授課老師審閱後始得作為複習依據。口訣內容著作權屬原授課老師，本頁不公開口訣全文。</p>
+  <p>按摩乙級術科 40 題比對索引表　版本 v43・更新日期 2026-08-16</p>
+  <p>本頁為 AI 輔助草稿，須經社工／授課老師審閱後始得作為複習依據。口訣內容著作權屬原授課老師，口訣類欄位需輸入密碼才會顯示原文。</p>
 </footer>
+
+<div class="pwd-modal-bg" id="sPwdModal" role="dialog" aria-modal="true" aria-labelledby="sPwdTitle">
+  <div class="pwd-modal">
+    <h3 id="sPwdTitle">🔒 輸入密碼</h3>
+    <p>與主頁 40 題選題頁相同的密碼，答對後本頁口訣類欄位會顯示口訣原文。</p>
+    <div class="pwd-input-wrap">
+      <input type="password" id="sPwdInput" class="pwd-input" placeholder="請輸入密碼" autocomplete="current-password" aria-label="密碼" onkeydown="if(event.key==='Enter')submitSPwd()">
+      <button class="pwd-toggle" onclick="toggleSPwdShow()" aria-label="顯示或隱藏密碼">👁</button>
+    </div>
+    <div class="pwd-error" id="sPwdError">密碼錯誤，請再試一次</div>
+    <div class="pwd-lock-msg" id="sPwdLockMsg">輸入錯誤次數過多，請重新整理頁面</div>
+    <button class="pwd-submit" onclick="submitSPwd()">確認</button>
+    <button class="pwd-cancel" onclick="closeSPwdModal()">取消</button>
+  </div>
+</div>
 
 </div>
 
 <script>
-var SUMMARY_VERSION = "v42";
+var SUMMARY_VERSION = "v43";
 var MODE = "all";
+
+/* 口訣原文資料：只有輸入密碼解鎖後才會被寫入表格 DOM。
+   PWD_HASH 與 localStorage 鍵名沿用 index.html 既有的同一組密碼機制。 */
+var MNEM = {
+ "01": {
+  "c11": "放恢消促舒舒解解。"
+ },
+ "02": {
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。（切記：一定要說，棘上棘間韌帶損傷，禁止做旋腰椎和曲膝曲髖運動法）"
+ },
+ "03": {
+  "c7": "勞姿反先骨",
+  "c9": "晨反久勞天",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "04": {
+  "c7": "真先外疲，假病外退（或：真假先退外勞）",
+  "c9": "背伸久勞天",
+  "c11": "放恢消促舒舒解解（本症施術目的乃在鬆弛腰臀部及下肢肌群因腰部疼痛，所引起的緊張。）",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "05": {
+  "c7": "外勞反對風（或：急姿反對風）",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "06": {
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "07": {
+  "c7": "急閃跌大分、慢妊久勞重",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "08": {
+  "c7": "外勞內佔先炎（與05、13、17、21、36同樣以「外勞」開頭，但後續用字不同）",
+  "c8": "酸感運夜手",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "09": {
+  "c7": "病理口訣：充肥炎皮痛／充肥炎嵌痛／充肥炎滲沾",
+  "c9": "晨彎久勞天（與第13題文字完全相同）",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "13": {
+  "c7": "外勞負活、肥強老濕（與05、08、17、21、36同樣以「外勞」開頭，但後續用字不同）",
+  "c9": "晨彎久勞天（與第09題文字完全相同）",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。（另有本題專屬的力學說明，請前往第13題查看完整內容）"
+ },
+ "14": {
+  "c7": "病因口訣：遺免染傷寒（與22、35同屬「…傷寒」型病因口訣；與第22題其中一種病因口訣文字完全相同）／病理口訣：增融橋多少",
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "15": {
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "16": {
+  "c10": "大下闊內小喙胸、小棘棘外大二三",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。（另有本題自我鍛練運動項目說明，請前往第16題查看）"
+ },
+ "17": {
+  "c7": "外勞刺肌滑膜帶（與05、08、13、21、36同樣以「外勞」開頭，但後續用字不同）",
+  "c10": "肱橈橈尺伸伸伸、肘旋外外伸伸（實際記載於注意事項節備註中，非本節內容）",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰（備註另有前臂背側肌群解剖口訣：肱橈橈尺伸伸伸、肘旋外外伸伸）"
+ },
+ "18": {
+  "c10": "圓橈掌尺淺（附著在內上髁的五條肌腱之首字略語）",
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "19": {
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "20": {
+  "c7": "病理口訣：滲酸積壓淋沉沾",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "21": {
+  "c7": "外勞骨感滲（與05、08、13、17、36同樣以「外勞」開頭，但後續用字不同）",
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "22": {
+  "c7": "病因口訣：遺免染傷寒／遺免菌結毒內神（與14、35同屬「…傷寒」型病因口訣；與第14題其中一種病因口訣文字完全相同）；病理口訣：關皮脈肉",
+  "c8": "多游反對、周慢破",
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。（另有本題提醒：鼓勵患者增強戰勝疾病的信念；忌食寒鹼性食物。）"
+ },
+ "27": {
+  "c7": "刀骨展痂枕毒"
+ },
+ "28": {
+  "c7": "姿骨佔牽炎",
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "35": {
+  "c7": "內退外傷寒（與14、22同屬「…傷寒」型病因口訣）",
+  "c11": "放恢消促舒舒解解。",
+  "c12": "保手休護鍛骨、禁飲冰。（另有本題專屬的測試檢查說明，請前往第35題查看）"
+ },
+ "36": {
+  "c7": "外勞風先炎（與05、08、13、17、21同樣以「外勞」開頭，但後續用字不同）",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ },
+ "37": {
+  "c7": "高姿風扭挑",
+  "c8": "痙痛僵滯",
+  "c11": "放恢消促舒舒解解",
+  "c12": "保手休護鍛骨、禁飲冰。"
+ }
+};
+var SPWD_HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
+var sPwdVerified=(localStorage.getItem('massageExamAuth')===SPWD_HASH);
+var sPwdFailCount=0;
+
+function requirePasswordSummary(){
+  if(sPwdVerified){revealMnemonics();return;}
+  document.getElementById('sPwdInput').value='';
+  document.getElementById('sPwdError').classList.remove('show');
+  document.getElementById('sPwdLockMsg').classList.remove('show');
+  document.getElementById('sPwdModal').classList.add('open');
+  setTimeout(function(){document.getElementById('sPwdInput').focus();},50);
+}
+async function sSha256(str){
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+async function submitSPwd(){
+  if(sPwdFailCount>=3){document.getElementById('sPwdLockMsg').classList.add('show');return;}
+  var input=document.getElementById('sPwdInput').value;
+  var hash=await sSha256(input);
+  if(hash===SPWD_HASH){
+    sPwdVerified=true;sPwdFailCount=0;
+    localStorage.setItem('massageExamAuth',SPWD_HASH);
+    closeSPwdModal();
+    revealMnemonics();
+  }else{
+    sPwdFailCount++;
+    document.getElementById('sPwdError').classList.add('show');
+    document.getElementById('sPwdInput').value='';
+    document.getElementById('sPwdInput').focus();
+    if(sPwdFailCount>=3){document.getElementById('sPwdError').classList.remove('show');document.getElementById('sPwdLockMsg').classList.add('show');}
+  }
+}
+function closeSPwdModal(){document.getElementById('sPwdModal').classList.remove('open');}
+function toggleSPwdShow(){var inp=document.getElementById('sPwdInput');inp.type=inp.type==='password'?'text':'password';}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape' && document.getElementById('sPwdModal').classList.contains('open')){closeSPwdModal();}
+});
+
+function revealMnemonics(){
+  var rows = document.querySelectorAll('tbody tr');
+  for(var i=0;i<rows.length;i++){
+    var tr = rows[i];
+    var numCell = tr.querySelector('th[data-col="c1"]');
+    if(!numCell) continue;
+    var num = numCell.textContent.trim();
+    var data = MNEM[num];
+    if(!data) continue;
+    var cols = ['c7','c8','c9','c10','c11','c12'];
+    for(var j=0;j<cols.length;j++){
+      var col = cols[j];
+      if(data[col]){
+        var cell = tr.querySelector('td[data-col="'+col+'"]');
+        if(cell) cell.textContent = data[col];
+      }
+    }
+  }
+  var desc = document.getElementById('unlock-desc');
+  if(desc){desc.textContent='口訣類欄位已解鎖，各欄現在顯示口訣原文（口訣展開後的逐項解釋與穴位詳細定位仍請前往主頁對應題目查看）。';desc.classList.add('done');}
+  var btn = document.getElementById('unlockBtn');
+  if(btn){btn.style.display='none';}
+}
+
+if(sPwdVerified){
+  revealMnemonics();
+}
 
 function setMode(mode, btn){
   MODE = mode;
