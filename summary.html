@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>按摩乙級術科 40 題比對索引表</title>
+<style>
+:root{
+  --bg:#ffffff; --text:#1a1a1a; --line:#8a8a8a; --head-bg:#e8eef6;
+  --row-alt:#f6f8fb; --focus:#0b57d0; --muted:#5a5a5a; --warn-bg:#fff4e5;
+  --link:#0b4fa8; --btn-bg:#eef1f5; --btn-on:#0b4fa8; --font:system-ui,"Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:16px;line-height:1.7}
+.wrap{max-width:1500px;margin:0 auto}
+h1{font-size:1.5rem;margin:0 0 4px}
+h2{font-size:1.15rem;margin:24px 0 8px}
+.ver{font-size:.9rem;color:var(--muted);margin:0 0 16px}
+p{margin:8px 0}
+a{color:var(--link)}
+a:focus,button:focus,[tabindex]:focus{outline:3px solid var(--focus);outline-offset:2px}
+
+.panel{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:12px 0;background:var(--row-alt)}
+.panel.note{background:var(--warn-bg)}
+.panel h2{margin-top:0}
+
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+button{font-family:var(--font);font-size:.95rem;padding:8px 12px;
+  border:1px solid var(--line);border-radius:6px;background:var(--btn-bg);
+  color:var(--text);cursor:pointer}
+button[aria-pressed="true"]{background:var(--btn-on);color:#fff;border-color:var(--btn-on);font-weight:700}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:100%}
+caption{text-align:left;padding:10px 12px;font-weight:700;background:var(--head-bg);
+  border-bottom:1px solid var(--line)}
+th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;
+  font-size:.95rem;text-align:left}
+thead th{background:var(--head-bg);position:sticky;top:0;z-index:1}
+tbody tr:nth-child(even){background:var(--row-alt)}
+tbody th[scope="row"]{white-space:nowrap;font-weight:700}
+.col-name{min-width:190px}
+.col-mnem{min-width:220px}
+.col-note{min-width:260px}
+.grp{display:block;font-size:.85rem;color:var(--muted);margin-top:2px}
+.lnk{display:block;font-size:.85rem;margin-top:3px}
+.hidecol{display:none}
+footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:.88rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>按摩乙級術科 40 題比對索引表<span aria-hidden="true">－</span>索引頁</h1>
+<p class="ver">版本 v42・更新日期 2026-08-15　本頁公開、不需密碼</p>
+
+<p><a href="index.html">回到主頁（40 題選題頁）</a></p>
+
+<div class="panel">
+  <h2>這張表要解決什麼</h2>
+  <p>用途是<strong>快速比對 40 題之間的口訣與重點差異</strong>，並跳轉回主頁對應題目看完整內容。
+  這是索引頁，不是把口訣攤開的頁面：口訣欄只顯示「有無口訣」與相似群組，
+  不顯示口訣文字本身；口訣全文請點各列「前往第 NN 題」連結，回主頁依原本的密碼機制查看。</p>
+  <p>全 40 題進度：已有重點整理版 <strong>25 題</strong>、
+  口述簡易版（無口訣）<strong>2 題</strong>、
+  尚未提供 <strong>13 題</strong>。</p>
+</div>
+
+<div class="panel note">
+  <h2>「施術目的」與「注意事項」的通用口訣說明</h2>
+  <p>絕大多數題目的「施術目的」與「注意事項」使用同一組全站通用口訣，
+  第 11、12 欄逐題列出「全站通用口訣」或「與通用版不同」的狀態，方便比對哪些題目是例外。
+  口訣全文屬受保護內容，本頁不引用原文。</p>
+  <p>已知的特殊題目（有比對價值，故先列出）：</p>
+  <ul>
+    <li>題 16：注意事項節除通用口訣外，另加自我鍛鍊運動項目。</li>
+    <li>題 17：注意事項節的備註中另含一組肘部肌肉解剖相關的口訣，並非位於相關解剖節。</li>
+    <li>題 24、27、29、32：施術目的與注意事項為疾病專屬敘述（神經麻痺／頭痛類題目），並未使用全站通用口訣。</li>
+    <li>題 04：施術目的在通用口訣之外，另有一段本題專屬的補充說明。</li>
+  </ul>
+</div>
+
+<h2>顯示設定</h2>
+<div class="btnrow">
+<button type="button" id="btn-all" aria-pressed="true" onclick="setMode('all',this)">顯示全部欄位</button>
+<button type="button" aria-pressed="false" onclick="setMode('c7',this)">只看病因病理口訣</button>
+<button type="button" aria-pressed="false" onclick="setMode('c8',this)">只看臨床表現口訣</button>
+<button type="button" aria-pressed="false" onclick="setMode('c9',this)">只看事時口訣</button>
+<button type="button" aria-pressed="false" onclick="setMode('c10',this)">只看相關解剖</button>
+<button type="button" aria-pressed="false" onclick="setMode('c11',this)">只看施術目的</button>
+<button type="button" aria-pressed="false" onclick="setMode('c12',this)">只看注意事項</button>
+<button type="button" aria-pressed="false" onclick="setMode('c4',this)">只看穴數</button>
+<button type="button" aria-pressed="false" onclick="setMode('c13',this)">只看資料狀態備註</button>
+</div>
+<p id="mode-desc">按下按鈕後，表格會縮成「題號、題名、該欄」三欄，方便一路往下讀完 40 列做比對；
+按鈕狀態以「已按下」報讀，不會另外跳出通知訊息。</p>
+
+<div class="tbl-wrap" role="region" aria-labelledby="tbl-cap" tabindex="0">
+<table>
+  <caption id="tbl-cap">40 題比對索引表：目前顯示全部 13 欄、40 列</caption>
+  <thead>
+    <tr>
+      <th scope="col" data-col="c1">題號</th>
+      <th scope="col" data-col="c2">類別</th>
+      <th scope="col" data-col="c3">題名</th>
+      <th scope="col" data-col="c4">穴數</th>
+      <th scope="col" data-col="c5">步驟數</th>
+      <th scope="col" data-col="c6">重點整理版狀態</th>
+      <th scope="col" data-col="c7">病因病理口訣</th>
+      <th scope="col" data-col="c8">臨床表現口訣（症狀）</th>
+      <th scope="col" data-col="c9">事時口訣</th>
+      <th scope="col" data-col="c10">相關解剖</th>
+      <th scope="col" data-col="c11">施術目的</th>
+      <th scope="col" data-col="c12">注意事項</th>
+      <th scope="col" data-col="c13">資料狀態備註</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr>
+  <th scope="row" data-col="c1">01</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">頸椎退行性變化之按摩<a class="lnk" href="index.html#topic-01">前往第 01 題</a></td>
+  <td data-col="c4">15</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c13" class="col-note">本題施術目的／注意事項為疾病專屬敘述，與其餘題目共用的通用口訣不同。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">02</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">腰肌急性扭傷之按摩<span class="grp">規範版別名：閃腰</span><a class="lnk" href="index.html#topic-02">前往第 02 題</a></td>
+  <td data-col="c4">11</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">03</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">慢性腰部損傷之按摩<a class="lnk" href="index.html#topic-03">前往第 03 題</a></td>
+  <td data-col="c4">10</td>
+  <td data-col="c5">8</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">有口訣（群組A：事時口訣「Ｘ久勞天」型，共4題：03、04、09、13）</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">04</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">腰椎滑脫之按摩<span class="grp">規範版別名：峽部不相連</span><a class="lnk" href="index.html#topic-04">前往第 04 題</a></td>
+  <td data-col="c4">11</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">有口訣（群組A：事時口訣「Ｘ久勞天」型，共4題：03、04、09、13）</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">規範版與重點整理版的穴位排列順序不同（同一批穴位，次序不同），建議向老師確認以何者為準。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">05</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">第三腰椎橫突過長之按摩<a class="lnk" href="index.html#topic-05">前往第 05 題</a></td>
+  <td data-col="c4">7</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組B：病因口訣「外勞」開頭型，共6題：05、08、13、17、21、36）</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">06</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">腰骶部病變之按摩<a class="lnk" href="index.html#topic-06">前往第 06 題</a></td>
+  <td data-col="c4">6</td>
+  <td data-col="c5">5</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">07</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">骶髂關節損傷之按摩<a class="lnk" href="index.html#topic-07">前往第 07 題</a></td>
+  <td data-col="c4">11</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">08</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">腕溝管損傷之按摩<a class="lnk" href="index.html#topic-08">前往第 08 題</a></td>
+  <td data-col="c4">2</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組B：病因口訣「外勞」開頭型，共6題：05、08、13、17、21、36）</td>
+  <td data-col="c8" class="col-mnem">有口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">09</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">膝關節髕下脂肪墊損傷之按摩<a class="lnk" href="index.html#topic-09">前往第 09 題</a></td>
+  <td data-col="c4">6</td>
+  <td data-col="c5">8</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣　本題病因病理節另有獨立標示的「病理口訣」（與病因口訣分開列示）。</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">有口訣（群組A：事時口訣「Ｘ久勞天」型，共4題：03、04、09、13；本題與第13題文字完全相同）</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">重點整理版穴位段落標示的穴數與實際列出的穴位數量不一致（同一節內自相矛盾），建議向老師確認正確穴數。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">10</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">踝關節急性扭傷之按摩<a class="lnk" href="index.html#topic-10">前往第 10 題</a></td>
+  <td data-col="c4">7</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">11</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">踝溝管損傷之按摩<a class="lnk" href="index.html#topic-11">前往第 11 題</a></td>
+  <td data-col="c4">6</td>
+  <td data-col="c5">3</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">12</th>
+  <td data-col="c2">關節損傷</td>
+  <td data-col="c3" class="col-name">足跟退行性變化之按摩<a class="lnk" href="index.html#topic-12">前往第 12 題</a></td>
+  <td data-col="c4">8</td>
+  <td data-col="c5">4</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">13</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">腰退行性脊椎炎之按摩<a class="lnk" href="index.html#topic-13">前往第 13 題</a></td>
+  <td data-col="c4">10</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組B：病因口訣「外勞」開頭型，共6題：05、08、13、17、21、36）</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">有口訣（群組A：事時口訣「Ｘ久勞天」型，共4題：03、04、09、13；本題與第09題文字完全相同）</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">14</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">強直性脊椎炎之按摩<a class="lnk" href="index.html#topic-14">前往第 14 題</a></td>
+  <td data-col="c4">11</td>
+  <td data-col="c5">11</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組C：病因口訣「…傷寒」型，共3題：14、22、35；本題與第22題的其中一種病因口訣文字完全相同）　本題病因病理節另有獨立標示的「病理口訣」（與病因口訣分開列示）。</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">15</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">髖關節股關節炎之按摩<a class="lnk" href="index.html#topic-15">前往第 15 題</a></td>
+  <td data-col="c4">4</td>
+  <td data-col="c5">8</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">重點整理版列出的穴位數量少於規範版與講義版（少列一穴），建議向老師確認是否漏列。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">16</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">肩關節周圍炎（五十肩）之按摩<a class="lnk" href="index.html#topic-16">前往第 16 題</a></td>
+  <td data-col="c4">6</td>
+  <td data-col="c5">8</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容（含解剖口訣）</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">病因口訣正文與備註解釋兩處用字不一致（僅一字之差），建議向老師確認正確版本，本表不引用兩種寫法的原文。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">17</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">肘關節肱骨外上髁炎（網球肘）之按摩<a class="lnk" href="index.html#topic-17">前往第 17 題</a></td>
+  <td data-col="c4">5</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組B：病因口訣「外勞」開頭型，共6題：05、08、13、17、21、36）</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">本題肘部肌肉解剖相關的口訣實際記載於注意事項節的備註中，而非相關解剖節。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">18</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">肘關節肱骨內上髁炎（學生肘）之按摩<a class="lnk" href="index.html#topic-18">前往第 18 題</a></td>
+  <td data-col="c4">7</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容（含解剖口訣）</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">講義版列出的穴位數量多於規範版與重點整理版（多列一穴），建議向老師確認以何者為準。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">19</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">腕部橈側伸腕肌腱周圍炎之按摩<a class="lnk" href="index.html#topic-19">前往第 19 題</a></td>
+  <td data-col="c4">8</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">20</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">膝關節滑膜炎之按摩<a class="lnk" href="index.html#topic-20">前往第 20 題</a></td>
+  <td data-col="c4">11</td>
+  <td data-col="c5">9</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣　本題病因病理節另有獨立標示的「病理口訣」（與病因口訣分開列示）。</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">21</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">踝部跟腱炎之按摩<a class="lnk" href="index.html#topic-21">前往第 21 題</a></td>
+  <td data-col="c4">8</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組B：病因口訣「外勞」開頭型，共6題：05、08、13、17、21、36）</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">22</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">類風濕性關節炎（上肢）之按摩<a class="lnk" href="index.html#topic-22">前往第 22 題</a></td>
+  <td data-col="c4">12</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組C：病因口訣「…傷寒」型，共3題：14、22、35；本題病因口訣另有兩種說法，其中一種與第14題文字完全相同）　本題病因病理節另有獨立標示的「病理口訣」（與病因口訣分開列示）。</td>
+  <td data-col="c8" class="col-mnem">有口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">23</th>
+  <td data-col="c2">關節炎</td>
+  <td data-col="c3" class="col-name">類風濕性關節炎（下肢）之按摩<a class="lnk" href="index.html#topic-23">前往第 23 題</a></td>
+  <td data-col="c4">17</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">24</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">臂神經叢麻痺之按摩<a class="lnk" href="index.html#topic-24">前往第 24 題</a></td>
+  <td data-col="c4">16</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c12" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c13" class="col-note">本題施術目的／注意事項為疾病專屬敘述，與其餘題目共用的通用口訣不同。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">25</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">正中神經麻痺之按摩<a class="lnk" href="index.html#topic-25">前往第 25 題</a></td>
+  <td data-col="c4">16</td>
+  <td data-col="c5">8</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">26</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">尺神經麻痺之按摩<a class="lnk" href="index.html#topic-26">前往第 26 題</a></td>
+  <td data-col="c4">18</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">27</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">橈神經麻痺之按摩<a class="lnk" href="index.html#topic-27">前往第 27 題</a></td>
+  <td data-col="c4">25</td>
+  <td data-col="c5">5</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c12" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c13" class="col-note">本題施術目的／注意事項為疾病專屬敘述，與其餘題目共用的通用口訣不同。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">28</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">腓總神經麻痺之按摩<a class="lnk" href="index.html#topic-28">前往第 28 題</a></td>
+  <td data-col="c4">12</td>
+  <td data-col="c5">5</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">29</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">顏面神經麻痺之按摩<a class="lnk" href="index.html#topic-29">前往第 29 題</a></td>
+  <td data-col="c4">18</td>
+  <td data-col="c5">5</td>
+  <td data-col="c6">口述簡易版（無口訣）</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c12" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c13" class="col-note">本題施術目的／注意事項為疾病專屬敘述，與其餘題目共用的通用口訣不同。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">30</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">半身不遂（上肢）之按摩<span class="grp">規範版別名：中風</span><a class="lnk" href="index.html#topic-30">前往第 30 題</a></td>
+  <td data-col="c4">13</td>
+  <td data-col="c5">5</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">31</th>
+  <td data-col="c2">麻痺</td>
+  <td data-col="c3" class="col-name">半身不遂（下肢）之按摩<span class="grp">規範版別名：中風</span><a class="lnk" href="index.html#topic-31">前往第 31 題</a></td>
+  <td data-col="c4">18</td>
+  <td data-col="c5">5</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">32</th>
+  <td data-col="c2">神經痛</td>
+  <td data-col="c3" class="col-name">頭痛之按摩<a class="lnk" href="index.html#topic-32">前往第 32 題</a></td>
+  <td data-col="c4">25</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">口述簡易版（無口訣）</td>
+  <td data-col="c7" class="col-mnem">該節無口訣</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c12" class="col-mnem">非通用內容（本題疾病專屬敘述）</td>
+  <td data-col="c13" class="col-note">講義版列出的穴位數量多於規範版（多列數穴），建議向老師確認以何者為準。　本題施術目的／注意事項為疾病專屬敘述，與其餘題目共用的通用口訣不同。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">33</th>
+  <td data-col="c2">神經痛</td>
+  <td data-col="c3" class="col-name">三叉神經痛之按摩<a class="lnk" href="index.html#topic-33">前往第 33 題</a></td>
+  <td data-col="c4">24</td>
+  <td data-col="c5">4</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">34</th>
+  <td data-col="c2">神經痛</td>
+  <td data-col="c3" class="col-name">肋間神經痛之按摩<a class="lnk" href="index.html#topic-34">前往第 34 題</a></td>
+  <td data-col="c4">17</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">講義版列出的穴位數量多於規範版（多列一穴），建議向老師確認以何者為準。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">35</th>
+  <td data-col="c2">神經痛</td>
+  <td data-col="c3" class="col-name">坐骨神經痛（腰椎間盤突出）之按摩<a class="lnk" href="index.html#topic-35">前往第 35 題</a></td>
+  <td data-col="c4">12</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組C：病因口訣「…傷寒」型，共3題：14、22、35）</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣＋另有附加說明</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">36</th>
+  <td data-col="c2">神經痛</td>
+  <td data-col="c3" class="col-name">神經痛（梨狀肌病變）之按摩<a class="lnk" href="index.html#topic-36">前往第 36 題</a></td>
+  <td data-col="c4">12</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣（群組B：病因口訣「外勞」開頭型，共6題：05、08、13、17、21、36）</td>
+  <td data-col="c8" class="col-mnem">該節無症狀口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">37</th>
+  <td data-col="c2">落枕</td>
+  <td data-col="c3" class="col-name">急性頸部軟組織痙攣（落枕）之按摩<a class="lnk" href="index.html#topic-37">前往第 37 題</a></td>
+  <td data-col="c4">8</td>
+  <td data-col="c5">6</td>
+  <td data-col="c6">有</td>
+  <td data-col="c7" class="col-mnem">有口訣</td>
+  <td data-col="c8" class="col-mnem">有口訣</td>
+  <td data-col="c9" class="col-mnem">該節無事時口訣</td>
+  <td data-col="c10">有內容</td>
+  <td data-col="c11" class="col-mnem">全站通用口訣</td>
+  <td data-col="c12" class="col-mnem">全站通用口訣</td>
+  <td data-col="c13" class="col-note">備註節記載教科書與講義對「頭偏向哪一側」之敘述略有差異，建議以老師課堂講解為準，本表不引用兩邊的敘述原文。</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">38</th>
+  <td data-col="c2">肩頸凝</td>
+  <td data-col="c3" class="col-name">肩頸凝之按摩<a class="lnk" href="index.html#topic-38">前往第 38 題</a></td>
+  <td data-col="c4">12</td>
+  <td data-col="c5">7</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">39</th>
+  <td data-col="c2">便秘</td>
+  <td data-col="c3" class="col-name">便秘之按摩<a class="lnk" href="index.html#topic-39">前往第 39 題</a></td>
+  <td data-col="c4">9</td>
+  <td data-col="c5">4</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">無</td>
+</tr>
+<tr>
+  <th scope="row" data-col="c1">40</th>
+  <td data-col="c2">失眠</td>
+  <td data-col="c3" class="col-name">失眠之按摩<a class="lnk" href="index.html#topic-40">前往第 40 題</a></td>
+  <td data-col="c4">30</td>
+  <td data-col="c5">9</td>
+  <td data-col="c6">尚未提供</td>
+  <td data-col="c7" class="col-mnem">尚未提供</td>
+  <td data-col="c8" class="col-mnem">尚未提供</td>
+  <td data-col="c9" class="col-mnem">尚未提供</td>
+  <td data-col="c10">尚未提供</td>
+  <td data-col="c11" class="col-mnem">尚未提供</td>
+  <td data-col="c12" class="col-mnem">尚未提供</td>
+  <td data-col="c13" class="col-note">講義版列出的穴位數量多於規範版（多列一穴），建議向老師確認以何者為準。</td>
+</tr>
+  </tbody>
+</table>
+</div>
+
+<div class="panel">
+  <h2>怎麼用螢幕助讀程式試這張表</h2>
+  <ol>
+    <li>用表格導覽指令進入表格，先聽 caption 報出目前欄數與列數。</li>
+    <li>用「跳到下一列」在同一欄之間移動，每格都會報出「欄名、題號、內容」。</li>
+    <li>覺得 13 欄太寬時，按上方「只看＿＿」按鈕，表格會縮成三欄，可以一路往下讀完。</li>
+    <li>每列「題名」欄有「前往第 NN 題」連結，跳轉到主頁對應題目查看完整內容（含口訣全文，依主頁既有密碼機制）。</li>
+  </ol>
+</div>
+
+<footer>
+  <p>按摩乙級術科 40 題比對索引表　版本 v42・更新日期 2026-08-15</p>
+  <p>本頁為 AI 輔助草稿，須經社工／授課老師審閱後始得作為複習依據。口訣內容著作權屬原授課老師，本頁不公開口訣全文。</p>
+</footer>
+
+</div>
+
+<script>
+var SUMMARY_VERSION = "v42";
+var MODE = "all";
+
+function setMode(mode, btn){
+  MODE = mode;
+  var btns = document.querySelectorAll('.btnrow button');
+  for (var i=0;i<btns.length;i++){ btns[i].setAttribute('aria-pressed','false'); }
+  btn.setAttribute('aria-pressed','true');
+  applyMode();
+}
+
+function applyMode(){
+  var keep = (MODE === 'all') ? null : {c1:1, c3:1};
+  if (keep) { keep[MODE] = 1; }
+  var cells = document.querySelectorAll('th[data-col], td[data-col]');
+  var shown = 0, seenCols = {};
+  for (var i=0;i<cells.length;i++){
+    var c = cells[i].getAttribute('data-col');
+    var show = keep ? !!keep[c] : true;
+    cells[i].classList.toggle('hidecol', !show);
+    if (show && !seenCols[c]) { seenCols[c] = 1; shown++; }
+  }
+  var rows = document.querySelectorAll('tbody tr').length;
+  document.getElementById('tbl-cap').textContent =
+    '40 題比對索引表：目前顯示 ' + shown + ' 欄、' + rows + ' 列';
+}
+
+applyMode();
+</script>
+</body>
+</html>
