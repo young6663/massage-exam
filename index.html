@@ -846,7 +846,7 @@ d、偶有傷后腰伴雙下肢疼痛，或交替性坐骨神經痛者，為突�
     <button class="pwd-cancel" onclick="closePwdModal()">取消</button>
   </div>
 </div>
-<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v52・更新日期 2026-09-14</footer>
+<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v53・更新日期 2026-09-25</footer>
 <script>
 var selectedNums=[];
 var PWD_HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
@@ -1037,6 +1037,15 @@ document.addEventListener('keydown',function(e){
     closePwdModal();
   }
 });
+// 深層連結：網址結尾是 #topic-27（或 #topic-7）時，直接選好該題並進入練習畫面（給「乙級上岸衝次營」等外部網站連進來用）
+(function openTopicFromHash(){
+  var m=/^#topic-(\d{1,2})$/.exec(location.hash);
+  if(!m)return;
+  var num=('0'+m[1]).slice(-2);
+  if(!document.getElementById('topic-'+num)||!document.getElementById('gb-'+num))return;
+  toggleTopic(num);
+  startExam();
+})();
 </script>
 </body>
 </html>
