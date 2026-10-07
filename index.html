@@ -847,7 +847,7 @@ d、偶有傷后腰伴雙下肢疼痛，或交替性坐骨神經痛者，為突�
     <button class="pwd-cancel" onclick="closePwdModal()">取消</button>
   </div>
 </div>
-<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v64・更新日期 2026-10-07</footer>
+<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v65・更新日期 2026-10-07</footer>
 <script>
 var selectedNums=[];
 var PWD_HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
@@ -1081,6 +1081,19 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape' && document.getElementById('pwdModal').classList.contains('open')){
     closePwdModal();
   }
+});
+// 鍵盤左右鍵換題（v65）：左＝上一題、右＝下一題。焦點在版本分頁（分頁自己用左右鍵切版本）、
+// 輸入框、有彈窗開著、按著修飾鍵、或只選一題時不攔。
+document.addEventListener('keydown',function(e){
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+  if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||e.defaultPrevented)return;
+  var ex=document.getElementById('examScreen');
+  if(!ex||ex.style.display==='none'||selectedNums.length<2)return;
+  if(document.querySelector('dialog[open]')||document.getElementById('pwdModal').classList.contains('open'))return;
+  var t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable||(t.classList&&t.classList.contains('ver-tab'))))return;
+  e.preventDefault();
+  if(e.key==='ArrowRight')goNextTopic();else goPrevTopic();
 });
 // 深層連結：網址結尾是 #topic-27（或 #topic-7）時，直接選好該題並進入練習畫面（給「乙級上岸衝次營」等外部網站連進來用）
 (function openTopicFromHash(){
