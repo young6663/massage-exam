@@ -200,6 +200,7 @@ dialog.sheet-modal::backdrop{background:rgba(0,0,0,.55)}
     <button class="nav-topic-btn active" id="navBtn0" onclick="switchTopic(0)"><span class="nb-num" id="navNum0" aria-hidden="true">──</span></button>
     <button class="nav-topic-btn" id="navBtn1" onclick="switchTopic(1)"><span class="nb-num" id="navNum1" aria-hidden="true">──</span></button>
   </nav>
+  <div id="verAnnounce" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></div>
   <main class="exam-content" id="main-content-exam" tabindex="-1">
     <article class="topic-article" id="topic-01" data-num="01" data-name="關節損傷－頸椎退行性變化之按摩" data-shortname="頸椎退行性變化之按摩" data-cat="關節損傷" hidden>
   <div class="topic-head" style="border-top:4px solid #1e5799">
@@ -846,13 +847,14 @@ d、偶有傷后腰伴雙下肢疼痛，或交替性坐骨神經痛者，為突�
     <button class="pwd-cancel" onclick="closePwdModal()">取消</button>
   </div>
 </div>
-<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v63・更新日期 2026-10-07</footer>
+<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v64・更新日期 2026-10-07</footer>
 <script>
 var selectedNums=[];
 var PWD_HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
 var pwdVerified=(localStorage.getItem('massageExamAuth')===PWD_HASH);
 var pwdFailCount=0;
 var pendingVer=null,pendingNum=null,pendingTab=null;
+var preferredVer='spec';  // 使用者最後手動選的版本；換題時沿用，該題沒有就暫時顯示規範版
 
 function verTabKeyNav(e,topicNum,tabEl){
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
@@ -921,6 +923,7 @@ function switchTopic(idx){
   document.querySelectorAll('.topic-article').forEach(function(t){t.classList.remove('active');t.hidden=true;});
   var card=document.getElementById('topic-'+num);
   card.hidden=false;card.classList.add('active');
+  applyPreferredVer(num);
   for(var i=0;i<2;i++){
     var btn=document.getElementById('navBtn'+i);
     if(btn.dataset.num)setNavBtnState(btn,i===idx);
@@ -931,6 +934,29 @@ function switchTopic(idx){
   setTimeout(function(){var h=card.querySelector('.topic-title');if(h){h.setAttribute('tabindex','-1');h.focus();}else{document.getElementById('main-content-exam').focus();}},80);
   updateNextBtn();
 }
+// 換題時沿用使用者選的版本（重點整理／講義）；該題沒有這個版本就顯示規範版，
+// 但記住的版本不變，切回有該版本的題目時會再回到那個版本
+function applyPreferredVer(num){
+  var want=preferredVer;
+  if(want!=='spec'&&!pwdVerified)want='spec';
+  var tab=document.getElementById('vt-'+num+'-'+want);
+  var fallback=false;
+  if(!tab||tab.classList.contains('disabled')||!document.getElementById('vp-'+num+'-'+want)){
+    fallback=(want!=='spec');want='spec';tab=document.getElementById('vt-'+num+'-spec');
+  }
+  if(tab)showVer(num,want,tab);
+  var live=document.getElementById('verAnnounce');
+  if(live){
+    clearTimeout(verAnnTimer1);clearTimeout(verAnnTimer2);
+    live.textContent='';
+    if(fallback){
+      var msg='這題沒有'+({teacher:'重點整理',detail:'講義'})[preferredVer]+'，顯示規範版';
+      verAnnTimer1=setTimeout(function(){live.textContent=msg;},700);
+      verAnnTimer2=setTimeout(function(){live.textContent='';},4000);
+    }
+  }
+}
+var verAnnTimer1=null,verAnnTimer2=null;
 // 換題按鈕只顯示題號；報讀器念「第N題」，選中的加念「目前題目」
 function setNavBtnState(btn,on){
   btn.classList.toggle('active',on);
@@ -976,6 +1002,10 @@ function getCurrentVerLabel(num){
   return map[panel.id.split('-').pop()]||'規範版';
 }
 function switchVer(topicNum,ver,tabEl){
+  preferredVer=ver;
+  showVer(topicNum,ver,tabEl);
+}
+function showVer(topicNum,ver,tabEl){
   var numStr=String(topicNum).padStart(2,'0');
   document.querySelectorAll('#topic-'+numStr+' .ver-tab').forEach(function(t){t.classList.remove('active');t.setAttribute('aria-selected','false');});
   tabEl.classList.add('active');tabEl.setAttribute('aria-selected','true');
