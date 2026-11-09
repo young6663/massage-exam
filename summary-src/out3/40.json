@@ -1,11 +1,1 @@
-{
- "num": "40",
- "positions": [
-  "仰臥",
-  "俯臥"
- ],
- "pillow": [],
- "exercises": [],
- "tests": [],
- "note": "無墊枕、運動法、測試。步驟中有柳手法與推橋弓，為手法，未列入exercises。"
-}
+{"num":"40","positions":["仰臥","俯臥"],"pillow":[],"exercises":[],"tests":[],"note":"步驟有柳手法、推橋弓（手法，非運動法）。"}

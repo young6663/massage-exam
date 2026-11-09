@@ -1,15 +1,1 @@
-{
- "num": "38",
- "positions": [
-  "側臥"
- ],
- "pillow": [],
- "exercises": [
-  {
-   "text": "肩部及頸部運動法（步驟(七)）",
-   "src": "重+規"
-  }
- ],
- "tests": [],
- "note": "後頸部、肩部的橫手式、切打法為手法，未列入exercises。無墊枕、測試。"
-}
+{"num":"38","positions":["側臥"],"pillow":[],"exercises":[{"text":"肩部及頸部運動法","src":"重+規"}],"tests":[],"note":null}

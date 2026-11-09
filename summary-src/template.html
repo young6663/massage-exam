@@ -153,8 +153,7 @@ var COLS=[
   {k:'et',h:'病因病理'},
   {k:'cl',h:'臨床表現（人事時地・症狀）'},
   {k:'an',h:'相關解剖'},
-  {k:'pe',h:'墊枕／運動法／測試'},
-  {k:'st',h:'施術步驟'},
+  {k:'pe',h:'體位・步驟・墊枕・運動・測試'},
   {k:'pc',h:'施術目的／注意事項'},
   {k:'nt',h:'補充與備註'}
 ];
@@ -168,6 +167,7 @@ layout=ls('summaryLayout')||'auto';
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function src(s){return '';}
 function ul(items,cls){if(!items||!items.length)return'';return '<ul class="'+(cls||'plain')+'">'+items.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ul>';}
+function ulf(items){if(!items||!items.length)return'';if(items.length<=4)return ul(items);return ul(items.slice(0,3))+'<details><summary>更多 '+(items.length-3)+' 條</summary>'+ul(items.slice(3))+'</details>';}
 function det(items,label){if(!items||!items.length)return'';return '<details><summary>'+(label||'展開解釋')+'</summary>'+ul(items)+'</details>';}
 function mnem(label,m,items,note,s){
   if(!m){var it0=(items||[]).slice();if(note)it0.push('註：'+note);return '<span class="sub">'+esc(label||'')+src(s)+'</span>'+ul(it0);}
@@ -184,7 +184,7 @@ function cET(t){
   var h='';
   (t.etiology||[]).forEach(function(e){h+=mnem(e.label,e.mnemonic,e.items,e.note,e.src);});
   if(t.etiology_summary&&t.etiology_summary.items&&t.etiology_summary.items.length){
-    h+='<span class="sub">病因重點'+src(t.etiology_summary.src)+'</span>'+ul(t.etiology_summary.items);
+    h+='<span class="sub">病因重點'+src(t.etiology_summary.src)+'</span>'+ulf(t.etiology_summary.items);
   }
   return h||none();
 }
@@ -193,7 +193,7 @@ function cRS(t){
   if(t.people&&t.people.text)h+='<span class="sub">人'+src(t.people.src)+'</span><div>'+esc(t.people.text)+'</div>';
   if(t.timing){
     if(t.timing.mnemonic)h+=mnem('事時',t.timing.mnemonic,t.timing.items,t.timing.note,t.timing.src);
-    else if(t.timing.items&&t.timing.items.length)h+='<span class="sub">事時'+src(t.timing.src)+'</span>'+ul(t.timing.items);
+    else if(t.timing.items&&t.timing.items.length)h+='<span class="sub">事時'+src(t.timing.src)+'</span>'+ulf(t.timing.items);
   }
   if(t.location&&t.location.text)h+='<span class="sub">地'+src(t.location.src)+'</span><div>'+esc(t.location.text)+'</div>';
   return h||none();
@@ -207,7 +207,7 @@ function cSY(t){
   var s=t.symptoms, h='';
   if(s){
     if(s.mnemonic)h+=mnem('症狀口訣',s.mnemonic,s.items,s.note,s.src);
-    else if(s.items&&s.items.length)h+=ul(s.items)+src(s.src);
+    else if(s.items&&s.items.length)h+=ulf(s.items)+src(s.src);
   }
   (t.extra_sections||[]).forEach(function(x){if(SY_RE.test(x.label))h+=exOne(x);});
   return h||none();
@@ -216,7 +216,7 @@ function cAN(t){
   var a=t.anatomy; if(!a)return none();
   var h='';
   if(a.mnemonic)h+=mnem('解剖口訣',a.mnemonic,a.mnemonic_items,null,null);
-  if(a.items&&a.items.length)h+=ul(a.items);
+  if(a.items&&a.items.length)h+=ulf(a.items);
   return h?h+src(a.src):none();
 }
 function pcPart(name,o,g){
@@ -243,12 +243,19 @@ function cST(t){
 }
 function peList(name,arr){
   if(!arr||!arr.length)return '';
-  return '<span class="sub">'+name+'</span><ul class="plain">'+arr.map(function(x){return '<li>'+esc(x.text)+src(x.src)+'</li>';}).join('')+'</ul>';
+  return '<span class="sub">'+name+'</span>'+ulf(arr.map(function(x){return x.text;}));
+}
+function stepsDet(t){
+  if(!t.stepsMain||!t.stepsMain.length)return '';
+  var h='<details><summary>展開施術步驟（'+t.stepsMain.length+' 步）</summary>'+ol(t.stepsMain);
+  if(t.stepsSpec&&t.stepsSpec.length)h+='<details><summary>規範版全文（'+t.stepsSpec.length+' 步）</summary>'+ol(t.stepsSpec)+'</details>';
+  return h+'</details>';
 }
 function cPE(t){
-  var p=t.pet; if(!p)return '<span class="none">盤點中</span>';
+  var p=t.pet||{};
   var h='';
-  if(p.positions&&p.positions.length)h+='<span class="sub">體位</span><div>'+esc(p.positions.join('→'))+'</div>';
+  if(p.positions&&p.positions.length)h+='<span class="sub">體位</span><div><strong>'+esc(p.positions.join('→'))+'</strong></div>';
+  h+=stepsDet(t);
   h+=peList('墊枕',p.pillow)+peList('運動法',p.exercises)+peList('測試',p.tests);
   if(!h)return none();
   if(p.note)h+='<details><summary>⚠ 版本差異</summary><p>'+esc(p.note)+'</p></details>';
@@ -274,7 +281,7 @@ function cCL(t){
   if(b!==dash)h+='<span class="sub">症狀</span>'+b;
   return h||dash;
 }
-var CELL={cl:cCL,mn:cMN,st:cST,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
+var CELL={cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
 function cell(k,t){
   if(!unlocked)return '<span class="locked">需輸入密碼</span>';
   if(!t.etiology&&!t.symptoms)return '<span class="none">本題資料整理中</span>';
