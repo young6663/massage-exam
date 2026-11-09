@@ -2,12 +2,13 @@ import json, glob, re, sys
 sys.stdout.reconfigure(encoding='utf-8')
 def norm(s):
     return re.sub(r'[\s，,、。．.；;：:（）()「」/／]', '', s)
+TOP = json.load(open('topics.json', encoding='utf-8'))
 bad = 0
 total = 0
 for f in sorted(glob.glob('out/*.json')):
     n = f[-7:-5]
     d = json.load(open(f, encoding='utf-8'))
-    src = norm(open(f'src/{n}.txt', encoding='utf-8').read())
+    src = norm(open(f'src/{n}.txt', encoding='utf-8').read()) + norm(json.dumps(TOP.get(n, {}), ensure_ascii=False))
     ms = []
     for e in d.get('etiology') or []:
         ms.append(('病因', e.get('mnemonic')))

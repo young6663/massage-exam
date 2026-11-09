@@ -30,6 +30,9 @@ button[aria-pressed="true"]{background:var(--btn-on);color:#fff;border-color:var
 /* 口訣與展開 */
 .mn{margin:2px 0 6px}
 .mn .lbl{font-size:.85rem;color:var(--muted);display:block}
+.mnl .lbl{display:inline-block;min-width:3.2em;margin-right:4px;font-size:.85rem;color:var(--muted)}
+.mnl{margin:2px 0 4px}
+td.c-mn{min-width:250px}
 .mtext{color:var(--mn);background:var(--mn-bg);padding:0 4px;border-radius:4px;font-weight:700;font-size:1.05rem}
 details{margin:2px 0}
 summary{cursor:pointer;color:var(--link);font-size:.9rem;padding:4px 0;min-height:32px}
@@ -108,6 +111,7 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
   </div>
   <div class="ctl" role="group" aria-label="只看哪一欄">
     <span class="lab" aria-hidden="true">只看</span>
+    <button type="button" data-col="key" onclick="setCol('key')">重點</button>
     <button type="button" data-col="all" onclick="setCol('all')">全部</button>
   </div>
   <div class="ctl">
@@ -145,24 +149,24 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 <script>
 var DATA=__DATA__;
 var COLS=[
-  {k:'st',h:'施術步驟'},
-  {k:'pe',h:'墊枕／運動法／測試'},
+  {k:'mn',h:'口訣一覽'},
   {k:'et',h:'病因病理'},
-  {k:'rs',h:'人事時地'},
-  {k:'sy',h:'症狀'},
+  {k:'cl',h:'臨床表現（人事時地・症狀）'},
   {k:'an',h:'相關解剖'},
+  {k:'pe',h:'墊枕／運動法／測試'},
+  {k:'st',h:'施術步驟'},
   {k:'pc',h:'施術目的／注意事項'},
   {k:'nt',h:'補充與備註'}
 ];
 var SRC={'重':'重點整理','規':'規範','講':'講義'};
 var HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
-var unlocked=false, layout='auto', col='all', allOpen=false, fails=0;
+var unlocked=false, layout='auto', col='key', allOpen=false, fails=0;
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
 unlocked=(ls('massageExamAuth')===HASH);
 layout=ls('summaryLayout')||'auto';
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function src(s){if(!s)return'';return ' <span class="src">〔'+esc(s)+'〕</span>';}
+function src(s){return '';}
 function ul(items,cls){if(!items||!items.length)return'';return '<ul class="'+(cls||'plain')+'">'+items.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ul>';}
 function det(items,label){if(!items||!items.length)return'';return '<details><summary>'+(label||'展開解釋')+'</summary>'+ul(items)+'</details>';}
 function mnem(label,m,items,note,s){
@@ -174,7 +178,7 @@ function mnem(label,m,items,note,s){
   h+=det(it);
   return h+'</div>';
 }
-function none(){return '<span class="none">（無資料）</span>';}
+function none(){return '<span class="none">—</span>';}
 
 function cET(t){
   var h='';
@@ -238,7 +242,7 @@ function cST(t){
   return h;
 }
 function peList(name,arr){
-  if(!arr||!arr.length)return '<span class="sub">'+name+'</span><span class="none">無</span>';
+  if(!arr||!arr.length)return '';
   return '<span class="sub">'+name+'</span><ul class="plain">'+arr.map(function(x){return '<li>'+esc(x.text)+src(x.src)+'</li>';}).join('')+'</ul>';
 }
 function cPE(t){
@@ -246,17 +250,38 @@ function cPE(t){
   var h='';
   if(p.positions&&p.positions.length)h+='<span class="sub">體位</span><div>'+esc(p.positions.join('→'))+'</div>';
   h+=peList('墊枕',p.pillow)+peList('運動法',p.exercises)+peList('測試',p.tests);
+  if(!h)return none();
   if(p.note)h+='<details><summary>⚠ 版本差異</summary><p>'+esc(p.note)+'</p></details>';
   return h;
 }
-var CELL={st:cST,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
+function cMN(t){
+  var L=[];
+  function add(lab,m,items,note){lab=lab||'口訣';if(m)L.push('<div class="mn mnl"><span class="lbl">'+esc(lab)+'</span><strong class="mtext">'+esc(m)+'</strong>'+det((items||[]).concat(note?['註：'+note]:[]))+'</div>');}
+  (t.etiology||[]).forEach(function(e){add((e.label||'').replace('口訣','')||'病因',e.mnemonic,e.items,e.note);});
+  if(t.timing)add('事時',t.timing.mnemonic,t.timing.items,t.timing.note);
+  if(t.symptoms)add('症狀',t.symptoms.mnemonic,t.symptoms.items,t.symptoms.note);
+  if(t.anatomy)add('解剖',t.anatomy.mnemonic,t.anatomy.mnemonic_items,null);
+  (t.extra_sections||[]).forEach(function(x){add(x.label.replace(/口訣/,''),x.mnemonic,x.items,null);});
+  var sp=[];
+  if(t.purpose&&t.purpose.type==='專屬')sp.push('施術目的');
+  if(t.cautions&&t.cautions.type==='專屬')sp.push('注意事項');
+  if(sp.length)L.push('<div class="mnl"><span class="lbl">注意</span>'+sp.join('、')+'不用通用口訣（見「施術目的／注意事項」欄）</div>');
+  return L.join('')||'<span class="none">本題沒有專屬口訣</span>';
+}
+function cCL(t){
+  var a=cRS(t),b=cSY(t),dash=none();
+  var h=(a===dash?'':a);
+  if(b!==dash)h+='<span class="sub">症狀</span>'+b;
+  return h||dash;
+}
+var CELL={cl:cCL,mn:cMN,st:cST,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
 function cell(k,t){
   if(!unlocked)return '<span class="locked">需輸入密碼</span>';
   if(!t.etiology&&!t.symptoms)return '<span class="none">本題資料整理中</span>';
   return CELL[k](t);
 }
 function link(t){return '<a class="lnk" href="index.html#topic-'+t.num+'">前往第 '+t.num+' 題完整內容</a>';}
-function metaLine(t){return esc(t.cat)+'・'+t.acu+' 穴・'+t.steps+' 步驟'+(t.hasTeacher?'':'・無重點整理版');}
+function metaLine(t){return esc(t.cat)+'・'+t.acu+' 穴・'+t.steps+' 步';}
 
 var GEN={};
 function prepGen(){
@@ -269,7 +294,8 @@ function prepGen(){
   document.getElementById('genBox').innerHTML=b;
 }
 
-function visibleCols(){return COLS.filter(function(c){return col==='all'||c.k===col;});}
+var KEY={et:1,cl:1,pe:1,an:1};
+function visibleCols(){return COLS.filter(function(c){return col==='all'||(col==='key'&&KEY[c.k])||c.k===col;});}
 function renderTable(){
   var cs=visibleCols();
   var h='<div class="tbl-wrap" tabindex="0" role="region" aria-label="比對表，可捲動"><table><caption id="cap">40 題比對表：'+(cs.length+1)+' 欄、'+DATA.topics.length+' 列</caption><thead><tr><th scope="col">題號與題名</th>';
@@ -414,11 +440,11 @@ function renderQuick(){
   if(!unlocked){q.classList.add('hide');return;}
   q.classList.remove('hide');
   function pick(k){return DATA.topics.filter(function(t){return t.pet&&t.pet[k]&&t.pet[k].length;});}
-  function line(name,arr,k){
-    return '<details><summary>'+name+'：'+arr.length+' 題（'+arr.map(function(t){return t.num;}).join('、')+'）</summary><ul class="plain">'+
-      arr.map(function(t){return '<li>'+t.num+' '+esc(t.name)+'：'+t.pet[k].map(function(x){return esc(x.text);}).join('；')+'</li>';}).join('')+'</ul></details>';
+  function line(name,arr,k,open){
+    var body='<ul class="plain">'+arr.map(function(t){return '<li><strong>'+t.num+' '+esc(t.name.replace(/之按摩$/,''))+'</strong>：'+t.pet[k].map(function(x){return esc(x.text);}).join('；')+'</li>';}).join('')+'</ul>';
+    return '<details'+(open?' open':'')+'><summary>'+name+'</summary>'+body+'</details>';
   }
-  q.innerHTML='<h2>快速比對</h2>'+line('要墊枕',pick('pillow'),'pillow')+line('有測試／檢查',pick('tests'),'tests')+line('有運動法',pick('exercises'),'exercises');
+  q.innerHTML='<h2>快速比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false);
 }
 </script>
 </body>
