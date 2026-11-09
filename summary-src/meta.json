@@ -1,0 +1,242 @@
+{
+"01": {
+"title": "關節損傷－頸椎退行性變化之按摩",
+"spec_acu": 15,
+"spec_steps": 7,
+"has_teacher": true
+},
+"02": {
+"title": "關節損傷－腰肌急性扭傷之按摩",
+"spec_acu": 11,
+"spec_steps": 6,
+"has_teacher": true
+},
+"03": {
+"title": "關節損傷－慢性腰部損傷之按摩",
+"spec_acu": 10,
+"spec_steps": 8,
+"has_teacher": true
+},
+"04": {
+"title": "關節損傷－腰椎滑脫之按摩",
+"spec_acu": 11,
+"spec_steps": 6,
+"has_teacher": true
+},
+"05": {
+"title": "關節損傷－第三腰椎橫突過長之按摩",
+"spec_acu": 7,
+"spec_steps": 7,
+"has_teacher": true
+},
+"06": {
+"title": "關節損傷－腰骶部病變之按摩",
+"spec_acu": 6,
+"spec_steps": 5,
+"has_teacher": true
+},
+"07": {
+"title": "關節損傷－骶髂關節損傷之按摩",
+"spec_acu": 11,
+"spec_steps": 7,
+"has_teacher": true
+},
+"08": {
+"title": "關節損傷－腕溝管損傷之按摩",
+"spec_acu": 2,
+"spec_steps": 6,
+"has_teacher": true
+},
+"09": {
+"title": "關節損傷－膝關節髕下脂肪墊損傷之按摩",
+"spec_acu": 6,
+"spec_steps": 8,
+"has_teacher": true
+},
+"10": {
+"title": "關節損傷－踝關節急性扭傷之按摩",
+"spec_acu": 7,
+"spec_steps": 6,
+"has_teacher": true
+},
+"11": {
+"title": "關節損傷－踝溝管損傷之按摩",
+"spec_acu": 6,
+"spec_steps": 3,
+"has_teacher": true
+},
+"12": {
+"title": "關節損傷－足跟退行性變化之按摩",
+"spec_acu": 8,
+"spec_steps": 4,
+"has_teacher": true
+},
+"13": {
+"title": "關節炎－腰退行性脊椎炎之按摩",
+"spec_acu": 10,
+"spec_steps": 6,
+"has_teacher": true
+},
+"14": {
+"title": "關節炎－強直性脊椎炎之按摩",
+"spec_acu": 11,
+"spec_steps": 11,
+"has_teacher": true
+},
+"15": {
+"title": "關節炎－髖關節股關節炎之按摩",
+"spec_acu": 4,
+"spec_steps": 8,
+"has_teacher": true
+},
+"16": {
+"title": "關節炎－肩關節周圍炎（五十肩）之按摩",
+"spec_acu": 6,
+"spec_steps": 8,
+"has_teacher": true
+},
+"17": {
+"title": "關節炎－肘關節肱骨外上髁炎（網球肘）之按摩",
+"spec_acu": 5,
+"spec_steps": 7,
+"has_teacher": true
+},
+"18": {
+"title": "關節炎－肘關節肱骨內上髁炎（學生肘）之按摩",
+"spec_acu": 7,
+"spec_steps": 7,
+"has_teacher": true
+},
+"19": {
+"title": "關節炎－腕部橈側伸腕肌腱周圍炎之按摩",
+"spec_acu": 8,
+"spec_steps": 7,
+"has_teacher": true
+},
+"20": {
+"title": "關節炎－膝關節滑膜炎之按摩",
+"spec_acu": 11,
+"spec_steps": 9,
+"has_teacher": true
+},
+"21": {
+"title": "關節炎－踝部跟腱炎之按摩",
+"spec_acu": 8,
+"spec_steps": 6,
+"has_teacher": true
+},
+"22": {
+"title": "關節炎－類風濕性關節炎（上肢）之按摩",
+"spec_acu": 12,
+"spec_steps": 6,
+"has_teacher": true
+},
+"23": {
+"title": "關節炎－類風濕性關節炎（下肢）之按摩",
+"spec_acu": 17,
+"spec_steps": 7,
+"has_teacher": true
+},
+"24": {
+"title": "麻痺－臂神經叢麻痺之按摩",
+"spec_acu": 16,
+"spec_steps": 6,
+"has_teacher": true
+},
+"25": {
+"title": "麻痺－正中神經麻痺之按摩",
+"spec_acu": 16,
+"spec_steps": 8,
+"has_teacher": false
+},
+"26": {
+"title": "麻痺－尺神經麻痺之按摩",
+"spec_acu": 18,
+"spec_steps": 7,
+"has_teacher": false
+},
+"27": {
+"title": "麻痺－橈神經麻痺之按摩",
+"spec_acu": 25,
+"spec_steps": 5,
+"has_teacher": true
+},
+"28": {
+"title": "麻痺－腓總神經麻痺之按摩",
+"spec_acu": 12,
+"spec_steps": 5,
+"has_teacher": true
+},
+"29": {
+"title": "麻痺－顏面神經麻痺之按摩",
+"spec_acu": 18,
+"spec_steps": 5,
+"has_teacher": true
+},
+"30": {
+"title": "麻痺－半身不遂（上肢）之按摩",
+"spec_acu": 13,
+"spec_steps": 5,
+"has_teacher": true
+},
+"31": {
+"title": "麻痺－半身不遂（下肢）之按摩",
+"spec_acu": 18,
+"spec_steps": 5,
+"has_teacher": true
+},
+"32": {
+"title": "神經痛－頭痛之按摩",
+"spec_acu": 25,
+"spec_steps": 6,
+"has_teacher": true
+},
+"33": {
+"title": "神經痛－三叉神經痛之按摩",
+"spec_acu": 24,
+"spec_steps": 4,
+"has_teacher": true
+},
+"34": {
+"title": "神經痛－肋間神經痛之按摩",
+"spec_acu": 17,
+"spec_steps": 6,
+"has_teacher": true
+},
+"35": {
+"title": "神經痛－坐骨神經痛（腰椎間盤突出）之按摩",
+"spec_acu": 12,
+"spec_steps": 6,
+"has_teacher": true
+},
+"36": {
+"title": "神經痛（梨狀肌病變）之按摩",
+"spec_acu": 12,
+"spec_steps": 6,
+"has_teacher": true
+},
+"37": {
+"title": "急性頸部軟組織痙攣（落枕）之按摩",
+"spec_acu": 8,
+"spec_steps": 6,
+"has_teacher": true
+},
+"38": {
+"title": "肩頸凝之按摩",
+"spec_acu": 12,
+"spec_steps": 7,
+"has_teacher": true
+},
+"39": {
+"title": "便秘之按摩",
+"spec_acu": 9,
+"spec_steps": 4,
+"has_teacher": true
+},
+"40": {
+"title": "失眠之按摩",
+"spec_acu": 30,
+"spec_steps": 9,
+"has_teacher": true
+}
+}
