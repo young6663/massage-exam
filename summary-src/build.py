@@ -5,6 +5,7 @@ DATE = sys.argv[2] if len(sys.argv) > 2 else '2026-11-09'
 DEST = sys.argv[3] if len(sys.argv) > 3 else os.path.join(HERE, 'summary.html')
 
 meta = json.load(open(os.path.join(HERE, 'meta.json'), encoding='utf-8'))
+ACU = json.load(open(os.path.join(HERE, 'acu.json'), encoding='utf-8'))
 STEPS = json.load(open(os.path.join(HERE, 'steps.json'), encoding='utf-8'))
 topics = []
 for num in sorted(meta):
@@ -14,6 +15,7 @@ for num in sorted(meta):
         cat, name = {'36': '神經痛', '37': '落枕', '38': '肩頸凝', '39': '便秘', '40': '失眠'}.get(num, ''), m['title']
     p = os.path.join(HERE, 'out', num + '.json')
     d = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}
+    d['acuInfo'] = ACU.get(num)
     st = STEPS.get(num, {})
     d['stepsMain'] = st.get('teacher') or st.get('spec') or []
     d['stepsMainSrc'] = '重' if st.get('teacher') else '規'

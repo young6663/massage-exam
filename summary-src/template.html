@@ -32,7 +32,8 @@ button[aria-pressed="true"]{background:var(--btn-on);color:#fff;border-color:var
 .mn .lbl{font-size:.85rem;color:var(--muted);display:block}
 .mnl .lbl{display:inline-block;min-width:3.2em;margin-right:4px;font-size:.85rem;color:var(--muted)}
 .mnl{margin:2px 0 4px}
-td.c-mn{min-width:250px}
+td.c-mn{min-width:250px} td.c-ac{min-width:220px}
+.acnames{margin:2px 0;line-height:1.8}
 .mtext{color:var(--mn);background:var(--mn-bg);padding:0 4px;border-radius:4px;font-weight:700;font-size:1.05rem}
 details{margin:2px 0}
 summary{cursor:pointer;color:var(--link);font-size:.9rem;padding:4px 0;min-height:32px}
@@ -150,10 +151,11 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 var DATA=__DATA__;
 var COLS=[
   {k:'mn',h:'口訣一覽'},
+  {k:'ac',h:'穴位'},
+  {k:'pe',h:'體位・步驟・墊枕・運動・測試'},
   {k:'et',h:'病因病理'},
   {k:'cl',h:'臨床表現（人事時地・症狀）'},
   {k:'an',h:'相關解剖'},
-  {k:'pe',h:'體位・步驟・墊枕・運動・測試'},
   {k:'pc',h:'施術目的／注意事項'},
   {k:'nt',h:'補充與備註'}
 ];
@@ -281,7 +283,21 @@ function cCL(t){
   if(b!==dash)h+='<span class="sub">症狀</span>'+b;
   return h||dash;
 }
-var CELL={cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
+function cAC(t){
+  var a=t.acuInfo; if(!a)return none();
+  var h='<div><strong>'+esc(a.summary||'')+'</strong></div>';
+  a.groups.forEach(function(g){
+    var names=g.pts.map(function(p){return esc(p.n);}).join('、');
+    if(g.label){var m=g.label.replace(/^第(\d)組口訣：/,'第$1組 ');h+='<div class="mn mnl"><span class="lbl">'+esc(m.split(' ')[0])+'</span><strong class="mtext">'+esc(m.split(' ').slice(1).join(' ')||g.label)+'</strong><div>'+names+'</div></div>';}
+    else h+='<div class="acnames">'+names+'</div>';
+  });
+  if(a.notes&&a.notes.length)h+=ul(a.notes);
+  var locs=[];a.groups.forEach(function(g){g.pts.forEach(function(p){if(p.loc)locs.push(p.n+'：'+p.loc);});});
+  if(locs.length)h+=det(locs,'展開穴位定位');
+  if(a.mismatch)h+='<div class="issue">⚠ '+esc(a.mismatch)+(a.notes&&a.notes.length?'':'，問老師')+'</div>';
+  return h;
+}
+var CELL={ac:cAC,cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
 function cell(k,t){
   if(!unlocked)return '<span class="locked">需輸入密碼</span>';
   if(!t.etiology&&!t.symptoms)return '<span class="none">本題資料整理中</span>';
@@ -301,7 +317,7 @@ function prepGen(){
   document.getElementById('genBox').innerHTML=b;
 }
 
-var KEY={et:1,cl:1,pe:1,an:1};
+var KEY={ac:1,pe:1,et:1,cl:1,an:1};
 function visibleCols(){return COLS.filter(function(c){return col==='all'||(col==='key'&&KEY[c.k])||c.k===col;});}
 function renderTable(){
   var cs=visibleCols();
