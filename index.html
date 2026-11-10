@@ -191,6 +191,7 @@ dialog.sheet-modal::backdrop{background:rgba(0,0,0,.55)}
       <div id="selectedDisplay"><p class="selected-empty">尚未選擇題目</p></div>
     </div>
     <button class="pick-go" onclick="startExam()">開始複習</button>
+    <button class="pick-go" style="background:#1e5799;box-shadow:none;margin-top:8px" onclick="goQuick()">看快速卡</button>
     <p class="pick-hint">選一題或兩題皆可，選好後按開始複習</p>
     <p class="pick-hint">選兩題時可以左右滑換題，往左＝下一題，往右＝上一題：沒開報讀器用單指滑；Android TalkBack 用兩指滑；iPhone 旁白請單指長壓後左右撥；電腦可按左右方向鍵。</p>
   </div>
@@ -200,6 +201,7 @@ dialog.sheet-modal::backdrop{background:rgba(0,0,0,.55)}
     <button class="nav-exit" onclick="exitExam()" aria-label="返回選題">← 返回</button>
     <button class="nav-topic-btn active" id="navBtn0" onclick="switchTopic(0)"><span class="nb-num" id="navNum0" aria-hidden="true">──</span></button>
     <button class="nav-topic-btn" id="navBtn1" onclick="switchTopic(1)"><span class="nb-num" id="navNum1" aria-hidden="true">──</span></button>
+    <button class="nav-exit" style="border-right:none;border-left:1px solid rgba(255,255,255,.15)" onclick="goQuick()">快速卡</button>
   </nav>
   <div id="verAnnounce" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"></div>
   <main class="exam-content" id="main-content-exam" tabindex="-1">
@@ -848,7 +850,7 @@ d、偶有傷后腰伴雙下肢疼痛，或交替性坐骨神經痛者，為突�
     <button class="pwd-cancel" onclick="closePwdModal()">取消</button>
   </div>
 </div>
-<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v67・更新日期 2026-10-21</footer>
+<footer role="contentinfo" style="text-align:center;padding:16px 8px 24px;color:#888;font-size:.85rem">版本 v68・更新日期 2026-11-10</footer>
 <script>
 var selectedNums=[];
 var PWD_HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
@@ -901,6 +903,13 @@ function updateSelectedDisplay(){
   el.innerHTML=html;
 }
 
+// 快速卡：帶著已選的題號到比對索引表，只在這兩題的關鍵字卡之間切換
+function goQuick(){
+  if(!selectedNums.length){alert('請至少選擇一個題號');return;}
+  var at='',a=document.querySelector('.topic-article.active');
+  if(a&&document.getElementById('examScreen').style.display!=='none')at='&at='+a.dataset.num;
+  location.href='summary.html#pin='+selectedNums.join(',')+at;
+}
 function startExam(){
   var nums=selectedNums.slice();
   if(!nums.length){alert('請至少選擇一個題號');return;}
@@ -1098,12 +1107,15 @@ document.addEventListener('keydown',function(e){
 });
 // 深層連結：網址結尾是 #topic-27（或 #topic-7）時，直接選好該題並進入練習畫面（給「乙級上岸衝次營」等外部網站連進來用）
 (function openTopicFromHash(){
+  // #topics=12,35&at=35：從快速卡回來，兩題都選好並停在指定那一題
+  var m2=/^#topics=(\d{1,2})(?:,(\d{1,2}))?(?:&at=(\d{1,2}))?$/.exec(location.hash);
   var m=/^#topic-(\d{1,2})$/.exec(location.hash);
-  if(!m)return;
-  var num=('0'+m[1]).slice(-2);
-  if(!document.getElementById('topic-'+num)||!document.getElementById('gb-'+num))return;
-  toggleTopic(num);
+  var nums=m2?[m2[1],m2[2]]:(m?[m[1]]:[]);
+  nums=nums.filter(Boolean).map(function(x){return ('0'+x).slice(-2);}).filter(function(n,i,a){return a.indexOf(n)===i&&document.getElementById('topic-'+n)&&document.getElementById('gb-'+n);});
+  if(!nums.length)return;
+  nums.forEach(function(n){toggleTopic(n);});
   startExam();
+  if(m2&&m2[3]){var k=selectedNums.indexOf(('0'+m2[3]).slice(-2));if(k>0)switchTopic(k);}
 })();
 
 // ============ 左右滑換題手勢（v63，參考經穴背誦教練 v1.3） ============

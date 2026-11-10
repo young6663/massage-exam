@@ -81,6 +81,25 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 .pwd button{width:100%;margin-top:6px}
 .pwd .go{background:#1e5799;color:#fff;font-weight:700;border:none}
 .err{color:#b00020;font-weight:700;font-size:.9rem}
+.cardbar{position:sticky;top:0;z-index:20;background:#fff;display:flex;gap:6px;align-items:stretch;padding:6px 0;border-bottom:2px solid var(--line);margin:0 0 6px}
+.cardbar button{flex:1;min-height:52px;font-size:1.05rem;font-weight:700;padding:4px 6px;line-height:1.25}
+.cardbar button:disabled{opacity:.45;cursor:default}
+.cardbar .pos{align-self:center;font-weight:700;padding:0 4px;white-space:nowrap}
+.cardclip{overflow-x:clip}
+#cardsBox{touch-action:pan-y}
+.card.snap{transition:transform .15s ease-out,opacity .15s ease-out}
+@keyframes inR{from{transform:translateX(35%);opacity:.2}to{transform:none;opacity:1}}
+@keyframes inL{from{transform:translateX(-35%);opacity:.2}to{transform:none;opacity:1}}
+.card.inR{animation:inR .18s ease-out}
+.card.inL{animation:inL .18s ease-out}
+@media (prefers-reduced-motion:reduce){.card.snap{transition:none}.card.inR,.card.inL{animation:none}}
+.pingrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0}
+.pingrid button{min-height:46px;padding:4px;font-size:1.05rem;font-weight:700}
+.cardtools{display:flex;gap:8px;align-items:stretch;margin:8px 0}
+.cardtools .openbtn{flex:1;margin:0}
+.cardtools button{min-height:48px;font-weight:700}
+.flow{margin:2px 0 4px;padding-left:1.6em}
+.flow li{margin:1px 0}
 @media (max-width:820px){body{padding:10px}}
 </style>
 </head>
@@ -94,6 +113,13 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
   <button type="button" class="unlock-btn" id="unlockBtn" onclick="openPwd()">輸入密碼</button>
 </div>
 
+<div class="panel" id="pinPanel">
+  <h2>抽題</h2>
+  <p id="pinMsg" role="status"></p>
+  <div class="ctl"><button type="button" id="pinClear" onclick="clearPins()">看全部 40 題</button></div>
+  <details id="pinPick"><summary>選抽到的兩題</summary><div class="pingrid" id="pinGrid" role="group" aria-label="選題，最多兩題"></div></details>
+</div>
+
 <div class="panel">
   <p id="offlineMsg" role="status">離線存檔準備中</p>
   <button type="button" id="saveBtn" onclick="saveOffline()">離線存檔</button>
@@ -101,7 +127,7 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 
 <div class="panel" id="quickPanel"></div>
 
-<div class="panel">
+<div class="panel" id="dispPanel">
   <h2>顯示</h2>
   <div class="ctl" role="group" aria-label="版面">
     <span class="lab" aria-hidden="true">版面</span>
@@ -121,7 +147,7 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
   </div>
   <details>
     <summary>說明與通用口訣</summary>
-    <p>以重點整理版為主，規範版確認，最後才用講義。手機卡片可左右滑換題。</p>
+    <p>以重點整理版為主，規範版確認，最後才用講義。手機卡片可左右滑換題。抽到題目後在「抽題」選兩題，就只在這兩題之間切換。</p>
     <div id="genBox"></div>
   </details>
 </div>
@@ -150,7 +176,9 @@ var DATA=__DATA__;
 var COLS=[
   {k:'mn',h:'口訣'},
   {k:'ac',h:'穴位'},
-  {k:'pe',h:'體位'},
+  {k:'pe',h:'步驟'},
+  {k:'ov',h:'概述'},
+  {k:'ms',h:'必講'},
   {k:'et',h:'病因'},
   {k:'cl',h:'臨床'},
   {k:'an',h:'解剖'},
@@ -228,9 +256,33 @@ function pcPart(name,o,g){
   return h;
 }
 function cPC(t){return pcPart('施術目的',t.purpose,GEN.purpose)+pcPart('注意事項',t.cautions,GEN.cautions);}
+var OV_RE=/概述/;
+function cOV(t){
+  var o=t.overview,h='';
+  if(o){
+    if(o.mnemonic)h+=mnem('',o.mnemonic,o.items,null,o.src);
+    else h+=ul(o.items);
+  }else{
+    (t.extra_sections||[]).forEach(function(x){if(OV_RE.test(x.label)){h+=x.mnemonic?mnem('',x.mnemonic,x.items,null,x.src):ul(x.items);}});
+  }
+  return h||none();
+}
+// 必講：分型、分類、分期、考試設定、檢查等每題的核心重點，直接顯示不收合；
+// 備註／講義／可不講的留在「備註」欄，穴位口訣已在穴位欄。
+var OPT_RE=/穴位|^測試檢查$|備註|可不講|不用說|非口述|講義|補充/;
+function isMust(x){return !SY_RE.test(x.label)&&!OV_RE.test(x.label)&&!OPT_RE.test(x.label);}
+function cMS(t){
+  var h='';
+  (t.extra_sections||[]).forEach(function(x){
+    if(!isMust(x))return;
+    if(x.mnemonic)h+=mnem(x.label,x.mnemonic,x.items,null,x.src);
+    else h+='<span class="sub">'+esc(x.label.replace(/（考試一定要說）/,''))+'</span>'+ul(x.items);
+  });
+  return h||none();
+}
 function cNT(t){
   var h='';
-  (t.extra_sections||[]).forEach(function(x){if(!SY_RE.test(x.label))h+=exOne(x);});
+  (t.extra_sections||[]).forEach(function(x){if(!SY_RE.test(x.label)&&!OV_RE.test(x.label)&&!isMust(x))h+=exOne(x);});
   if(t.issues&&t.issues.length)h+='<details><summary>待確認</summary><ul class="issues">'+t.issues.map(function(i){return '<li class="issue">'+esc(i)+'</li>';}).join('')+'</ul></details>';
   return h||none();
 }
@@ -247,7 +299,7 @@ function peList(name,arr){
 }
 function stepsDet(t){
   if(!t.stepsMain||!t.stepsMain.length)return '';
-  var h='<details><summary>步驟</summary>'+ol(t.stepsMain);
+  var h='<details><summary>'+(t.steps_brief&&t.steps_brief.length?'全文':'步驟')+'</summary>'+ol(t.stepsMain);
   if(t.stepsSpec&&t.stepsSpec.length)h+='<details><summary>規範全文</summary>'+ol(t.stepsSpec)+'</details>';
   return h+'</details>';
 }
@@ -255,6 +307,7 @@ function cPE(t){
   var p=t.pet||{};
   var h='';
   if(p.positions&&p.positions.length)h+='<div><strong>'+esc(p.positions.join('、'))+'</strong></div>';
+  if(t.steps_brief&&t.steps_brief.length)h+='<ol class="flow">'+t.steps_brief.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';
   h+=stepsDet(t);
   h+=peList('墊枕',p.pillow)+peList('運動法',p.exercises)+peList('測試',p.tests);
   if(!h)return none();
@@ -296,7 +349,7 @@ function cAC(t){
   if(a.mismatch)h+='<div class="issue">'+esc(a.mismatch)+(a.notes&&a.notes.length?'':'，問老師')+'</div>';
   return h;
 }
-var CELL={ac:cAC,cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
+var CELL={ov:cOV,ms:cMS,ac:cAC,cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
 function cell(k,t){
   if(!unlocked)return '<span class="locked">需輸入密碼</span>';
   if(!t.etiology&&!t.symptoms)return '<span class="none">本題資料整理中</span>';
@@ -317,14 +370,14 @@ function prepGen(){
   document.getElementById('genBox').innerHTML=b;
 }
 
-var KEY={ac:1,pe:1,et:1,cl:1,an:1};
+var KEY={ac:1,pe:1,ov:1,ms:1,et:1,cl:1,an:1,pc:1};
 function visibleCols(){return COLS.filter(function(c){return col==='all'||(col==='key'&&KEY[c.k])||c.k===col;});}
 function renderTable(){
   var cs=visibleCols();
   var h='<div class="tbl-wrap" tabindex="0" role="region" aria-label="比對表"><table><caption id="cap">比對表</caption><thead><tr><th scope="col">題目</th>';
   cs.forEach(function(c){h+='<th scope="col">'+c.h+'</th>';});
   h+='</tr></thead><tbody>';
-  DATA.topics.forEach(function(t){
+  list().forEach(function(t){
     h+='<tr id="row-'+t.num+'"><th scope="row" tabindex="-1"><a href="index.html#topic-'+t.num+'">'+t.num+' '+esc(sn(t))+'</a></th>';
     cs.forEach(function(c){h+='<td class="c-'+c.k+'">'+cell(c.k,t)+'</td>';});
     h+='</tr>';
@@ -332,30 +385,85 @@ function renderTable(){
   return h+'</tbody></table></div>';
 }
 var cur=parseInt(ls('summaryCard')||'0',10)||0;
+// 釘選（抽到的兩題）：有釘選時表格與卡片都只顯示釘選的題目，左右滑只在這兩題之間切換
+var pins=[],pcur=0;
+try{pins=JSON.parse(ls('summaryPins')||'[]')||[];}catch(e){pins=[];}
+function topicOf(n){for(var i=0;i<DATA.topics.length;i++)if(DATA.topics[i].num===n)return DATA.topics[i];return null;}
+function idxOf(n){for(var i=0;i<DATA.topics.length;i++)if(DATA.topics[i].num===n)return i;return 0;}
+if(!Array.isArray(pins))pins=[];
+pins=pins.filter(function(n){return typeof n==='string'&&topicOf(n);}).slice(0,2);
+function list(){return pins.length?pins.map(topicOf):DATA.topics;}
+function getCur(){var N=list().length,c=pins.length?pcur:cur;if(!(c>=0&&c<N))c=0;return c;}
+function setCur(c){if(pins.length)pcur=c;else{cur=c;ls('summaryCard',String(c));}}
+function canGo(d){var N=list().length;if(N<2)return false;if(pins.length===2)return true;var n=getCur()+d;return n>=0&&n<N;}
+function fullHref(t){return pins.length===2?('index.html#topics='+pins.join(',')+'&at='+t.num):('index.html#topic-'+t.num);}
+function cardBar(L,c,sticky){
+  var N=L.length,cls=sticky?'cardbar':'cardnav';
+  if(pins.length===2){
+    return '<nav class="'+cls+'" aria-label="釘選的兩題">'+L.map(function(t,i){return '<button type="button" aria-pressed="'+(i===c?'true':'false')+'" onclick="showCard('+i+','+(i>c?1:-1)+')">'+t.num+' '+esc(sn(t))+'</button>';}).join('')+'</nav>';
+  }
+  if(N<2)return '';
+  return '<nav class="'+cls+'" aria-label="換題"><button type="button" onclick="goCard(-1)"'+(c===0?' disabled':'')+'><span aria-hidden="true">◀ </span>上一題</button><span class="pos" aria-hidden="true">'+(c+1)+' / '+N+'</span><button type="button" onclick="goCard(1)"'+(c===N-1?' disabled':'')+'>下一題<span aria-hidden="true"> ▶</span></button></nav>';
+}
 function renderCards(){
-  var cs=visibleCols(), N=DATA.topics.length;
-  if(cur<0||cur>=N)cur=0;
-  var t=DATA.topics[cur];
-  var nav='<nav class="cardnav" aria-label="換題"><button type="button" onclick="goCard(-1)"'+(cur===0?' disabled':'')+'><span aria-hidden="true">◀ </span>上一題</button><span class="pos" aria-hidden="true">'+(cur+1)+' / '+N+'</span><button type="button" onclick="goCard(1)"'+(cur===N-1?' disabled':'')+'>下一題<span aria-hidden="true"> ▶</span></button></nav>';
-  var h='<div class="cards" id="cardsBox">'+nav;
-  h+='<article class="card" id="card-'+t.num+'"><h2 tabindex="-1">'+t.num+' '+esc(sn(t))+'</h2>';
-  h+='<a class="openbtn" href="index.html#topic-'+t.num+'">完整內容</a>';
-  cs.forEach(function(c){h+='<h3>'+c.h+'</h3><div>'+cell(c.k,t)+'</div>';});
-  h+='</article>'+nav+'</div>';
-  return h;
+  var cs=visibleCols(), L=list(), c=getCur(), t=L[c];
+  var pinned=pins.indexOf(t.num)>=0;
+  var h='<div class="cards" id="cardsBox">'+cardBar(L,c,true);
+  h+='<div class="cardclip"><article class="card" id="card-'+t.num+'"><h2 tabindex="-1">'+t.num+' '+esc(sn(t))+'</h2>';
+  h+='<div class="cardtools"><button type="button" class="pinbtn" aria-pressed="'+(pinned?'true':'false')+'" onclick="togglePin(\''+t.num+'\',\'card\')">釘選</button><a class="openbtn" href="'+fullHref(t)+'">完整內容</a></div>';
+  cs.forEach(function(k){h+='<h3>'+k.h+'</h3><div>'+cell(k.k,t)+'</div>';});
+  h+='</article></div>'+cardBar(L,c,false);
+  if(pins.length)h+='<p><button type="button" onclick="clearPins()">看全部 40 題</button></p>';
+  return h+'</div>';
 }
-function goCard(d){
-  var N=DATA.topics.length, n=cur+d;
-  if(n<0||n>=N)return;
-  cur=n; ls('summaryCard',String(cur)); render();
-  var h=document.querySelector('#cardsBox h2'); if(h){h.scrollIntoView({block:'start'});h.focus();}
-}
-function effLayout(){if(layout!=='auto')return layout;return window.matchMedia('(max-width: 820px)').matches?'cards':'table';}
-function render(){
-  prepGen();renderQuick();
+function renderView(){
   var L=effLayout();
   document.getElementById('view').innerHTML=(L==='table')?renderTable():renderCards();
   if(allOpen)setDetails(true);
+}
+function focusCard(dir){
+  var box=document.getElementById('cardsBox');if(!box)return;
+  var a=box.querySelector('.card');if(a&&dir)a.classList.add(dir>0?'inR':'inL');
+  var top=box.getBoundingClientRect().top;if(top<0)window.scrollBy(0,top);
+  var h=box.querySelector('h2');if(h){try{h.focus({preventScroll:true});}catch(e){h.focus();}}
+}
+function showCard(i,dir){setCur(i);renderView();focusCard(dir);}
+function goCard(d){
+  var N=list().length,n=getCur()+d;
+  if(pins.length===2)n=(n+N)%N;else if(n<0||n>=N)return;
+  showCard(n,d);
+}
+function savePins(){ls('summaryPins',JSON.stringify(pins));}
+function renderPins(){
+  var m=document.getElementById('pinMsg');
+  m.textContent=pins.length?('釘選：'+pins.map(function(n){var t=topicOf(n);return n+' '+sn(t);}).join('、')):'未釘選，顯示全部';
+  document.getElementById('pinClear').classList.toggle('hide',!pins.length);
+  document.getElementById('pinGrid').innerHTML=DATA.topics.map(function(t){return '<button type="button" id="pg-'+t.num+'" aria-pressed="'+(pins.indexOf(t.num)>=0?'true':'false')+'" aria-label="'+t.num+' '+esc(sn(t))+'" onclick="togglePin(\''+t.num+'\',\'grid\')">'+t.num+'</button>';}).join('');
+  // 有釘選時把內容移到「抽題」正下方，不用捲過其他面板
+  var v=document.getElementById('view'),anchor=document.getElementById(pins.length?'pinPanel':'dispPanel');
+  if(anchor.nextElementSibling!==v)anchor.parentNode.insertBefore(v,anchor.nextSibling);
+}
+function togglePin(n,from){
+  var i=pins.indexOf(n);
+  if(i>=0)pins.splice(i,1);else{if(pins.length>=2)pins.shift();pins.push(n);}
+  savePins();
+  if(pins.length){pcur=pins.indexOf(n);if(pcur<0)pcur=0;}else cur=idxOf(n);
+  render();
+  if(from==='grid'&&pins.length<2){var g=document.getElementById('pg-'+n);if(g)g.focus();return;}
+  if(from==='grid'){document.getElementById('pinPick').open=false;}
+  if(effLayout()==='cards'){
+    if(from==='card'){var b=document.querySelector('#cardsBox .pinbtn');if(b){b.focus();return;}}
+    var box=document.getElementById('cardsBox');if(box)box.scrollIntoView({block:'start'});focusCard(0);
+  }else{var th=document.querySelector('#view tbody th');if(th){th.scrollIntoView({block:'center'});th.focus();}}
+}
+function clearPins(){
+  if(!pins.length)return;
+  var n=list()[getCur()].num;pins=[];savePins();cur=idxOf(n);ls('summaryCard',String(cur));render();
+  if(effLayout()==='cards')focusCard(0);else{var m=document.getElementById('pinMsg');m.setAttribute('tabindex','-1');m.focus();}
+}
+function effLayout(){if(layout!=='auto')return layout;return window.matchMedia('(max-width: 820px)').matches?'cards':'table';}
+function render(){
+  prepGen();renderQuick();renderPins();renderView();
   document.querySelectorAll('[data-layout]').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-layout')===layout?'true':'false');});
   document.querySelectorAll('[data-col]').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-col')===col?'true':'false');});
   var lp=document.getElementById('lockPanel');
@@ -367,9 +475,10 @@ function setDetails(open){document.querySelectorAll('#view details').forEach(fun
 function toggleAll(){allOpen=!allOpen;setDetails(allOpen);var b=document.getElementById('expandBtn');b.textContent=allOpen?'全部收合':'全部展開';}
 function jumpTo(n){
   if(!n)return;
+  if(pins.length&&pins.indexOf(n)<0){pins=[];savePins();render();}
   if(effLayout()==='cards'){
-    for(var i=0;i<DATA.topics.length;i++)if(DATA.topics[i].num===n){cur=i-0;}
-    goCard(0);document.getElementById('jump').value='';return;
+    if(pins.length)pcur=pins.indexOf(n);else cur=idxOf(n);
+    showCard(getCur(),0);document.getElementById('jump').value='';return;
   }
   var el=document.querySelector('#row-'+n+' th, #card-'+n+' h2');
   if(el){el.scrollIntoView({block:'start'});el.focus();}
@@ -389,11 +498,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.ge
 // 左右滑換題（沿用主頁 v63 手勢）：單指只認左右滑；TalkBack 兩指／旁白三指也可；
 // 上下滑不攔；兩指張開縮放、螢幕邊緣返回手勢、選取文字中都不換題。往左滑＝下一題。
 (function(){
-  var startX=0,startY=0,startN=0,tracking=false,MIN=45,EDGE=20,fStart={},fLast={};
+  var startX=0,startY=0,startN=0,tracking=false,MIN=45,EDGE=20,fStart={},fLast={},t0=0,drag=false,vert=false,cardEl=null;
+  function resetCard(anim){if(!cardEl)return;if(anim)cardEl.classList.add('snap');cardEl.style.transform='';cardEl.style.opacity='';cardEl=null;}
   function active(){return effLayout()==='cards'&&!document.getElementById('pwdBg').classList.contains('open');}
   function sameDir(){var sign=0;for(var k in fStart){if(!fLast[k])continue;var d=fLast[k].x-fStart[k].x;if(Math.abs(d)<MIN/2)return false;var sg=d<0?-1:1;if(sign&&sg!==sign)return false;sign=sg;}return sign!==0;}
   document.addEventListener('touchstart',function(e){
-    tracking=false;if(!active())return;
+    tracking=false;drag=false;vert=false;resetCard(false);if(!active())return;
+    t0=Date.now();
     var t=e.target.tagName;if(t==='INPUT'||t==='SELECT'||t==='TEXTAREA')return;
     startN=e.touches.length;startX=e.touches[0].clientX;startY=e.touches[0].clientY;fStart={};fLast={};
     for(var i=0;i<e.touches.length;i++){var q=e.touches[i];fStart[q.identifier]=fLast[q.identifier]={x:q.clientX,y:q.clientY};}
@@ -403,19 +514,41 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.ge
   document.addEventListener('touchmove',function(e){
     if(!tracking)return;if(e.touches.length>startN)startN=e.touches.length;
     for(var i=0;i<e.touches.length;i++){var q=e.touches[i];if(!fStart[q.identifier])fStart[q.identifier]={x:q.clientX,y:q.clientY};fLast[q.identifier]={x:q.clientX,y:q.clientY};}
+    if(startN===1&&e.touches.length===1){
+      var mx=e.touches[0].clientX-startX,my=e.touches[0].clientY-startY;
+      if(!drag&&!vert){
+        if(Math.abs(my)>12&&Math.abs(my)>=Math.abs(mx))vert=true;
+        else if(Math.abs(mx)>12&&Math.abs(mx)>Math.abs(my)*1.3&&!(window.getSelection&&window.getSelection().toString())){
+          drag=true;cardEl=document.querySelector('#cardsBox .card');
+          if(cardEl)cardEl.classList.remove('snap','inL','inR');
+        }
+      }
+      if(drag&&cardEl){
+        cardEl.style.transform='translateX('+Math.round(canGo(mx<0?1:-1)?mx:mx*0.25)+'px)';
+        cardEl.style.opacity=String(Math.max(.4,1-Math.abs(mx)/600));
+      }
+    }
     if(startN>=2&&sameDir()){var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;if(Math.abs(dx)>MIN&&Math.abs(dx)>Math.abs(dy)&&e.cancelable)e.preventDefault();}
   },{passive:false});
   document.addEventListener('touchend',function(e){
     if(!tracking)return;
     if(e.changedTouches)for(var j=0;j<e.changedTouches.length;j++){var c=e.changedTouches[j];fLast[c.identifier]={x:c.clientX,y:c.clientY};}
     if(e.touches&&e.touches.length>0)return;
-    tracking=false;if(!active())return;
-    var endT=e.changedTouches&&e.changedTouches[0];if(!endT)return;
+    tracking=false;if(!active()){resetCard(false);return;}
+    var endT=e.changedTouches&&e.changedTouches[0];if(!endT){resetCard(true);return;}
     var dx=endT.clientX-startX,dy=endT.clientY-startY,ax=Math.abs(dx),ay=Math.abs(dy);
-    var sel=window.getSelection?window.getSelection().toString():'';if(sel)return;
-    if(ax<MIN||ax<ay)return;if(startN>=2&&!sameDir())return;
-    goCard(dx<0?1:-1);
+    var sel=window.getSelection?window.getSelection().toString():'';if(sel){resetCard(true);return;}
+    var ok=drag?(ax>=MIN||(ax>24&&Date.now()-t0<250)):(!vert&&ax>=MIN&&ax>=ay);
+    if(startN>=2&&!sameDir())ok=false;
+    var dir=dx<0?1:-1;
+    if(!ok||!canGo(dir)){resetCard(true);return;}
+    var still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(drag&&cardEl&&!still){
+      cardEl.classList.add('snap');cardEl.style.transform='translateX('+(dir>0?'-110%':'110%')+')';cardEl.style.opacity='0';cardEl=null;
+      setTimeout(function(){goCard(dir);},130);
+    }else{cardEl=null;goCard(dir);}
   },{passive:true});
+  document.addEventListener('touchcancel',function(){tracking=false;resetCard(true);},{passive:true});
   // 鍵盤左右鍵換題（卡片版面；焦點在輸入框、下拉選單或按著修飾鍵時不攔）
   document.addEventListener('keydown',function(e){
     if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
@@ -430,7 +563,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.ge
   var j=document.getElementById('jump');
   DATA.topics.forEach(function(t){var o=document.createElement('option');o.value=t.num;o.textContent=t.num+' '+sn(t);j.appendChild(o);});
   window.matchMedia('(max-width: 820px)').addEventListener('change',function(){if(layout==='auto')render();});
+  // 從主頁帶題號進來：summary.html#pin=12,35（可加 &at=35 指定先看哪一題）
+  var hm=/^#pin=(\d{1,2})(?:,(\d{1,2}))?(?:&at=(\d{1,2}))?$/.exec(location.hash),fromHash=false;
+  if(hm){
+    var hp=[hm[1],hm[2]].filter(Boolean).map(function(x){return ('0'+x).slice(-2);}).filter(function(x,i,a){return topicOf(x)&&a.indexOf(x)===i;});
+    if(hp.length){pins=hp;savePins();pcur=Math.max(0,pins.indexOf(('0'+(hm[3]||hp[0])).slice(-2)));fromHash=true;
+      try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
+  }
   render();
+  if(fromHash&&effLayout()==='cards'){var cb=document.getElementById('cardsBox');if(cb)cb.scrollIntoView({block:'start'});focusCard(0);}
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').then(function(){return navigator.serviceWorker.ready;})
       .then(function(){showOffline();})
