@@ -90,40 +90,38 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 <p class="ver">版本 __VERSION__（__DATE__）・<a href="index.html">回到主頁（40 題選題頁）</a></p>
 
 <div class="panel" id="lockPanel">
-  <p id="lockMsg">口訣與重點內容需輸入主頁講義的同一組密碼。</p>
-  <button type="button" class="unlock-btn" id="unlockBtn" onclick="openPwd()">🔒 輸入密碼</button>
+  <p id="lockMsg">需輸入講義密碼。</p>
+  <button type="button" class="unlock-btn" id="unlockBtn" onclick="openPwd()">輸入密碼</button>
 </div>
 
 <div class="panel">
-  <h2>離線存檔</h2>
-  <p id="offlineMsg" role="status">離線使用：準備中…</p>
-  <button type="button" id="saveBtn" onclick="saveOffline()">💾 存到這台裝置（考前按一次）</button>
+  <p id="offlineMsg" role="status">離線存檔準備中</p>
+  <button type="button" id="saveBtn" onclick="saveOffline()">離線存檔</button>
 </div>
 
 <div class="panel" id="quickPanel"></div>
 
 <div class="panel">
-  <h2>顯示設定</h2>
+  <h2>顯示</h2>
   <div class="ctl" role="group" aria-label="版面">
     <span class="lab" aria-hidden="true">版面</span>
     <button type="button" data-layout="auto" onclick="setLayout('auto')">自動</button>
     <button type="button" data-layout="table" onclick="setLayout('table')">表格</button>
     <button type="button" data-layout="cards" onclick="setLayout('cards')">逐題卡片</button>
   </div>
-  <div class="ctl" role="group" aria-label="只看哪一欄">
+  <div class="ctl" role="group" aria-label="只看">
     <span class="lab" aria-hidden="true">只看</span>
     <button type="button" data-col="key" onclick="setCol('key')">重點</button>
     <button type="button" data-col="all" onclick="setCol('all')">全部</button>
   </div>
   <div class="ctl">
-    <button type="button" id="expandBtn" onclick="toggleAll()">全部展開解釋</button>
+    <button type="button" id="expandBtn" onclick="toggleAll()">全部展開</button>
     <label for="jump" class="lab">跳到</label>
-    <select id="jump" onchange="jumpTo(this.value)"><option value="">選題號</option></select>
+    <select id="jump" onchange="jumpTo(this.value)"><option value="">題號</option></select>
   </div>
   <details>
-    <summary>符號說明與全站通用口訣</summary>
-    <p>〔重〕重點整理版、〔規〕規範版、〔講〕講義版。內容以重點整理版為主，規範版確認，兩者都沒有才用講義。</p>
-    <p>⚠ 為版本差異或建議向老師確認的地方。</p>
+    <summary>說明與通用口訣</summary>
+    <p>以重點整理版為主，規範版確認，最後才用講義。手機卡片可左右滑換題。</p>
     <div id="genBox"></div>
   </details>
 </div>
@@ -150,14 +148,14 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 <script>
 var DATA=__DATA__;
 var COLS=[
-  {k:'mn',h:'口訣一覽'},
+  {k:'mn',h:'口訣'},
   {k:'ac',h:'穴位'},
-  {k:'pe',h:'體位・步驟・墊枕・運動・測試'},
-  {k:'et',h:'病因病理'},
-  {k:'cl',h:'臨床表現（人事時地・症狀）'},
-  {k:'an',h:'相關解剖'},
-  {k:'pc',h:'施術目的／注意事項'},
-  {k:'nt',h:'補充與備註'}
+  {k:'pe',h:'體位'},
+  {k:'et',h:'病因'},
+  {k:'cl',h:'臨床'},
+  {k:'an',h:'解剖'},
+  {k:'pc',h:'目的注意'},
+  {k:'nt',h:'備註'}
 ];
 var SRC={'重':'重點整理','規':'規範','講':'講義'};
 var HASH='65b07591b3ba0336098224fb47ff88cd9f93a703654dc8b4a8b32bc42a630d77';
@@ -166,11 +164,11 @@ function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorag
 unlocked=(ls('massageExamAuth')===HASH);
 layout=ls('summaryLayout')||'auto';
 
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function esc(s){return String(s==null?'':s).replace(/\s*→\s*/g,'，').replace(/(\d)\s*[~～]\s*(\d)/g,'$1到$2').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function src(s){return '';}
 function ul(items,cls){if(!items||!items.length)return'';return '<ul class="'+(cls||'plain')+'">'+items.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ul>';}
-function ulf(items){if(!items||!items.length)return'';if(items.length<=4)return ul(items);return ul(items.slice(0,3))+'<details><summary>更多 '+(items.length-3)+' 條</summary>'+ul(items.slice(3))+'</details>';}
-function det(items,label){if(!items||!items.length)return'';return '<details><summary>'+(label||'展開解釋')+'</summary>'+ul(items)+'</details>';}
+function ulf(items){if(!items||!items.length)return'';if(items.length<=4)return ul(items);return ul(items.slice(0,3))+'<details><summary>更多</summary>'+ul(items.slice(3))+'</details>';}
+function det(items,label){if(!items||!items.length)return'';return '<details><summary>'+(label||'解釋')+'</summary>'+ul(items)+'</details>';}
 function mnem(label,m,items,note,s){
   if(!m){var it0=(items||[]).slice();if(note)it0.push('註：'+note);return '<span class="sub">'+esc(label||'')+src(s)+'</span>'+ul(it0);}
   var h='<div class="mn">';
@@ -180,13 +178,13 @@ function mnem(label,m,items,note,s){
   h+=det(it);
   return h+'</div>';
 }
-function none(){return '<span class="none">—</span>';}
+function none(){return '<span class="none">無</span>';}
 
 function cET(t){
   var h='';
   (t.etiology||[]).forEach(function(e){h+=mnem(e.label,e.mnemonic,e.items,e.note,e.src);});
   if(t.etiology_summary&&t.etiology_summary.items&&t.etiology_summary.items.length){
-    h+='<span class="sub">病因重點'+src(t.etiology_summary.src)+'</span>'+ulf(t.etiology_summary.items);
+    h+='<span class="sub">重點'+src(t.etiology_summary.src)+'</span>'+ulf(t.etiology_summary.items);
   }
   return h||none();
 }
@@ -203,7 +201,7 @@ function cRS(t){
 var SY_RE=/臨床表現|症狀/;
 function exOne(x){
   if(x.mnemonic)return mnem(x.label,x.mnemonic,x.items,null,x.src);
-  return '<span class="sub">'+esc(x.label)+src(x.src)+'</span>'+det(x.items,'展開'+esc(x.label));
+  return '<span class="sub">'+esc(x.label)+src(x.src)+'</span>'+det(x.items,'內容');
 }
 function cSY(t){
   var s=t.symptoms, h='';
@@ -224,16 +222,16 @@ function cAN(t){
 function pcPart(name,o,g){
   var h='<span class="sub">'+name+(o?src(o.src):'')+'</span>';
   if(!o)return h+none();
-  if(o.type==='專屬')return h+'<div>本題專屬（不用通用口訣）</div>'+ul(o.extra);
-  h+='<div class="mn"><strong class="mtext">'+esc(g.short)+'</strong>'+det(g.lines,'展開通用口訣')+'</div>';
-  if(o.type==='通用+補充'&&o.extra&&o.extra.length)h+='<div>本題另加：</div>'+ul(o.extra);
+  if(o.type==='專屬')return h+'<div>專屬</div>'+ul(o.extra);
+  h+='<div class="mn"><strong class="mtext">'+esc(g.short)+'</strong>'+det(g.lines,'解釋')+'</div>';
+  if(o.type==='通用+補充'&&o.extra&&o.extra.length)h+='<div>另加</div>'+ul(o.extra);
   return h;
 }
 function cPC(t){return pcPart('施術目的',t.purpose,GEN.purpose)+pcPart('注意事項',t.cautions,GEN.cautions);}
 function cNT(t){
   var h='';
   (t.extra_sections||[]).forEach(function(x){if(!SY_RE.test(x.label))h+=exOne(x);});
-  if(t.issues&&t.issues.length)h+='<details><summary>⚠ 待向老師確認（'+t.issues.length+' 項）</summary><ul class="issues">'+t.issues.map(function(i){return '<li class="issue">'+esc(i)+'</li>';}).join('')+'</ul></details>';
+  if(t.issues&&t.issues.length)h+='<details><summary>待確認</summary><ul class="issues">'+t.issues.map(function(i){return '<li class="issue">'+esc(i)+'</li>';}).join('')+'</ul></details>';
   return h||none();
 }
 function ol(items){if(!items||!items.length)return'';return '<ol class="plain steps">'+items.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';}
@@ -249,18 +247,18 @@ function peList(name,arr){
 }
 function stepsDet(t){
   if(!t.stepsMain||!t.stepsMain.length)return '';
-  var h='<details><summary>展開施術步驟（'+t.stepsMain.length+' 步）</summary>'+ol(t.stepsMain);
-  if(t.stepsSpec&&t.stepsSpec.length)h+='<details><summary>規範版全文（'+t.stepsSpec.length+' 步）</summary>'+ol(t.stepsSpec)+'</details>';
+  var h='<details><summary>步驟</summary>'+ol(t.stepsMain);
+  if(t.stepsSpec&&t.stepsSpec.length)h+='<details><summary>規範全文</summary>'+ol(t.stepsSpec)+'</details>';
   return h+'</details>';
 }
 function cPE(t){
   var p=t.pet||{};
   var h='';
-  if(p.positions&&p.positions.length)h+='<span class="sub">體位</span><div><strong>'+esc(p.positions.join('→'))+'</strong></div>';
+  if(p.positions&&p.positions.length)h+='<div><strong>'+esc(p.positions.join('、'))+'</strong></div>';
   h+=stepsDet(t);
   h+=peList('墊枕',p.pillow)+peList('運動法',p.exercises)+peList('測試',p.tests);
   if(!h)return none();
-  if(p.note)h+='<details><summary>⚠ 版本差異</summary><p>'+esc(p.note)+'</p></details>';
+  if(p.note)h+='<details><summary>差異</summary><p>'+esc(p.note)+'</p></details>';
   return h;
 }
 function cMN(t){
@@ -275,7 +273,7 @@ function cMN(t){
   if(t.purpose&&t.purpose.type==='專屬')sp.push('施術目的');
   if(t.cautions&&t.cautions.type==='專屬')sp.push('注意事項');
   if(sp.length)L.push('<div class="mnl"><span class="lbl">注意</span>'+sp.join('、')+'不用通用口訣（見「施術目的／注意事項」欄）</div>');
-  return L.join('')||'<span class="none">本題沒有專屬口訣</span>';
+  return L.join('')||'<span class="none">無</span>';
 }
 function cCL(t){
   var a=cRS(t),b=cSY(t),dash=none();
@@ -293,8 +291,8 @@ function cAC(t){
   });
   if(a.notes&&a.notes.length)h+=ul(a.notes);
   var locs=[];a.groups.forEach(function(g){g.pts.forEach(function(p){if(p.loc)locs.push(p.n+'：'+p.loc);});});
-  if(locs.length)h+=det(locs,'展開穴位定位');
-  if(a.mismatch)h+='<div class="issue">⚠ '+esc(a.mismatch)+(a.notes&&a.notes.length?'':'，問老師')+'</div>';
+  if(locs.length)h+=det(locs,'定位');
+  if(a.mismatch)h+='<div class="issue">'+esc(a.mismatch)+(a.notes&&a.notes.length?'':'，問老師')+'</div>';
   return h;
 }
 var CELL={ac:cAC,cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
@@ -304,6 +302,7 @@ function cell(k,t){
   return CELL[k](t);
 }
 function link(t){return '<a class="lnk" href="index.html#topic-'+t.num+'">前往第 '+t.num+' 題完整內容</a>';}
+function sn(t){return t.name.replace(/之按摩$/,'');}
 function metaLine(t){return esc(t.cat)+'・'+t.acu+' 穴・'+t.steps+' 步';}
 
 var GEN={};
@@ -321,11 +320,11 @@ var KEY={ac:1,pe:1,et:1,cl:1,an:1};
 function visibleCols(){return COLS.filter(function(c){return col==='all'||(col==='key'&&KEY[c.k])||c.k===col;});}
 function renderTable(){
   var cs=visibleCols();
-  var h='<div class="tbl-wrap" tabindex="0" role="region" aria-label="比對表，可捲動"><table><caption id="cap">40 題比對表：'+(cs.length+1)+' 欄、'+DATA.topics.length+' 列</caption><thead><tr><th scope="col">題號與題名</th>';
+  var h='<div class="tbl-wrap" tabindex="0" role="region" aria-label="比對表"><table><caption id="cap">比對表</caption><thead><tr><th scope="col">題目</th>';
   cs.forEach(function(c){h+='<th scope="col">'+c.h+'</th>';});
   h+='</tr></thead><tbody>';
   DATA.topics.forEach(function(t){
-    h+='<tr id="row-'+t.num+'"><th scope="row" tabindex="-1">'+t.num+'　'+esc(t.name)+'<span class="meta">'+metaLine(t)+'</span>'+link(t)+'</th>';
+    h+='<tr id="row-'+t.num+'"><th scope="row" tabindex="-1"><a href="index.html#topic-'+t.num+'">'+t.num+' '+esc(sn(t))+'</a></th>';
     cs.forEach(function(c){h+='<td class="c-'+c.k+'">'+cell(c.k,t)+'</td>';});
     h+='</tr>';
   });
@@ -336,12 +335,12 @@ function renderCards(){
   var cs=visibleCols(), N=DATA.topics.length;
   if(cur<0||cur>=N)cur=0;
   var t=DATA.topics[cur];
-  var nav='<nav class="cardnav" aria-label="換題"><button type="button" onclick="goCard(-1)"'+(cur===0?' disabled':'')+'>◀ 上一題</button><span class="pos" aria-hidden="true">'+(cur+1)+' / '+N+'</span><button type="button" onclick="goCard(1)"'+(cur===N-1?' disabled':'')+'>下一題 ▶</button></nav>';
+  var nav='<nav class="cardnav" aria-label="換題"><button type="button" onclick="goCard(-1)"'+(cur===0?' disabled':'')+'><span aria-hidden="true">◀ </span>上一題</button><span class="pos" aria-hidden="true">'+(cur+1)+' / '+N+'</span><button type="button" onclick="goCard(1)"'+(cur===N-1?' disabled':'')+'>下一題<span aria-hidden="true"> ▶</span></button></nav>';
   var h='<div class="cards" id="cardsBox">'+nav;
-  h+='<article class="card" id="card-'+t.num+'"><h2 tabindex="-1">第 '+t.num+' 題　'+esc(t.name)+'</h2><span class="meta">'+metaLine(t)+'</span>';
-  h+='<a class="openbtn" href="index.html#topic-'+t.num+'">打開第 '+t.num+' 題完整內容</a>';
+  h+='<article class="card" id="card-'+t.num+'"><h2 tabindex="-1">'+t.num+' '+esc(sn(t))+'</h2>';
+  h+='<a class="openbtn" href="index.html#topic-'+t.num+'">完整內容</a>';
   cs.forEach(function(c){h+='<h3>'+c.h+'</h3><div>'+cell(c.k,t)+'</div>';});
-  h+='</article>'+nav.replace('aria-label="換題"','aria-label="換題（下方）"')+'<p class="hint">手機可左右滑換題（開報讀時 TalkBack 兩指、旁白三指）。</p></div>';
+  h+='</article>'+nav+'</div>';
   return h;
 }
 function goCard(d){
@@ -359,12 +358,12 @@ function render(){
   document.querySelectorAll('[data-layout]').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-layout')===layout?'true':'false');});
   document.querySelectorAll('[data-col]').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-col')===col?'true':'false');});
   var lp=document.getElementById('lockPanel');
-  if(unlocked){document.getElementById('lockMsg').innerHTML='<span class="status-ok">已解鎖</span>，口訣與重點內容都已顯示。';document.getElementById('unlockBtn').classList.add('hide');}
+  if(unlocked){document.getElementById('lockPanel').classList.add('hide');document.getElementById('unlockBtn').classList.add('hide');}
 }
 function setLayout(v){layout=v;ls('summaryLayout',v);render();}
 function setCol(v){col=v;render();}
 function setDetails(open){document.querySelectorAll('#view details').forEach(function(d){d.open=open;});}
-function toggleAll(){allOpen=!allOpen;setDetails(allOpen);var b=document.getElementById('expandBtn');b.textContent=allOpen?'全部收合解釋':'全部展開解釋';}
+function toggleAll(){allOpen=!allOpen;setDetails(allOpen);var b=document.getElementById('expandBtn');b.textContent=allOpen?'全部收合':'全部展開';}
 function jumpTo(n){
   if(!n)return;
   if(effLayout()==='cards'){
@@ -425,10 +424,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.ge
   });
 })();
 (function init(){
-  var g=document.querySelector('[aria-label="只看哪一欄"]');
+  var g=document.querySelector('[aria-label="只看"]');
   COLS.forEach(function(c){var b=document.createElement('button');b.type='button';b.setAttribute('data-col',c.k);b.textContent=c.h;b.onclick=function(){setCol(c.k);};g.appendChild(b);});
   var j=document.getElementById('jump');
-  DATA.topics.forEach(function(t){var o=document.createElement('option');o.value=t.num;o.textContent=t.num+' '+t.name;j.appendChild(o);});
+  DATA.topics.forEach(function(t){var o=document.createElement('option');o.value=t.num;o.textContent=t.num+' '+sn(t);j.appendChild(o);});
   window.matchMedia('(max-width: 820px)').addEventListener('change',function(){if(layout==='auto')render();});
   render();
   if('serviceWorker' in navigator){
@@ -436,18 +435,18 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.ge
       .then(function(){showOffline();})
       .catch(function(){setOM('這個瀏覽器無法存到裝置，需要網路才能開。');document.getElementById('saveBtn').classList.add('hide');});
   }else{setOM('這個瀏覽器不支援離線存檔，需要網路才能開。');document.getElementById('saveBtn').classList.add('hide');}
-  window.addEventListener('offline',function(){setOM('目前沒有網路，正在使用存在這台裝置的版本。');});
+  window.addEventListener('offline',function(){setOM('離線中，使用存檔');});
 })();
 function setOM(s){document.getElementById('offlineMsg').textContent=s;}
 function showOffline(){
   var t=ls('summarySavedAt');
-  setOM(navigator.onLine?('已存到這台裝置'+(t?'（上次存檔 '+t+'）':'')+'，斷線也能打開本頁和主頁 40 題頁。'):'目前沒有網路，正在使用存在這台裝置的版本。');
+  setOM(navigator.onLine?('已離線存檔'+(t?' '+t:'')):'離線中，使用存檔');
 }
 function saveOffline(){
   var b=document.getElementById('saveBtn');
   if(!window.caches){setOM('這個瀏覽器不支援離線存檔。');return;}
   if(!navigator.onLine){setOM('目前沒有網路，無法更新存檔；裝置裡的舊存檔仍可使用。');return;}
-  b.disabled=true;setOM('存檔中…');
+  b.disabled=true;setOM('存檔中');
   caches.open('massage-exam-offline-v1').then(function(c){
     return Promise.all(['summary.html','index.html','./'].map(function(u){
       return fetch(u,{cache:'reload'}).then(function(r){if(!r.ok)throw new Error(u);return c.put(u,r);});
@@ -467,7 +466,7 @@ function renderQuick(){
     var body='<ul class="plain">'+arr.map(function(t){return '<li><strong>'+t.num+' '+esc(t.name.replace(/之按摩$/,''))+'</strong>：'+t.pet[k].map(function(x){return esc(x.text);}).join('；')+'</li>';}).join('')+'</ul>';
     return '<details'+(open?' open':'')+'><summary>'+name+'</summary>'+body+'</details>';
   }
-  q.innerHTML='<h2>快速比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false);
+  q.innerHTML='<h2>比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false);
 }
 </script>
 </body>
