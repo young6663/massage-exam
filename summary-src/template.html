@@ -307,9 +307,12 @@ function cPE(t){
   var p=t.pet||{};
   var h='';
   if(p.positions&&p.positions.length)h+='<div><strong>'+esc(p.positions.join('、'))+'</strong></div>';
-  if(t.steps_brief&&t.steps_brief.length)h+='<ol class="flow">'+t.steps_brief.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';
+  // 開場要交代的放最前面：設定（設患側／設壓痛點／設型別）、墊枕、測試，然後才是流程
+  if(p.setup&&p.setup.length)h+='<span class="sub">設定</span>'+ul(p.setup);
+  h+=peList('墊枕',p.pillow)+peList('測試',p.tests);
+  if(t.steps_brief&&t.steps_brief.length)h+='<span class="sub">流程</span><ol class="flow">'+t.steps_brief.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';
   h+=stepsDet(t);
-  h+=peList('墊枕',p.pillow)+peList('運動法',p.exercises)+peList('測試',p.tests);
+  h+=peList('運動法',p.exercises);
   if(!h)return none();
   if(p.note)h+='<details><summary>差異</summary><p>'+esc(p.note)+'</p></details>';
   return h;

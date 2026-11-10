@@ -1,1 +1,17 @@
-{"num":"30","positions":["仰臥","側臥"],"pillow":[],"exercises":[{"text":"上肢各關節被動運動","src":"重+規"}],"tests":[],"note":"側臥時患肢在上"}
+{
+ "num": "30",
+ "positions": [
+  "仰臥",
+  "側臥"
+ ],
+ "pillow": [],
+ "exercises": [
+  {
+   "text": "上肢各關節被動運動",
+   "src": "重+規"
+  }
+ ],
+ "tests": [],
+ "note": "側臥時患肢在上",
+ "setup": []
+}

@@ -30,5 +30,6 @@
   }
  ],
  "tests": [],
- "note": null
+ "note": null,
+ "setup": []
 }

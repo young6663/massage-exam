@@ -1,1 +1,14 @@
-{"num":"29","positions":["仰臥","坐姿"],"pillow":[],"exercises":[],"tests":[],"note":null}
+{
+ "num": "29",
+ "positions": [
+  "仰臥",
+  "坐姿"
+ ],
+ "pillow": [],
+ "exercises": [],
+ "tests": [],
+ "note": null,
+ "setup": [
+  "設患側（患側為主、健側為輔）"
+ ]
+}

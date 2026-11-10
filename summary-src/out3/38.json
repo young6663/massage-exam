@@ -1,1 +1,16 @@
-{"num":"38","positions":["側臥"],"pillow":[],"exercises":[{"text":"肩部及頸部運動法","src":"重+規"}],"tests":[],"note":null}
+{
+ "num": "38",
+ "positions": [
+  "側臥"
+ ],
+ "pillow": [],
+ "exercises": [
+  {
+   "text": "肩部及頸部運動法",
+   "src": "重+規"
+  }
+ ],
+ "tests": [],
+ "note": null,
+ "setup": []
+}

@@ -1,1 +1,17 @@
-{"num":"24","positions":["側臥","俯臥"],"pillow":[],"exercises":[{"text":"肩肘腕指被動屈曲迴旋","src":"重+規"}],"tests":[],"note":null}
+{
+ "num": "24",
+ "positions": [
+  "側臥",
+  "俯臥"
+ ],
+ "pillow": [],
+ "exercises": [
+  {
+   "text": "肩肘腕指被動屈曲迴旋",
+   "src": "重+規"
+  }
+ ],
+ "tests": [],
+ "note": null,
+ "setup": []
+}

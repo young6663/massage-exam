@@ -1,1 +1,17 @@
-{"num":"26","positions":["側臥","仰臥"],"pillow":[],"exercises":[{"text":"上肢屈曲迴旋拔伸抖搖","src":"規"}],"tests":[],"note":null}
+{
+ "num": "26",
+ "positions": [
+  "側臥",
+  "仰臥"
+ ],
+ "pillow": [],
+ "exercises": [
+  {
+   "text": "上肢屈曲迴旋拔伸抖搖",
+   "src": "規"
+  }
+ ],
+ "tests": [],
+ "note": null,
+ "setup": []
+}

@@ -6,5 +6,6 @@
  "pillow": [],
  "exercises": [],
  "tests": [],
- "note": null
+ "note": null,
+ "setup": []
 }

@@ -1,1 +1,16 @@
-{"num":"27","positions":["側臥"],"pillow":[],"exercises":[{"text":"上肢迴旋、牽引、抖搖","src":"重+規"}],"tests":[],"note":null}
+{
+ "num": "27",
+ "positions": [
+  "側臥"
+ ],
+ "pillow": [],
+ "exercises": [
+  {
+   "text": "上肢迴旋、牽引、抖搖",
+   "src": "重+規"
+  }
+ ],
+ "tests": [],
+ "note": null,
+ "setup": []
+}
