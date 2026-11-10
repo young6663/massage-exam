@@ -172,7 +172,7 @@ function det(items,label){if(!items||!items.length)return'';return '<details><su
 function mnem(label,m,items,note,s){
   if(!m){var it0=(items||[]).slice();if(note)it0.push('註：'+note);return '<span class="sub">'+esc(label||'')+src(s)+'</span>'+ul(it0);}
   var h='<div class="mn">';
-  if(label)h+='<span class="lbl">'+esc(label)+'</span>';
+  if(label)h+='<span class="lbl">'+esc(label.replace(/口訣/,'')||label)+'</span>';
   h+='<strong class="mtext">'+esc(m)+'</strong>'+src(s);
   var it=(items||[]).slice(); if(note)it.push('註：'+note);
   h+=det(it);
@@ -283,11 +283,12 @@ function cCL(t){
 }
 function cAC(t){
   var a=t.acuInfo; if(!a)return none();
-  var h='<div><strong>'+esc(a.summary||'')+'</strong></div>';
+  var hasN=a.notes&&a.notes.length;
+  var h='<div><strong>'+esc((a.summary||'').replace(/^共\s*/,'').replace(/\s+/g,'').replace(/。$/,''))+'</strong></div>';
   a.groups.forEach(function(g){
     var names=g.pts.map(function(p){return esc(p.n);}).join('、');
     if(g.label){var m=g.label.replace(/^第(\d)組口訣：/,'第$1組 ');h+='<div class="mn mnl"><span class="lbl">'+esc(m.split(' ')[0])+'</span><strong class="mtext">'+esc(m.split(' ').slice(1).join(' ')||g.label)+'</strong><div>'+names+'</div></div>';}
-    else h+='<div class="acnames">'+names+'</div>';
+    else if(!hasN)h+='<div class="acnames">'+names+'</div>';
   });
   if(a.notes&&a.notes.length)h+=ul(a.notes);
   var locs=[];a.groups.forEach(function(g){g.pts.forEach(function(p){if(p.loc)locs.push(p.n+'：'+p.loc);});});

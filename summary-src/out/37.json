@@ -1,11 +1,1 @@
-{"num":"37","etiology":[{"label":"病因口訣","mnemonic":"高姿風扭挑","items":["高：枕頭過高","姿：睡姿不良","風：感受風寒","扭：頸部突然扭轉","挑：肩挑重物不當"],"note":null,"src":"重"}],
-"etiology_summary":null,
-"people":{"text":"任何年齡；中年後反覆落枕，可能是頸椎病前兆","src":"重"},
-"timing":{"mnemonic":null,"items":["活動痛加重","輕者 1~2 天休息自癒；重者數週不癒"],"note":null,"src":"重"},
-"location":{"text":"多為一側提肩胛肌、胸鎖乳突肌或斜方肌痛，也可雙側；重者波及上背、枕部、肩背","src":"重"},
-"symptoms":{"mnemonic":"痙痛僵滯","items":["痙：頸肌痙攣","痛：疼痛","僵：僵硬","滯：板滯"],"note":"頭偏向一側，頸旋轉尤困難","src":"重"},
-"anatomy":{"mnemonic":null,"mnemonic_items":[],"items":["肌肉：提肩胛肌","肌肉：胸鎖乳突肌","肌肉：斜方肌"],"src":"重"},
-"purpose":{"type":"通用","extra":null,"src":"重"},
-"cautions":{"type":"通用","extra":null,"src":"重"},
-"extra_sections":[{"label":"概述","items":["又稱失枕：睡姿不良或風寒致頸肌酸痛、痙攣、強直、功能障礙"],"src":"重"},{"label":"備註（口述不用說）","items":["教科書「頭歪向患側」指頭頂倒向患側","實際是下巴轉向健側"],"src":"重"},{"label":"肌肉起止（講義，補充）","items":["斜方肌：枕外隆凸、項韌帶、全部胸椎棘突、棘上韌帶 → 鎖骨肩峰端、肩峰、肩胛棘","提肩胛肌：上 4 頸椎橫突 → 肩胛骨內側角及脊柱緣上部","胸鎖乳突肌：胸骨柄前角、鎖骨胸骨端 → 乳突"],"src":"講"}],
-"issues":["口述不用說：教科書頭歪向患側，實際下巴轉向健側"]}
+{"num":"37","etiology":[{"label":"病因口訣","mnemonic":"高姿風扭挑","items":["高：枕頭過高","姿：睡姿不良","風：風寒","扭：頸突然扭轉","挑：肩挑重物"],"note":null,"src":"重"}],"etiology_summary":null,"people":{"text":"任何年齡、中年反覆恐頸椎病","src":"重"},"timing":{"mnemonic":null,"items":["活動痛加重","輕者1到2天自癒、重者數週"],"note":null,"src":"重"},"location":{"text":"多為一側頸肩肌群","src":"重"},"symptoms":{"mnemonic":"痙痛僵滯","items":["痙：頸肌痙攣","痛：疼痛","僵：僵硬","滯：板滯"],"note":null,"src":"重"},"anatomy":{"mnemonic":null,"mnemonic_items":[],"items":["肌肉：提肩胛肌","肌肉：胸鎖乳突肌","肌肉：斜方肌"],"src":"重"},"purpose":{"type":"通用","extra":null,"src":"重"},"cautions":{"type":"通用","extra":null,"src":"重"},"extra_sections":[{"label":"概述","items":["又稱失枕：頸肌酸痛痙攣強直"],"src":"重"},{"label":"備註（口述不用說）","items":["教科書頭歪患側＝頭頂倒患側","實際：下巴轉向健側"],"src":"重"},{"label":"肌肉起止（講義，補充）","items":["斜方肌：枕骨、胸椎→肩峰","提肩胛肌：上4頸椎→肩胛內側角","胸鎖乳突肌：胸骨、鎖骨→乳突"],"src":"講"}],"issues":["頭歪向患側：頭頂或下巴？"]}
