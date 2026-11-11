@@ -243,8 +243,8 @@ function cSY(t){
 function cAN(t){
   var a=t.anatomy; if(!a)return none();
   var h='';
-  if(a.mnemonic)h+=mnem('解剖口訣',a.mnemonic,a.mnemonic_items,null,null);
   if(a.items&&a.items.length)h+=ulf(a.items);
+  if(a.mnemonic)h+=mnem('解剖口訣',a.mnemonic,a.mnemonic_items,null,null);
   return h?h+src(a.src):none();
 }
 function pcPart(name,o,g){
@@ -270,7 +270,7 @@ function cOV(t){
 // 必講：分型、分類、分期、考試設定、檢查等每題的核心重點，直接顯示不收合；
 // 備註／講義／可不講的留在「備註」欄，穴位口訣已在穴位欄。
 var OPT_RE=/穴位|^測試檢查$|備註|可不講|不用說|非口述|講義|補充/;
-function isMust(x){return !SY_RE.test(x.label)&&!OV_RE.test(x.label)&&!OPT_RE.test(x.label);}
+function isMust(x){return !SY_RE.test(x.label)&&!OV_RE.test(x.label)&&!OPT_RE.test(x.label)&&/重/.test(x.src||'');}
 function cMS(t){
   var h='';
   (t.extra_sections||[]).forEach(function(x){
@@ -312,7 +312,7 @@ function cPE(t){
   h+=peList('墊枕',p.pillow)+peList('測試',p.tests);
   if(t.steps_brief&&t.steps_brief.length)h+='<span class="sub">流程</span><ol class="flow">'+t.steps_brief.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';
   h+=stepsDet(t);
-  h+=peList('運動法',p.exercises);
+  if(p.exercises&&p.exercises.length)h+=det(p.exercises.map(function(x){return x.text;}),'運動法');
   if(!h)return none();
   if(p.note)h+='<details><summary>差異</summary><p>'+esc(p.note)+'</p></details>';
   return h;
