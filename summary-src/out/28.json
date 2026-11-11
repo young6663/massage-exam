@@ -1,1 +1,98 @@
-{"etiology":[{"label":"病因口訣","mnemonic":"姿骨佔牽炎","items":["姿：久蹲盤膝臥姿","骨：腓骨頸骨折","佔：腫瘤、囊腫","牽：膝過伸或扭轉","炎：神經炎"],"note":null,"src":"重"}],"etiology_summary":null,"people":{"text":"久蹲、盤膝、臥床、腓骨頸外傷","src":"重"},"timing":{"mnemonic":null,"items":["局部受壓後出現","勞累、久蹲加重"],"note":null,"src":"重"},"location":{"text":"腓骨頸外側；小腿前外側、足背","src":"重"},"symptoms":{"mnemonic":null,"items":["腓骨頸痛、足背感覺減退","足下垂（踝背屈無力）","足外翻障礙","拇趾背屈力弱"],"src":"重","note":null},"anatomy":{"mnemonic":null,"mnemonic_items":[],"items":["腓總：繞腓骨頸→腓淺、腓深","腓深：脛前肌、伸拇長肌、伸趾長肌、第三腓骨肌","腓淺：腓骨長短肌、足外翻","易傷：腓骨頸表淺","路徑：坐骨神經→膕窩→繞腓骨頸"],"src":"重"},"purpose":{"type":"通用","extra":null,"src":"重"},"cautions":{"type":"通用","extra":null,"src":"重"},"extra_sections":[{"label":"病理","items":["受壓→缺血、水腫、傳導障礙、肌萎縮"],"src":"重"}],"issues":["腓深支配：講義寫小腿外側肌群？"],"num":"28","overview":{"mnemonic":null,"items":["腓總神經壓迫綜合征","腓骨頸受壓致損傷","小腿前外側、足背障礙"],"src":"重"},"steps_brief":["側臥或俯臥：輕擦揉捏按壓臀至趾後側","膕窩外側、腓骨肌群脛骨前肌、足背趾","壓12穴","膝、踝、足趾各關節運動法","強擦麻痺肌群熱透"]}
+{
+ "etiology": [
+  {
+   "label": "病因口訣",
+   "mnemonic": "姿骨佔牽炎",
+   "items": [
+    "姿：久蹲盤膝臥姿",
+    "骨：腓骨頸骨折",
+    "佔：腫瘤、囊腫",
+    "牽：膝過伸或扭轉",
+    "炎：神經炎"
+   ],
+   "note": null,
+   "src": "重"
+  }
+ ],
+ "etiology_summary": null,
+ "people": {
+  "text": "久蹲、盤膝、臥床、腓骨頸外傷",
+  "src": "重"
+ },
+ "timing": {
+  "mnemonic": null,
+  "items": [
+   "局部受壓後出現",
+   "勞累、久蹲加重"
+  ],
+  "note": null,
+  "src": "重"
+ },
+ "location": {
+  "text": "腓骨頸外側；小腿前外側、足背",
+  "src": "重"
+ },
+ "symptoms": {
+  "mnemonic": null,
+  "items": [
+   "腓骨頸痛、足背感覺減退",
+   "足下垂（踝背屈無力）",
+   "足外翻障礙",
+   "拇趾背屈力弱"
+  ],
+  "src": "重",
+  "note": null
+ },
+ "anatomy": {
+  "mnemonic": null,
+  "mnemonic_items": [],
+  "items": [
+   "腓總：繞腓骨頸→腓淺、腓深",
+   "腓深：脛前肌、伸拇長肌、伸趾長肌、第三腓骨肌",
+   "腓淺：腓骨長短肌、足外翻",
+   "易傷：腓骨頸表淺",
+   "路徑：坐骨神經→膕窩→繞腓骨頸"
+  ],
+  "src": "重"
+ },
+ "purpose": {
+  "type": "通用",
+  "extra": null,
+  "src": "重"
+ },
+ "cautions": {
+  "type": "通用",
+  "extra": null,
+  "src": "重"
+ },
+ "extra_sections": [
+  {
+   "label": "病理",
+   "items": [
+    "受壓→缺血、水腫、傳導障礙、肌萎縮"
+   ],
+   "src": "重",
+   "place": "et"
+  }
+ ],
+ "issues": [
+  "腓深支配：講義寫小腿外側肌群？"
+ ],
+ "num": "28",
+ "overview": {
+  "mnemonic": null,
+  "items": [
+   "腓總神經壓迫綜合征",
+   "腓骨頸受壓致損傷",
+   "小腿前外側、足背障礙"
+  ],
+  "src": "重"
+ },
+ "steps_brief": [
+  "側臥或俯臥：輕擦揉捏按壓臀至趾後側",
+  "膕窩外側、腓骨肌群脛骨前肌、足背趾",
+  "壓12穴",
+  "膝、踝、足趾各關節運動法",
+  "強擦麻痺肌群熱透"
+ ]
+}

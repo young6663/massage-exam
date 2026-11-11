@@ -178,7 +178,6 @@ var COLS=[
   {k:'ac',h:'穴位'},
   {k:'pe',h:'步驟'},
   {k:'ov',h:'概述'},
-  {k:'ms',h:'必講'},
   {k:'et',h:'病因'},
   {k:'cl',h:'臨床'},
   {k:'an',h:'解剖'},
@@ -214,6 +213,7 @@ function cET(t){
   if(t.etiology_summary&&t.etiology_summary.items&&t.etiology_summary.items.length){
     h+='<span class="sub">重點'+src(t.etiology_summary.src)+'</span>'+ulf(t.etiology_summary.items);
   }
+  h+=exAt(t,'et');
   return h||none();
 }
 function cRS(t){
@@ -237,15 +237,15 @@ function cSY(t){
     if(s.mnemonic)h+=mnem('症狀口訣',s.mnemonic,s.items,s.note,s.src);
     else if(s.items&&s.items.length)h+=ulf(s.items)+src(s.src);
   }
-  (t.extra_sections||[]).forEach(function(x){if(SY_RE.test(x.label))h+=exOne(x);});
   return h||none();
 }
 function cAN(t){
-  var a=t.anatomy; if(!a)return none();
+  var a=t.anatomy||{};
   var h='';
   if(a.items&&a.items.length)h+=ulf(a.items);
   if(a.mnemonic)h+=mnem('解剖口訣',a.mnemonic,a.mnemonic_items,null,null);
-  return h?h+src(a.src):none();
+  h+=exAt(t,'an');
+  return h||none();
 }
 function pcPart(name,o,g){
   var h='<span class="sub">'+name+(o?src(o.src):'')+'</span>';
@@ -255,7 +255,7 @@ function pcPart(name,o,g){
   if(o.type==='通用+補充'&&o.extra&&o.extra.length)h+='<div>另加</div>'+ul(o.extra);
   return h;
 }
-function cPC(t){return pcPart('施術目的',t.purpose,GEN.purpose)+pcPart('注意事項',t.cautions,GEN.cautions);}
+function cPC(t){return pcPart('施術目的',t.purpose,GEN.purpose)+pcPart('注意事項',t.cautions,GEN.cautions)+exAt(t,'pc');}
 var OV_RE=/概述/;
 function cOV(t){
   var o=t.overview,h='';
@@ -263,26 +263,24 @@ function cOV(t){
     if(o.mnemonic)h+=mnem('',o.mnemonic,o.items,null,o.src);
     else h+=ul(o.items);
   }else{
-    (t.extra_sections||[]).forEach(function(x){if(OV_RE.test(x.label)){h+=x.mnemonic?mnem('',x.mnemonic,x.items,null,x.src):ul(x.items);}});
   }
+  h+=exAt(t,'ov');
   return h||none();
 }
-// 必講：分型、分類、分期、考試設定、檢查等每題的核心重點，直接顯示不收合；
-// 備註／講義／可不講的留在「備註」欄，穴位口訣已在穴位欄。
-var OPT_RE=/穴位|^測試檢查$|備註|可不講|不用說|非口述|講義|補充/;
-function isMust(x){return !SY_RE.test(x.label)&&!OV_RE.test(x.label)&&!OPT_RE.test(x.label)&&/重/.test(x.src||'');}
-function cMS(t){
+// 補充區塊依 place 放回所屬段落：重點整理版的直接顯示，規範／講義來的收合；place=nt 的留在備註欄
+function exAt(t,place){
   var h='';
   (t.extra_sections||[]).forEach(function(x){
-    if(!isMust(x))return;
-    if(x.mnemonic)h+=mnem(x.label,x.mnemonic,x.items,null,x.src);
-    else h+='<span class="sub">'+esc(x.label.replace(/（考試一定要說）/,''))+'</span>'+ul(x.items);
+    if((x.place||'nt')!==place)return;
+    var lab=x.label.replace(/（考試一定要說）/,'').replace(/^講義：/,'');
+    if(place==='nt'||!/重/.test(x.src||'')){h+=x.mnemonic?mnem(lab,x.mnemonic,x.items,null,x.src):'<span class="sub">'+esc(lab)+'</span>'+det(x.items,'內容');return;}
+    if(x.mnemonic)h+=mnem(lab,x.mnemonic,x.items,null,x.src);
+    else h+='<span class="sub">'+esc(lab)+'</span>'+ul(x.items);
   });
-  return h||none();
+  return h;
 }
 function cNT(t){
-  var h='';
-  (t.extra_sections||[]).forEach(function(x){if(!SY_RE.test(x.label)&&!OV_RE.test(x.label)&&!isMust(x))h+=exOne(x);});
+  var h=exAt(t,'nt');
   if(t.issues&&t.issues.length)h+='<details><summary>待確認</summary><ul class="issues">'+t.issues.map(function(i){return '<li class="issue">'+esc(i)+'</li>';}).join('')+'</ul></details>';
   return h||none();
 }
@@ -307,12 +305,12 @@ function cPE(t){
   var p=t.pet||{};
   var h='';
   if(p.positions&&p.positions.length)h+='<div><strong>'+esc(p.positions.join('、'))+'</strong></div>';
-  // 開場要交代的放最前面：設定（設患側／設壓痛點／設型別）、墊枕、測試，然後才是流程
+  // 提醒區放最前面：設定（設患側／設壓痛點／設型別）、墊枕、測試、運動法、擦熱，然後才是流程
   if(p.setup&&p.setup.length)h+='<span class="sub">設定</span>'+ul(p.setup);
-  h+=peList('墊枕',p.pillow)+peList('測試',p.tests);
+  h+=peList('墊枕',p.pillow)+peList('測試',p.tests)+peList('運動法',p.exercises);
+  if(p.rub&&p.rub.length)h+='<span class="sub">擦熱</span>'+ul(p.rub);
   if(t.steps_brief&&t.steps_brief.length)h+='<span class="sub">流程</span><ol class="flow">'+t.steps_brief.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';
   h+=stepsDet(t);
-  if(p.exercises&&p.exercises.length)h+=det(p.exercises.map(function(x){return x.text;}),'運動法');
   if(!h)return none();
   if(p.note)h+='<details><summary>差異</summary><p>'+esc(p.note)+'</p></details>';
   return h;
@@ -335,6 +333,7 @@ function cCL(t){
   var a=cRS(t),b=cSY(t),dash=none();
   var h=(a===dash?'':a);
   if(b!==dash)h+='<span class="sub">症狀</span>'+b;
+  h+=exAt(t,'cl');
   return h||dash;
 }
 function cAC(t){
@@ -352,7 +351,7 @@ function cAC(t){
   if(a.mismatch)h+='<div class="issue">'+esc(a.mismatch)+(a.notes&&a.notes.length?'':'，問老師')+'</div>';
   return h;
 }
-var CELL={ov:cOV,ms:cMS,ac:cAC,cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
+var CELL={ov:cOV,ac:cAC,cl:cCL,mn:cMN,pe:cPE,et:cET,rs:cRS,sy:cSY,an:cAN,pc:cPC,nt:cNT};
 function cell(k,t){
   if(!unlocked)return '<span class="locked">需輸入密碼</span>';
   if(!t.etiology&&!t.symptoms)return '<span class="none">本題資料整理中</span>';
@@ -373,7 +372,7 @@ function prepGen(){
   document.getElementById('genBox').innerHTML=b;
 }
 
-var KEY={ac:1,pe:1,ov:1,ms:1,et:1,cl:1,an:1,pc:1};
+var KEY={ac:1,pe:1,ov:1,et:1,cl:1,an:1,pc:1};
 function visibleCols(){return COLS.filter(function(c){return col==='all'||(col==='key'&&KEY[c.k])||c.k===col;});}
 function renderTable(){
   var cs=visibleCols();

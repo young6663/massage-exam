@@ -1,1 +1,130 @@
-{"num":"09","overview":{"mnemonic":null,"items":["髕下脂肪墊損傷","脂肪墊腫脹發炎疼痛","髕韌帶沾黏"],"src":"重"},"etiology":[{"label":"病因","mnemonic":null,"items":["外傷","勞損","髕骨骨折、軟骨病、半月板傷"],"note":null,"src":"重"},{"label":"病理口訣（一）","mnemonic":"充肥炎皮痛","items":["充肥炎：充血肥厚發炎","皮痛：刺激皮神經痛"],"note":null,"src":"重"},{"label":"病理口訣（二）","mnemonic":"充肥炎嵌痛","items":["充肥炎：充血肥厚發炎","嵌痛：嵌頓痛"],"note":null,"src":"重"},{"label":"病理口訣（三）","mnemonic":"充肥炎滲沾","items":["充肥炎：充血肥厚發炎","滲沾：滲出增加、沾黏"],"note":null,"src":"重"}],"etiology_summary":null,"people":{"text":"30歲以上女性、爬山下蹲者","src":"重+講"},"timing":{"mnemonic":"晨彎久勞天","items":["晨：晨起發僵痛","彎：屈伸痛","久：不能久立久行","勞：勞累加重","天：天氣變化加重"],"note":null,"src":"重"},"location":{"text":"髕下脂肪墊、放射膕窩到跟骨","src":"重"},"symptoms":{"mnemonic":null,"items":["紅腫熱痛","屈伸不利","股四頭肌萎縮（嚴重）"],"src":"重"},"anatomy":{"mnemonic":null,"mnemonic_items":[],"items":["髕下脂肪墊：髕韌帶深面","位置：內外膝眼之間","功能：填充、緩衝、潤滑","脂肪構成、表面鞘膜"],"src":"重"},"purpose":{"type":"通用","extra":null,"src":"重"},"cautions":{"type":"通用","extra":null,"src":"重"},"extra_sections":[{"label":"穴位","items":["梁丘、血海、膝眼","陽陵泉、足三里、委中"],"src":"重"}],"issues":["「解除嵌頓」用於本題？"],"steps_brief":["仰臥：膝膕窩墊枕","膝關節上下左右測試脂肪墊","做膝周圍和髕下脂肪墊","掌根揉捏膝關節周圍","彈撥髕韌帶兩側（手法可稍重）","壓6穴","握踝牽引、內外旋、前推屈曲再伸直","伸直：強擦髕骨下部"]}
+{
+ "num": "09",
+ "overview": {
+  "mnemonic": null,
+  "items": [
+   "髕下脂肪墊損傷",
+   "脂肪墊腫脹發炎疼痛",
+   "髕韌帶沾黏"
+  ],
+  "src": "重"
+ },
+ "etiology": [
+  {
+   "label": "病因",
+   "mnemonic": null,
+   "items": [
+    "外傷",
+    "勞損",
+    "髕骨骨折、軟骨病、半月板傷"
+   ],
+   "note": null,
+   "src": "重"
+  },
+  {
+   "label": "病理口訣（一）",
+   "mnemonic": "充肥炎皮痛",
+   "items": [
+    "充肥炎：充血肥厚發炎",
+    "皮痛：刺激皮神經痛"
+   ],
+   "note": null,
+   "src": "重"
+  },
+  {
+   "label": "病理口訣（二）",
+   "mnemonic": "充肥炎嵌痛",
+   "items": [
+    "充肥炎：充血肥厚發炎",
+    "嵌痛：嵌頓痛"
+   ],
+   "note": null,
+   "src": "重"
+  },
+  {
+   "label": "病理口訣（三）",
+   "mnemonic": "充肥炎滲沾",
+   "items": [
+    "充肥炎：充血肥厚發炎",
+    "滲沾：滲出增加、沾黏"
+   ],
+   "note": null,
+   "src": "重"
+  }
+ ],
+ "etiology_summary": null,
+ "people": {
+  "text": "30歲以上女性、爬山下蹲者",
+  "src": "重+講"
+ },
+ "timing": {
+  "mnemonic": "晨彎久勞天",
+  "items": [
+   "晨：晨起發僵痛",
+   "彎：屈伸痛",
+   "久：不能久立久行",
+   "勞：勞累加重",
+   "天：天氣變化加重"
+  ],
+  "note": null,
+  "src": "重"
+ },
+ "location": {
+  "text": "髕下脂肪墊、放射膕窩到跟骨",
+  "src": "重"
+ },
+ "symptoms": {
+  "mnemonic": null,
+  "items": [
+   "紅腫熱痛",
+   "屈伸不利",
+   "股四頭肌萎縮（嚴重）"
+  ],
+  "src": "重"
+ },
+ "anatomy": {
+  "mnemonic": null,
+  "mnemonic_items": [],
+  "items": [
+   "髕下脂肪墊：髕韌帶深面",
+   "位置：內外膝眼之間",
+   "功能：填充、緩衝、潤滑",
+   "脂肪構成、表面鞘膜"
+  ],
+  "src": "重"
+ },
+ "purpose": {
+  "type": "通用",
+  "extra": null,
+  "src": "重"
+ },
+ "cautions": {
+  "type": "通用",
+  "extra": null,
+  "src": "重"
+ },
+ "extra_sections": [
+  {
+   "label": "穴位",
+   "items": [
+    "梁丘、血海、膝眼",
+    "陽陵泉、足三里、委中"
+   ],
+   "src": "重",
+   "place": "nt"
+  }
+ ],
+ "issues": [
+  "「解除嵌頓」用於本題？"
+ ],
+ "steps_brief": [
+  "仰臥：膝膕窩墊枕",
+  "膝關節上下左右測試脂肪墊",
+  "做膝周圍和髕下脂肪墊",
+  "掌根揉捏膝關節周圍",
+  "彈撥髕韌帶兩側（手法可稍重）",
+  "壓6穴",
+  "握踝牽引、內外旋、前推屈曲再伸直",
+  "伸直：強擦髕骨下部"
+ ]
+}
