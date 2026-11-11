@@ -93,8 +93,6 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
 .card.inR{animation:inR .18s ease-out}
 .card.inL{animation:inL .18s ease-out}
 @media (prefers-reduced-motion:reduce){.card.snap{transition:none}.card.inR,.card.inL{animation:none}}
-.pingrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0}
-.pingrid button{min-height:46px;padding:4px;font-size:1.05rem;font-weight:700}
 .cardtools{display:flex;gap:8px;align-items:stretch;margin:8px 0}
 .cardtools .openbtn{flex:1;margin:0}
 .cardtools button{min-height:48px;font-weight:700}
@@ -113,12 +111,6 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
   <button type="button" class="unlock-btn" id="unlockBtn" onclick="openPwd()">輸入密碼</button>
 </div>
 
-<div class="panel" id="pinPanel">
-  <h2>抽題</h2>
-  <p id="pinMsg" role="status"></p>
-  <div class="ctl"><button type="button" id="pinClear" onclick="clearPins()">看全部 40 題</button></div>
-  <details id="pinPick"><summary>選抽到的兩題</summary><div class="pingrid" id="pinGrid" role="group" aria-label="選題，最多兩題"></div></details>
-</div>
 
 <div class="panel">
   <p id="offlineMsg" role="status">離線存檔準備中</p>
@@ -147,7 +139,7 @@ footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--line);font-si
   </div>
   <details>
     <summary>說明與通用口訣</summary>
-    <p>以重點整理版為主，規範版確認，最後才用講義。手機卡片可左右滑換題。抽到題目後在「抽題」選兩題，就只在這兩題之間切換。</p>
+    <p>以重點整理版為主，規範版確認，最後才用講義。手機卡片可左右滑換題。從主頁按「看快速卡」進來時只顯示那兩題，按「看全部 40 題」或用「跳到」選別題就回到全部。</p>
     <div id="genBox"></div>
   </details>
 </div>
@@ -384,12 +376,14 @@ function renderTable(){
     cs.forEach(function(c){h+='<td class="c-'+c.k+'">'+cell(c.k,t)+'</td>';});
     h+='</tr>';
   });
-  return h+'</tbody></table></div>';
+  h+='</tbody></table></div>';
+  if(pins.length)h+='<p><button type="button" onclick="clearPins()">看全部 40 題</button></p>';
+  return h;
 }
 var cur=parseInt(ls('summaryCard')||'0',10)||0;
 // 釘選（抽到的兩題）：有釘選時表格與卡片都只顯示釘選的題目，左右滑只在這兩題之間切換
 var pins=[],pcur=0;
-try{pins=JSON.parse(ls('summaryPins')||'[]')||[];}catch(e){pins=[];}
+try{localStorage.removeItem('summaryPins');}catch(e){}  // 清掉舊版存在手機裡的釘選
 function topicOf(n){for(var i=0;i<DATA.topics.length;i++)if(DATA.topics[i].num===n)return DATA.topics[i];return null;}
 function idxOf(n){for(var i=0;i<DATA.topics.length;i++)if(DATA.topics[i].num===n)return i;return 0;}
 if(!Array.isArray(pins))pins=[];
@@ -412,7 +406,7 @@ function renderCards(){
   var pinned=pins.indexOf(t.num)>=0;
   var h='<div class="cards" id="cardsBox">'+cardBar(L,c,true);
   h+='<div class="cardclip"><article class="card" id="card-'+t.num+'"><h2 tabindex="-1">'+t.num+' '+esc(sn(t))+'</h2>';
-  h+='<div class="cardtools"><button type="button" class="pinbtn" aria-pressed="'+(pinned?'true':'false')+'" onclick="togglePin(\''+t.num+'\',\'card\')">釘選</button><a class="openbtn" href="'+fullHref(t)+'">完整內容</a></div>';
+  h+='<div class="cardtools"><a class="openbtn" href="'+fullHref(t)+'">完整內容</a></div>';
   cs.forEach(function(k){h+='<h3>'+k.h+'</h3><div>'+cell(k.k,t)+'</div>';});
   h+='</article></div>'+cardBar(L,c,false);
   if(pins.length)h+='<p><button type="button" onclick="clearPins()">看全部 40 題</button></p>';
@@ -435,33 +429,16 @@ function goCard(d){
   if(pins.length===2)n=(n+N)%N;else if(n<0||n>=N)return;
   showCard(n,d);
 }
-function savePins(){ls('summaryPins',JSON.stringify(pins));}
+// v59：抽題功能已移除；釘選兩題只在這一次開啟有效（從主頁「看快速卡」帶進來），不再存進手機
+function savePins(){}
 function renderPins(){
-  var m=document.getElementById('pinMsg');
-  m.textContent=pins.length?('釘選：'+pins.map(function(n){var t=topicOf(n);return n+' '+sn(t);}).join('、')):'未釘選，顯示全部';
-  document.getElementById('pinClear').classList.toggle('hide',!pins.length);
-  document.getElementById('pinGrid').innerHTML=DATA.topics.map(function(t){return '<button type="button" id="pg-'+t.num+'" aria-pressed="'+(pins.indexOf(t.num)>=0?'true':'false')+'" aria-label="'+t.num+' '+esc(sn(t))+'" onclick="togglePin(\''+t.num+'\',\'grid\')">'+t.num+'</button>';}).join('');
-  // 有釘選時把內容移到「抽題」正下方，不用捲過其他面板
-  var v=document.getElementById('view'),anchor=document.getElementById(pins.length?'pinPanel':'dispPanel');
+  var v=document.getElementById('view'),anchor=document.getElementById('dispPanel');
   if(anchor.nextElementSibling!==v)anchor.parentNode.insertBefore(v,anchor.nextSibling);
-}
-function togglePin(n,from){
-  var i=pins.indexOf(n);
-  if(i>=0)pins.splice(i,1);else{if(pins.length>=2)pins.shift();pins.push(n);}
-  savePins();
-  if(pins.length){pcur=pins.indexOf(n);if(pcur<0)pcur=0;}else cur=idxOf(n);
-  render();
-  if(from==='grid'&&pins.length<2){var g=document.getElementById('pg-'+n);if(g)g.focus();return;}
-  if(from==='grid'){document.getElementById('pinPick').open=false;}
-  if(effLayout()==='cards'){
-    if(from==='card'){var b=document.querySelector('#cardsBox .pinbtn');if(b){b.focus();return;}}
-    var box=document.getElementById('cardsBox');if(box)box.scrollIntoView({block:'start'});focusCard(0);
-  }else{var th=document.querySelector('#view tbody th');if(th){th.scrollIntoView({block:'center'});th.focus();}}
 }
 function clearPins(){
   if(!pins.length)return;
-  var n=list()[getCur()].num;pins=[];savePins();cur=idxOf(n);ls('summaryCard',String(cur));render();
-  if(effLayout()==='cards')focusCard(0);else{var m=document.getElementById('pinMsg');m.setAttribute('tabindex','-1');m.focus();}
+  var n=list()[getCur()].num;pins=[];cur=idxOf(n);ls('summaryCard',String(cur));render();
+  if(effLayout()==='cards')focusCard(0);else{var th=document.querySelector('#view tbody th');if(th){th.scrollIntoView({block:'center'});th.focus();}}
 }
 function effLayout(){if(layout!=='auto')return layout;return window.matchMedia('(max-width: 820px)').matches?'cards':'table';}
 function render(){
