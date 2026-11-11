@@ -584,10 +584,10 @@ function renderQuick(){
   q.classList.remove('hide');
   function pick(k){return DATA.topics.filter(function(t){return t.pet&&t.pet[k]&&t.pet[k].length;});}
   function line(name,arr,k,open){
-    var body='<ul class="plain">'+arr.map(function(t){return '<li><strong>'+t.num+' '+esc(t.name.replace(/之按摩$/,''))+'</strong>：'+t.pet[k].map(function(x){return esc(x.text);}).join('；')+'</li>';}).join('')+'</ul>';
+    var body='<ul class="plain">'+arr.map(function(t){return '<li><strong>'+t.num+' '+esc(t.name.replace(/之按摩$/,''))+'</strong>：'+t.pet[k].map(function(x){return esc(typeof x==='string'?x:x.text);}).join('；')+'</li>';}).join('')+'</ul>';
     return '<details'+(open?' open':'')+'><summary>'+name+'</summary>'+body+'</details>';
   }
-  q.innerHTML='<h2>比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false);
+  q.innerHTML='<h2>比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false)+line('擦熱',pick('rub'),'rub',false)+line('設定（設患側、壓痛點、型別）',pick('setup'),'setup',false);
 }
 </script>
 </body>
