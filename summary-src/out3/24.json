@@ -1,20 +1,20 @@
 {
- "num": "24",
- "positions": [
-  "側臥",
-  "俯臥"
- ],
- "pillow": [],
- "exercises": [
-  {
-   "text": "肩肘腕指被動屈曲迴旋",
-   "src": "重+規"
-  }
- ],
- "tests": [],
- "note": null,
- "setup": [],
- "rub": [
-  "最後對麻痺肌群做強擦法"
- ]
+  "num": "24",
+  "positions": [
+    "側臥",
+    "俯臥"
+  ],
+  "pillow": [],
+  "exercises": [
+    {
+      "text": "肩、肘、腕、指依序被動：屈曲、迴旋、牽引、抖搖",
+      "src": "重+規"
+    }
+  ],
+  "tests": [],
+  "note": null,
+  "setup": [],
+  "rub": [
+    "最後對麻痺肌群做強擦法"
+  ]
 }
