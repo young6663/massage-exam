@@ -297,10 +297,10 @@ function cPE(t){
   var p=t.pet||{};
   var h='';
   if(p.positions&&p.positions.length)h+='<div><strong>'+esc(p.positions.join('、'))+'</strong></div>';
-  // 提醒區放最前面：設定（設患側／設壓痛點／設型別）、墊枕、測試、運動法、擦熱，然後才是流程
+  // 提醒區放最前面：設定（設患側／設壓痛點／設型別）、墊枕、測試、運動法、擦法，然後才是流程
   if(p.setup&&p.setup.length)h+='<span class="sub">設定</span>'+ul(p.setup);
   h+=peList('墊枕',p.pillow)+peList('測試',p.tests)+peList('運動法',p.exercises);
-  if(p.rub&&p.rub.length)h+='<span class="sub">擦熱</span>'+ul(p.rub);
+  if(p.rub&&p.rub.length)h+='<span class="sub">擦法</span>'+ul(p.rub);
   if(t.steps_brief&&t.steps_brief.length)h+='<span class="sub">流程</span><ol class="flow">'+t.steps_brief.map(function(i){return '<li>'+esc(i)+'</li>';}).join('')+'</ol>';
   h+=stepsDet(t);
   if(!h)return none();
@@ -587,7 +587,7 @@ function renderQuick(){
     var body='<ul class="plain">'+arr.map(function(t){return '<li><strong>'+t.num+' '+esc(t.name.replace(/之按摩$/,''))+'</strong>：'+t.pet[k].map(function(x){return esc(typeof x==='string'?x:x.text);}).join('；')+'</li>';}).join('')+'</ul>';
     return '<details'+(open?' open':'')+'><summary>'+name+'</summary>'+body+'</details>';
   }
-  q.innerHTML='<h2>比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false)+line('擦熱',pick('rub'),'rub',false)+line('設定（設患側、壓痛點、型別）',pick('setup'),'setup',false);
+  q.innerHTML='<h2>比對</h2>'+line('墊枕',pick('pillow'),'pillow',true)+line('測試／檢查',pick('tests'),'tests',false)+line('運動法',pick('exercises'),'exercises',false)+line('擦法',pick('rub'),'rub',false)+line('設定（設患側、壓痛點、型別）',pick('setup'),'setup',false);
 }
 </script>
 </body>
