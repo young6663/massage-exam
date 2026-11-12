@@ -8,11 +8,22 @@
   ],
   "src": "規"
  },
- "people": null,
- "timing": null,
+ "people": {
+  "text": "習慣屈肘支撐者、腕重複勞動者",
+  "src": "講"
+ },
+ "timing": {
+  "mnemonic": null,
+  "items": [
+   "屈肘時肘管變小受壓",
+   "夜間痛麻驟醒"
+  ],
+  "note": null,
+  "src": "講"
+ },
  "location": {
-  "text": "手掌尺側1個半指、手背尺側",
-  "src": "規"
+  "text": "手掌尺側1個半指、手背尺側、痛向肘尺側及腋部放射",
+  "src": "規+講"
  },
  "symptoms": {
   "mnemonic": null,

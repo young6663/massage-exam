@@ -9,10 +9,20 @@
   ],
   "src": "規"
  },
- "people": null,
- "timing": null,
+ "people": {
+  "text": "特殊用腕工作者",
+  "src": "規"
+ },
+ "timing": {
+  "mnemonic": null,
+  "items": [
+   "不全損傷伴劇痛"
+  ],
+  "note": null,
+  "src": "規"
+ },
  "location": {
-  "text": "手掌橈側3個半指、背面中末節",
+  "text": "手掌橈側3個半指（拇食指末節最甚）、背面中末節",
   "src": "規"
  },
  "symptoms": {
